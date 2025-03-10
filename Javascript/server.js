@@ -8,7 +8,7 @@ app.use(express.static(__dirname));
 
 // Serve main.html when accessing the root URL
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'main.html'));
+    res.sendFile(path.join(__dirname, './HTML/main.html'));
 });
 
 app.listen(port, () => {
