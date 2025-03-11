@@ -8,14 +8,11 @@
 
     <body>
         <h1 id="demo">Hello World! &lt;3</h1>
+        <button id="button" type="button">Get location</button>
     </body>
     <script>
         const x = document.getElementById("demo");
-        addEventListener("mousemove", do_everything())
-        function do_everything() {
-            getLocation();
-            showPosition();
-        }
+        document.getElementById("button").addEventListener("click", getLocation)
         function getLocation() {
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
