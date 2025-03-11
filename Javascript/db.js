@@ -9,10 +9,15 @@ const db = new sqlite3.Database('./databases/click_and_collect.db', (err) => {
 });
 
 db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS cities (
+
+    db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        city TEXT
-    )`);
+        city TEXT UNIQUE
+    )`, (err) => {
+        if (err) console.error("Error creating table:", err.message);
+        else console.log("Table 'cities' created with UNIQUE constraint.");
+    });
+
 
     db.run(`CREATE TABLE IF NOT EXISTS shops (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,6 +34,10 @@ db.serialize(() => {
         FOREIGN KEY(city_id) REFERENCES cities(id),
         FOREIGN KEY(shop_id) REFERENCES shops(id)
     )`);
+    db.run(`INSERT INTO cities (city) VALUES ('Aalborg'), ('København'), ('Aarhus'), ('Odense'), ('Esbjerg'), ('Randers'), ('Horsens'), ('Kolding')`, (err) => {
+        if (err) console.error('Error inserting data:', err.message);
+        else console.log('Cities inserted.');
+    });
 });
 
 
