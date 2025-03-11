@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="da">
     <head>
         <title>Click And Collect</title>
         <meta charset="utf-8" />
@@ -7,6 +7,23 @@
     </head>
 
     <body>
-        <h1>Hello World! &lt;3</h1>
+        <h1 id="demo">Hello World! &lt;3</h1>
+        <button id="button" type="button">Get location</button>
     </body>
+    <script>
+        const x = document.getElementById("demo");
+        document.getElementById("button").addEventListener("click", getLocation)
+        function getLocation() {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+          } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+          }
+        }
+        
+        function showPosition(position) {
+          x.innerHTML = "Latitude: " + position.coords.latitude +
+          "<br>Longitude: " + position.coords.longitude;
+        }
+        </script>
 </html>
