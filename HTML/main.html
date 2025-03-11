@@ -7,6 +7,26 @@
     </head>
 
     <body>
-        <h1>Hello World! &lt;3</h1>
+        <h1 id="demo">Hello World! &lt;3</h1>
     </body>
+    <script>
+        const x = document.getElementById("demo");
+        addEventListener("mousemove", do_everything())
+        function do_everything() {
+            getLocation();
+            showPosition();
+        }
+        function getLocation() {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+          } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+          }
+        }
+        
+        function showPosition(position) {
+          x.innerHTML = "Latitude: " + position.coords.latitude +
+          "<br>Longitude: " + position.coords.longitude;
+        }
+        </script>
 </html>
