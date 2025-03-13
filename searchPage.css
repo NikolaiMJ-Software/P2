@@ -1,0 +1,22 @@
+body {
+    background: #6addb7;
+}
+
+#inputProductSearch{
+    display: flex;
+    margin: auto;
+    border-radius: 24px;
+    font-size: 48px;
+    font-family: Arial, Helvetica, sans-serif;
+    outline: 0;
+    border-color: #7fffd4;
+    border-width: 10px;
+    border-style: solid;
+    background: #e4ffe5;
+}
+
+#h1ProductPage {
+    text-align: center;
+    font-size: 96px;
+    margin:10px;
+}
