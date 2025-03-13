@@ -3,12 +3,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch('/cities'); // Fetch cities from the server
         const cities = await response.json();
         const container = document.getElementById('city-buttons'); // Target div
+        const searchInput = document.getElementById('query');
+        const searchForm = document.getElementById('form');
+
+        const cityButtons = [];
+
 
         cities.forEach(city => {
             // Create button
             const cityButton = document.createElement('button');
             cityButton.textContent = city.city;
             cityButton.classList.add('city-button');
+            cityButton.dataset.city = city.city.toLowerCase();
 
             // Set the background to image if image exists
             if (city.image_path) {
@@ -21,7 +27,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
 
             // add city button
+            cityButtons.push(cityButton);
             container.appendChild(cityButton);
+        });
+
+        searchInput.addEventListener('input', () => {
+            const searchValue = searchInput.value.toLowerCase();
+            cityButtons.forEach(button => {
+                if (button.dataset.city.includes(searchValue)) {
+                    button.style.display = 'flex'; // Show matching cities
+                } else {
+                    button.style.display = 'none'; // Hide non-matching cities
+                }
+            });
+        });
+
+        searchForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent form submission
+            const searchValue = searchInput.value.trim().toLowerCase();
+            const matchingCity = cities.find(city => city.city.toLowerCase() === searchValue);
+
+            if (matchingCity) {
+                // Redirect if an exact match is found
+                window.location.href = `../html/city.html?city=${encodeURIComponent(matchingCity.city)}`;
+            }
         });
 
     } catch (error) {
