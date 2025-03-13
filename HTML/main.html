@@ -7,7 +7,19 @@
     </head>
 
     <body>
-        <h1 id="demo">Hej Verden!</h1>
+        <h1 id="demo">Click & Hent</h1>
+        <!--Creat a search bar-->
+        <form id="form"> 
+          <input type="search" id="query" name="q" placeholder="Søg efter en by...">
+          <!--Add magnifying glass on the right side-->
+          <button type="submit">
+            <svg width="16" height="16" viewBox="0 0 24 24">
+              <path d="M21 21l-6-6m4-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" 
+              stroke="black" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </form>
+                
         <button id="button" type="button">Get location</button>
     </body>
     <script>
