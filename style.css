@@ -3,7 +3,7 @@ body {
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
-    height: 50vh; /* Full screen height */
+    height: 100vh; /* Full screen height */
     margin: 0;
     background-color: whitesmoke;
 }
@@ -18,7 +18,9 @@ body {
 
 /* Space between heading and search bar */
 h1 {
-    margin-bottom: 50px; /* Add space below h1 */
+    font-family: Lucida, serif;
+    margin-bottom: 80px;
+    font-size: 44px;
 }
 
 /* Style the search bar */
@@ -26,16 +28,17 @@ form {
     display: flex;
     align-items: center;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 10px;
     overflow: hidden;
-    width: 400px;
+    width: 400px; /* Adjust width */
     background-color: white;
 }
 
 /* Style the input field */
 input {
     border: none;
-    padding: 25px;
+    padding: 11px;
+    font-size: 20px;
     flex-grow: 1;
     outline: none;
 }
@@ -45,7 +48,10 @@ button {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 8px;
+    padding: 15px;
+    font-size: 20px;
+    border-left: 1px solid #ccc; /* Vertical line */
+
 }
 
 #city-buttons {
@@ -53,15 +59,15 @@ button {
     grid-template-columns: repeat(4, 1fr); /* 4 columns */
     gap: 20px; /* Space between buttons */
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 100px;
 }
 
 .city-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 180px; /* Adjusted width */
-    height: 100px; /* Adjusted height */
+    width: 300px; /* Adjusted width */
+    height: 150px; /* Adjusted height */
     border: 3px solid #4A7E8F;
     border-radius: 50px;
     font-size: 18px;
@@ -74,9 +80,9 @@ button {
     background-position: center;
     background-repeat: no-repeat;
     overflow: hidden;
+    opacity: 80%;
     
 }
-
 
 .city-button:hover {
     transform: scale(1.05);
