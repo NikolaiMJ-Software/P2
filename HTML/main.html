@@ -9,12 +9,22 @@
   <body>
     <h1 id="demo">Hej Verden!</h1>
     <button id="geoButton" type="button">Get location</button>
-    <button id="search" type="button">Go to search page</button>
+    <h2>Cities</h2>
+    <form id="cities">
+      <button id="Aalborg" type="button">Go to Aalborg page</button>
+      <button id="Randers" type="button">Go to Randers Page</button>
+    </form>
+    
 
     <script>
-      document.getElementById("search").addEventListener("click", function () {
-        window.location.href = "HTML/searchPage.html";
+      let a = document.querySelectorAll("#cities button[type=button]")
+      for (let i = 0; i < a.length; i++){
+        a[i].addEventListener("click", function() {
+          let city = a[i].id;
+          localStorage.setItem("city", city);
+          window.location.href = "HTML/searchPage.html";
       });
+      }
     </script>
     <script>
       const x = document.getElementById("demo");

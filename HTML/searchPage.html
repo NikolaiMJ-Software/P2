@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../style.css" />
 </head>
 <body>
+    <h1 id="header1"></h1>
+    <input id="input">
     
     <script src="../Javascript/searchPage.js"></script>
+    <script>
+        document.getElementById("header1").textContent = localStorage.getItem("city");
+        localStorage.clear();
+    </script>
 </body>
 </html>
