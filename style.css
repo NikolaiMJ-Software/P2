@@ -47,3 +47,20 @@ button {
     cursor: pointer;
     padding: 8px;
 }
+
+/*Grid layout for 8 ovals (4 columns, 2 rows) */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    grid-template-rows: repeat(2, auto);  /* 2 rows */
+    gap: 10px; /* Space between ovals */
+    margin-top: 20px; /* Space between search bar and grid */
+}
+
+/* Oval shape */
+.oval {
+    width: 80px; /* Adjust width */
+    height: 40px; /* Adjust height */
+    background-color: lightgray; /* Change color if needed */
+    border-radius: 50px; /* Makes it oval */
+}
