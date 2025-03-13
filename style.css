@@ -3,7 +3,7 @@ body {
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
-    height: 100vh; /* Full screen height */
+    height: 120vh; /* Full screen height */
     margin: 0;
     background-color: whitesmoke;
 }
@@ -69,7 +69,7 @@ button {
     width: 300px; /* Adjusted width */
     height: 150px; /* Adjusted height */
     border: 3px solid #4A7E8F;
-    border-radius: 50px;
+    border-radius: 50%;
     font-size: 18px;
     font-weight: bold;
     color: white; /* Ensures text is visible */
