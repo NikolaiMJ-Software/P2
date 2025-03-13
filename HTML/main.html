@@ -8,11 +8,11 @@
 
     <body>
         <h1 id="demo">Hej Verden!</h1>
-        <button id="button" type="button">Din Lokation</button>
+        <button id="button" type="button">Get location</button>
     </body>
     <script>
         const x = document.getElementById("demo");
-        document.getElementById("button").addEventListener("click", getLocation)
+        document.getElementById("geoButton").addEventListener("click", getLocation)
         function getLocation() {
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
