@@ -1,3 +1,90 @@
+/* Center everything in the viewport */
 body {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Full screen height */
+    margin: 0;
     background-color: whitesmoke;
+}
+
+/* Wrapper for the heading and search bar */
+.container {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center horizontally */
+    text-align: center;
+}
+
+/* Space between heading and search bar */
+h1 {
+    font-family: Lucida, serif;
+    margin-bottom: 80px;
+    font-size: 44px;
+}
+
+/* Style the search bar */
+form {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 400px; /* Adjust width */
+    background-color: white;
+}
+
+/* Style the input field */
+input {
+    border: none;
+    padding: 11px;
+    font-size: 20px;
+    flex-grow: 1;
+    outline: none;
+}
+
+/* Style the search button */
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 15px;
+    font-size: 20px;
+    border-left: 1px solid #ccc; /* Vertical line */
+
+}
+
+#city-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    gap: 20px; /* Space between buttons */
+    justify-content: center;
+    margin-top: 100px;
+}
+
+.city-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 300px; /* Adjusted width */
+    height: 150px; /* Adjusted height */
+    border: 3px solid #4A7E8F;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white; /* Ensures text is visible */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Adds contrast to text */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    opacity: 80%;
+    
+}
+
+.city-button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
 }
