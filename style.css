@@ -48,19 +48,34 @@ button {
     padding: 8px;
 }
 
-/*Grid layout for 8 ovals (4 columns, 2 rows) */
-.grid {
+#city-buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 columns */
-    grid-template-rows: repeat(2, auto);  /* 2 rows */
-    gap: 10px; /* Space between ovals */
-    margin-top: 20px; /* Space between search bar and grid */
+    gap: 20px; /* Space between buttons */
+    justify-content: center;
+    margin-top: 20px;
 }
 
-/* Oval shape */
-.oval {
-    width: 80px; /* Adjust width */
-    height: 40px; /* Adjust height */
-    background-color: lightgray; /* Change color if needed */
-    border-radius: 50px; /* Makes it oval */
+.city-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 180px; /* Adjusted width */
+    height: 100px; /* Adjusted height */
+    border: 2px solid #4A7E8F;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white; /* Ensures text is visible */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Adds contrast to text */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.city-button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
 }
