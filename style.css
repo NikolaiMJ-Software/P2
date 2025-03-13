@@ -68,7 +68,7 @@ button {
     justify-content: center;
     width: 300px; /* Adjusted width */
     height: 150px; /* Adjusted height */
-    border: 2px solid #4A7E8F;
+    border: 3px solid #4A7E8F;
     border-radius: 50px;
     font-size: 18px;
     font-weight: bold;
@@ -79,7 +79,10 @@ button {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    overflow: hidden;
+    
 }
+
 
 .city-button:hover {
     transform: scale(1.05);
