@@ -13,6 +13,7 @@ db.run("PRAGMA foreign_keys = ON;");
 
 
 db.serialize(() => {
+    db.run(`DROP TABLE cities`),
 
     db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,10 +40,18 @@ db.serialize(() => {
         FOREIGN KEY(city_id) REFERENCES cities(id),
         FOREIGN KEY(shop_id) REFERENCES shops(id)
     )`);
-    db.run(`INSERT INTO cities (city) VALUES ('Aalborg'), ('København'), ('Aarhus'), ('Odense'), ('Esbjerg'), ('Randers'), ('Horsens'), ('Kolding')`, (err) => {
-        if (err) console.error('Error inserting data:', err.message);
-        else console.log('Cities inserted.');
-    });
+    db.run(`INSERT INTO cities (city, image_path) VALUES 
+        ('Aalborg', 'Images/Aalborg/musikkenshus.jpg'), 
+        ('København', 'Images/København/Lille_havfrue.jpg'), 
+        ('Aarhus', 'Images/Aarhus/gamle_by.jpg'), 
+        ('Odense', 'Images/Odense/H.C._Andersen_Hus.jpg'), 
+        ('Esbjerg', 'Images/Esbjerg/4hvidemænd.jpg'), 
+        ('Randers', 'Images/Randers/Randers_Regnskov.jpg'), 
+        ('Horsens', 'Images/Horsens/Horsens_Fængsel.jpg'), 
+        ('Kolding', 'Images/Kolding/Kolding_Mini_By.jpg')`, (err) => {
+            if (err) console.error('Error inserting data:', err.message);
+            else console.log('Cities with image paths inserted.');
+        });
 });
 
 
