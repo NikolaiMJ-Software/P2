@@ -9,6 +9,27 @@
     <body>
         <h1 id="demo">Hej Verden!</h1>
         <button id="geoButton" type="button">Get location</button>
+        <button id="search" type="button">Go to search page</button>
+        
         <script src="../Javascript/searchPage.js"></script>
+        <script>
+          const x = document.getElementById("demo");
+          document.getElementById("geoButton").addEventListener("click", getLocation);
+          function getLocation() {
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+              x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+          }
+          
+          function showPosition(position) {
+            x.innerHTML =
+              "Latitude: " +
+              position.coords.latitude +
+              "<br>Longitude: " +
+              position.coords.longitude;
+          }
+        </script>
       </body>
 </html>
