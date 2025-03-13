@@ -74,9 +74,9 @@ button {
     background-position: center;
     background-repeat: no-repeat;
     overflow: hidden;
+    opacity: 80%;
     
 }
-
 
 .city-button:hover {
     transform: scale(1.05);
