@@ -25,6 +25,17 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/main.html'));
 });
 
+//API to get all the cities and pictures
+app.get('/cities', (req, res) => {
+    db.all(`SELECT city, image_path FROM cities ORDER BY id ASC`, (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json(rows);
+    });
+});
+
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
