@@ -8,11 +8,16 @@ const db = new sqlite3.Database('./databases/click_and_collect.db', (err) => {
     }
 });
 
+db.run("PRAGMA foreign_keys = ON;");
+
+
+
 db.serialize(() => {
 
     db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        city TEXT UNIQUE
+        city TEXT UNIQUE,
+        image_path TEXT
     )`, (err) => {
         if (err) console.error("Error creating table:", err.message);
         else console.log("Table 'cities' created with UNIQUE constraint.");
