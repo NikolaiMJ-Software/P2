@@ -48,7 +48,8 @@ db.serialize(() => {
         ('Esbjerg', 'Images/Esbjerg/4hvidemænd.jpg'), 
         ('Randers', 'Images/Randers/Randers_Regnskov.jpg'), 
         ('Horsens', 'Images/Horsens/Horsens_Fængsel.jpg'), 
-        ('Kolding', 'Images/Kolding/Kolding_Mini_By.jpg')`, (err) => {
+        ('Kolding', 'Images/Kolding/Kolding_Mini_By.jpg'), 
+        ('Test', 'Images/Test/test.png')`, (err) => {
             if (err) console.error('Error inserting data:', err.message);
             else console.log('Cities with image paths inserted.');
         });
