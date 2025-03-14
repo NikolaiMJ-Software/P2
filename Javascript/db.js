@@ -14,6 +14,8 @@ db.run("PRAGMA foreign_keys = ON;");
 
 db.serialize(() => {
     //db.run(`DROP TABLE cities`),
+    //db.run(`DROP TABLE products`),
+    //db.run(`DROP TABLE shops`),
 
     db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,6 +31,7 @@ db.serialize(() => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         shop_name TEXT,
         city_id INTEGER,
+        img_path TEXT,
         FOREIGN KEY(city_id) REFERENCES cities(id)
     )`);
 
@@ -36,7 +39,15 @@ db.serialize(() => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         city_id INTEGER,
         shop_id INTEGER,
-        product_stock INTEGER,
+        stock INTEGER,
+        price INTEGER,
+        description TEXT,
+        img1_path TEXT,
+        img2_path TEXT,
+        img3_path TEXT,
+        img4_path TEXT,
+        img5_path TEXT,
+        specifications TEXT,
         FOREIGN KEY(city_id) REFERENCES cities(id),
         FOREIGN KEY(shop_id) REFERENCES shops(id)
     )`);
@@ -69,8 +80,36 @@ db.serialize(() => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Users inserted.');
             });
+        db.run(`INSERT INTO shops (shop_name, city_id, img_path) VALUES
+            ('Måneby', '1', '')`, (err) => {
+                if (err) console.error('Error inserting data:', err.message);
+                else console.log('Shop inserted.');
+            });
+        db.run(`INSERT INTO products (city_id, shop_id, stock,) VALUES
+            ('sebastianpleygames.dk@gmail.com', 'Sebastian', '123')`, (err) => {
+                if (err) console.error('Error inserting data:', err.message);
+                else console.log('product inserted.');
+            });
+
 });
 
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+city_id INTEGER,
+shop_id INTEGER,
+stock INTEGER,
+price INTEGER,
+description TEXT,
+img1_path TEXT,
+img2_path TEXT,
+img3_path TEXT,
+img4_path TEXT,
+img5_path TEXT,
+specifications TEXT,
 
+
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+shop_name TEXT,
+city_id INTEGER,
+img_path TEXT,
 
 db.close();
