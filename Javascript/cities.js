@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Redirect to new page when clicking button
             cityButton.onclick = () => {
-                window.location.href = `../html/city.html?city=${encodeURIComponent(city.city)}`;
+                window.location.href = `../searchpage/${encodeURIComponent(city.city)}`;
             };
 
             // add city button
@@ -43,12 +43,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         searchForm.addEventListener('submit', (event) => {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault();
             const searchValue = searchInput.value.trim().toLowerCase();
             const matchingCity = cities.find(city => city.city.toLowerCase() === searchValue);
 
             if (matchingCity) {
-                // Redirect if an exact match is found
+                // Redirect if city is found
                 window.location.href = `../html/city.html?city=${encodeURIComponent(matchingCity.city)}`;
             }
         });
