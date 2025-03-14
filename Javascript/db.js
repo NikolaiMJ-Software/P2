@@ -39,6 +39,7 @@ db.serialize(() => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         city_id INTEGER,
         shop_id INTEGER,
+        product_name TEXT,
         stock INTEGER,
         price INTEGER,
         description TEXT,
@@ -85,8 +86,8 @@ db.serialize(() => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Shop inserted.');
             });
-        db.run(`INSERT INTO products (city_id, shop_id, stock, price, description, img1_path, img2_path, specifications) VALUES
-            ('1', '1', '10', '25', 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png', 'Den er faktisk virkelig grim')`, (err) => {
+        db.run(`INSERT INTO products (city_id, shop_id, product_name, stock, price, description, img1_path, img2_path, specifications) VALUES
+            ('1', '1', 'den grimme maskine', '10', '25', 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png', 'Den er faktisk virkelig grim')`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('product inserted.');
             });
