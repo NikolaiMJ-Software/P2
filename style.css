@@ -1,6 +1,6 @@
 /* Center everything in the viewport */
 body {
-    display: flex;
+    display: flex auto;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
     height: 120vh; /* Full screen height */
