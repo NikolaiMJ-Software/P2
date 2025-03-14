@@ -25,6 +25,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/main.html'));
 });
 
+app.get('/searchpage/:city', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
+});
+
 //API to get all the cities and pictures
 app.get('/cities', (req, res) => {
     db.all(`SELECT city, image_path FROM cities ORDER BY id ASC`, (err, rows) => {

@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (matchingCity) {
                 // Redirect if city is found
-                window.location.href = `../html/city.html?city=${encodeURIComponent(matchingCity.city)}`;
+                window.location.href = `../searchpage/${encodeURIComponent(matchingCity.city)}`;
             }
         });
 
