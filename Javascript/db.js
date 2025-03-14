@@ -13,7 +13,7 @@ db.run("PRAGMA foreign_keys = ON;");
 
 
 db.serialize(() => {
-    db.run(`DROP TABLE cities`),
+    //db.run(`DROP TABLE cities`),
 
     db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -53,6 +53,22 @@ db.serialize(() => {
             if (err) console.error('Error inserting data:', err.message);
             else console.log('Cities with image paths inserted.');
         });
+
+        db.run(`CREATE TABLE users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE,
+            name TEXT,
+            password TEXT
+        )`, (err) => {
+            if (err) console.error("Error creating table:", err.message);
+            else console.log("Table 'cities' created with UNIQUE constraint.");
+        });
+
+        db.run(`INSERT INTO users (email, name, password) VALUES
+            ('sebastianpleygames.dk@gmail.com', 'Sebastian', '123')`, (err) => {
+                if (err) console.error('Error inserting data:', err.message);
+                else console.log('Users inserted.');
+            });
 });
 
 
