@@ -1,11 +1,11 @@
 /* Center everything in the viewport */
 body {
-    display: flex auto;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
     height: 120vh; /* Full screen height */
     margin: 0;
     background-color: whitesmoke;
+    flex-wrap: wrap;
 }
 
 /* Wrapper for the heading and search bar */
@@ -82,6 +82,18 @@ button {
     overflow: hidden;
     opacity: 70%;
     
+}
+
+@media (max-width: 1024px) {
+    #city-buttons {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    #city-buttons {
+        grid-template-columns: repeat(1, 1fr); /* 1 column on smaller screens */
+    }
 }
 
 .city-button:hover {
