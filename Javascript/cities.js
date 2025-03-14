@@ -19,6 +19,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Set the background to image if image exists
             if (city.image_path) {
                 cityButton.style.backgroundImage = `url('${city.image_path}')`;
+                //  Move images from Esbjerg, Aarhus and København down 30% from center
+                if (city.city.toLowerCase() === 'esbjerg' || city.city.toLowerCase() === 'aarhus' || city.city.toLowerCase() === 'københavn') {
+                    cityButton.style.backgroundPosition = 'center 30%';
+                }
             }
 
             // Redirect to new page when clicking button
