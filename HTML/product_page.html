@@ -3,30 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Product Page</title>
+    <link rel="stylesheet" href="../productPage.css">
 </head>
 <body>
-    <h1></h1>
-<div class="row">
-    <div class="side">
-        <h3>test</h3>
-        <p>hello world</p>
+
+    <div class="row">
+        <!-- Product Image -->
+    <div class="product-image">
+        <img src="test.png" alt="Product Image">
+        <div class="product-var">
+            <img src="test.png" alt="Variant 1">
+            <img src="test.png" alt="Variant 2">
+        </div>
     </div>
-    <div class="main">
-        <h3>store name</h3>
-        <h2>product name</h2>
-        <p>short describtion</p>
-        <br>
-        <h3>Specifications</h3>
-        <p>
-            Spec 1
-        </p><br>
-        <p>
-            Spec 2
-        </p>
-        
+
+        <!-- Product Details -->
+        <div class="main">
+            <h3 class="store-name">Store Name</h3>
+            <h1 class="product-title">Product 1</h1>
+            <p class="product-description">Short description of the product...</p>
+
+            <ul class="specifications">
+                <li>Specification 1</li><br>
+                <li>Specification 2</li><br>
+                <li>Specification 3</li><br>
+            </ul>       
+
+            <!-- Product Variants (Placeholder Thumbnails) -->
+            <div class="variant-selection">
+                <div class="variant-box"></div>
+                <div class="variant-box"></div>
+            </div>
+
+            <!-- Quantity Selector -->
+            <br><p>Quantity</p>
+            <div class="quantity">
+                <button class="quantity-toggle" id="quantity-toggle">- <span id="quantity-value">1</span> +</button>
+                <p class="stock">3 products in stock</p>
+            </div>
+
+            
+            <script src="../Javascript/Quantity_selector.js"></script>
+
+            <!-- Pricing -->
+            <p class="save">Save: 321 kr.</p>
+            <p class="price">1234 kr. <span class="discount">1555 kr.</span></p>
+
+            <!-- Add to Cart Button -->
+            <button class="add-to-cart">Add to cart</button>
+        </div>
     </div>
-</div>
 
 </body>
 </html>
