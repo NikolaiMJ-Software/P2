@@ -81,12 +81,12 @@ db.serialize(() => {
                 else console.log('Users inserted.');
             });
         db.run(`INSERT INTO shops (shop_name, city_id, img_path) VALUES
-            ('Måneby', '1', '')`, (err) => {
+            ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg')`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Shop inserted.');
             });
-        db.run(`INSERT INTO products (city_id, shop_id, stock,) VALUES
-            ('sebastianpleygames.dk@gmail.com', 'Sebastian', '123')`, (err) => {
+        db.run(`INSERT INTO products (city_id, shop_id, stock, price, description, img1_path, img2_path, specifications) VALUES
+            ('1', '1', '10', '25', 'Den er grim', '')`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('product inserted.');
             });
