@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Redirect to new page when clicking button
             cityButton.onclick = () => {
-                window.location.href = `../searchpage/${encodeURIComponent(city.city)}`;
+                window.location.href = `../searchpage/?city=${encodeURIComponent(city.city)}`;
             };
 
             // add city button
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (matchingCity) {
                 // Redirect if city is found
-                window.location.href = `../searchpage/${encodeURIComponent(matchingCity.city)}`;
+                window.location.href = `../searchpage/?city=${encodeURIComponent(matchingCity.city)}`;
             }
         });
 

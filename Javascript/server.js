@@ -25,7 +25,9 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/main.html'));
 });
 
-app.get('/searchpage/:city', (req, res) => {
+app.get('/searchpage', (req, res) => {
+    const city = req.query.city; // Get city from query
+    console.log(`City requested: ${city}`); 
     res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
 });
 
