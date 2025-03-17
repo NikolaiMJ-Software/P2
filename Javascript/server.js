@@ -8,6 +8,11 @@ const port = 3000;
 //enable json support
 app.use(express.json());
 
+//remove acces for, database
+app.use('/databases', (req, res)=>{
+    res.statusMessage(403).send('Get Good Bozo');
+});
+
 // Serve static files (CSS, JS, images, etc.)
 app.use(express.static(path.join(__dirname, '../'))); // Serve from parent folder
 
