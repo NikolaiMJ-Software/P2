@@ -36,6 +36,13 @@ app.get('/searchpage', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
 });
 
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/login.html'));
+});
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/signup.html'));
+});
+
 //API to get all the cities and pictures
 app.get('/cities', (req, res) => {
     db.all(`SELECT city, image_path FROM cities ORDER BY id ASC`, (err, rows) => {
