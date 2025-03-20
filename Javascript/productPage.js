@@ -52,3 +52,11 @@ db.close((err) => {
         console.log('Database connection closed.');
     }
 });
+
+import reservation_email from "mail_sender.js"
+const button = document.getElementById("cart_button");
+button.addEventListener('click', email_prompt)
+function email_prompt() {
+    let email = prompt("Please enter your email", "Your email");
+    reservation_email(email, seller_email, id);
+}
