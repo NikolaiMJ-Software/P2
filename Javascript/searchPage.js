@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         //we have city name. we need city id
         const response_city = await fetch('/cities'); // Fetch cities from the server
         const cities = await response_city.json();
-        const productContainer = document.getElementsByClassName('products');
+        
         let currentCityId;
         for (let i = 0; i < cities.length; i++){
             if(cities[i].city == currentCity){
@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const response = await fetch('/products'); // Fetch products from the server
         const products = await response.json();
+        const productContainer = document.getElementById('productList');
 
         //go through products, check if city matches selected, initialize
         products.forEach(product => {
@@ -32,6 +33,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 //initialize all attributes.
                 productButton.textContent = product.product_name;
                 productButton.classList.add('product')
+
+                productContainer.appendChild(productButton);
 
                 
             }
