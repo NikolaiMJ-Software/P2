@@ -17,14 +17,14 @@ app.use('/databases', (req, res)=>{
 app.use(express.static(path.join(__dirname, '../'))); // Serve from parent folder
 
 //Connecting to sqlite database
-const db = new sqlite3.Database('./databases/click_and_collect.db', (err) => {
-    if(err){
-        console.error('Error connecting to database', err.message);
-    } else{
-        console.log('Connected to SQLite database.')
+const dbPath = path.join(__dirname, '../databases/click_and_collect.db');
+const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) {
+        console.error('Error connecting to database:', err.message);
+    } else {
+        console.log('Connected to SQLite database.');
     }
 });
-
 // Serve main.html when accessing the root URL
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/main.html'));
