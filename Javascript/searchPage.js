@@ -15,9 +15,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         if (currentCityId == undefined) throw "city ID not found"
         console.log(currentCityId);
+
+        const response = await fetch('/products'); // Fetch products from the server
+        const products = await response.json();
+        products.forEach(product => {
+            console.log(product.product_name + " " + product.price);
+
+            //with city id, get all products with id.
+            if (product.city_id == currentCityId){
+                //initialize all products.
+                const cityButton = document.createElement('button');
+                
+            }
+        });
         
-        //with city id, get all products with id.
-        //initialize all products.
     }
     catch(err){
         console.log(err);
