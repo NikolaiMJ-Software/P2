@@ -1,3 +1,6 @@
+//Imports reservation mails function from mail sender
+const { reservation_mails } = require('./mail_sender');
+
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id'); // Get product ID from URL
@@ -94,6 +97,7 @@ db.close((err) => {
     }
 });
 
+//Work in progress for reservation through button
 const button = document.getElementById("cart_button");
 button.addEventListener("click", reservation);
 function reservation() {
