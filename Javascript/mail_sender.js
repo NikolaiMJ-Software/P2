@@ -9,9 +9,6 @@ const db = new sqlite3.Database('./databases/click_and_collect.db', (err) => {
   }
 });
 
-let product_name = db.get("SELECT product_name FROM products WHERE id = 1")
-console.log(product_name);
-
 //Authenticate email
 const transporter = nodemailer.createTransport({
   service: 'gmail', // This only works with Gmail
@@ -47,14 +44,28 @@ function send_mail(receiver, subject, text) {
 
 //Mail system for item reservations
 function reservation_mails(buyer_email, seller_email, item_id){
-  send_mail(
-    buyer_email,
-    'Reservation af vare på Click&Hent',
-    item_id
-  );
-  send_mail(
-    seller_email,
-    'En af dine varer er reserveret på Click&Hent',
-    item_id
-  );
+
+  //First get product data from database, with error handling
+  db.get(`SELECT product_name FROM products WHERE id = ?`, [item_id], (err, row) => {
+    if (err) {
+        console.error('Error fetching product:', err.message);
+        return;
+    }
+    if (!row) {
+      console.log('No product found with id:', item_id);
+      return;
+    }
+
+    //Send mail to both buyer and seller to inform of the reservation
+    send_mail(
+      buyer_email,
+      'Reservation af vare på Click&Hent',
+      'Varen du har reserveret er: ' + row.product_name
+    );
+    send_mail(
+      seller_email,
+      'En af dine varer er reserveret på Click&Hent',
+      'Varen der er reserveret er: ' + row.product_name
+    );
+  });
 }
