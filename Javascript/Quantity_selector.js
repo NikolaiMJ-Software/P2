@@ -1,5 +1,8 @@
+//const response = await fetch('/stock'); // Fetch stock from the server
+//const stock = await response.json();
+
 let quantity = 1;
-const maxStock = 3; // Example stock count
+const maxStock = 3; // stock count
 
 document.getElementById('quantity-toggle').addEventListener('click', function (event) {
     const clickX = event.offsetX;
