@@ -69,4 +69,5 @@ function reservation_mails(buyer_email, seller_email, item_id){
     );
   });
 }
+
 module.exports = { reservation_mails };
