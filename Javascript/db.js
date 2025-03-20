@@ -36,7 +36,7 @@ db.serialize(() => {
 
     db.run(`CREATE TABLE IF NOT EXISTS shops (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        shop_name TEXT,
+        shop_name TEXT NOT NULL,
         city_id INTEGER,
         img_path TEXT,
         email TEXT,
@@ -44,22 +44,22 @@ db.serialize(() => {
     )`);
 
     db.run(`CREATE TABLE IF NOT EXISTS products (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        city_id INTEGER,
-        shop_id INTEGER,
-        product_name TEXT,
-        stock INTEGER,
-        price INTEGER,
-        description TEXT,
-        img1_path TEXT,
-        img2_path TEXT,
-        img3_path TEXT,
-        img4_path TEXT,
-        img5_path TEXT,
-        specifications TEXT,
-        discount TEXT,
-        FOREIGN KEY(city_id) REFERENCES cities(id),
-        FOREIGN KEY(shop_id) REFERENCES shops(id)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    city_id INTEGER,
+    shop_id INTEGER,
+    product_name TEXT NOT NULL,
+    stock INTEGER,
+    price REAL,
+    description TEXT,
+    img1_path TEXT,
+    img2_path TEXT,
+    img3_path TEXT,
+    img4_path TEXT,
+    img5_path TEXT,
+    specifications TEXT,
+    discount REAL,
+    FOREIGN KEY(shop_id) REFERENCES shops(id),
+    FOREIGN KEY(city_id) REFERENCES cities(id)
     )`);
 
     db.run(`INSERT INTO cities (city, image_path, latitude, longitude) VALUES 
@@ -79,12 +79,12 @@ db.serialize(() => {
 
         db.run(`CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT UNIQUE,
+            email TEXT UNIQUE NOT NULL,
             name TEXT,
             password TEXT
         )`, (err) => {
             if (err) console.error("Error creating table:", err.message);
-            else console.log("Table 'cities' created with UNIQUE constraint.");
+            else console.log("Table 'users' created.");
         });
 
         db.run(`INSERT INTO users (email, name, password) VALUES
@@ -98,12 +98,13 @@ db.serialize(() => {
                 else console.log('Shop inserted.');
             });
         db.run(`INSERT INTO products (city_id, shop_id, product_name, stock, price, description, img1_path, img2_path, img3_path, specifications, discount) VALUES
-            ('1', '1', 'den grimme maskine', '10', '25', 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png',
-            'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321826.png', 'Den er faktisk virkelig grim', '30')`, (err) => {
+            (1, 1, 'den grimme maskine', 10, 25, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png',
+            'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321826.png', 'Den er faktisk virkelig grim', 30)`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('product inserted.');
             });
-
+        db.run(`CREATE INDEX idx_shops_city ON shops(city_id);`);
+        db.run(`CREATE INDEX idx_products_shop ON products(shop_id);`);
 });
 
 db.close();
