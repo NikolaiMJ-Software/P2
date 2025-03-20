@@ -44,17 +44,29 @@ function send_mail(receiver, subject, text) {
 
 //Mail system for item reservations
 function reservation_mails(buyer_email, seller_email, item_id){
-  let row = db.get('SELECT product_name FROM products WHERE id = ?', [item_id])
+  db.get(`SELECT product_name FROM products WHERE id = ?`, [item_id], (err, row) => {
+    if (err) {
+        console.error('Error fetching product:', err.message);
+        return;
+    }
+    if (!row) {
+      console.log('No product found with id:', item_id);
+      return;
+    }
 
-  send_mail(
-    buyer_email,
-    'Reservation af vare på Click&Hent',
-    'Varen du har reserveret er:' + row.product_name
-  );
-  send_mail(
-    seller_email,
-    'En af dine varer er reserveret på Click&Hent',
-    'Varen der er reserveret er:' + row.product_name
-  );
+  const product_name = row.product_name;
+
+
+    send_mail(
+      buyer_email,
+      'Reservation af vare på Click&Hent',
+      'Varen du har reserveret er:' + product_name
+    );
+    send_mail(
+      seller_email,
+      'En af dine varer er reserveret på Click&Hent',
+      'Varen der er reserveret er:' + product_name
+    );
+  });
 }
-reservation_mails('alenje@hotmail.com', 'alenje@hotmail.com', 1);
+reservation_mails('nikolai456654@gmail.com', 'nikolai456654@gmail.com', 1);
