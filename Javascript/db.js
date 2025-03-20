@@ -36,6 +36,7 @@ db.serialize(() => {
         shop_name TEXT,
         city_id INTEGER,
         img_path TEXT,
+        email TEXT,
         FOREIGN KEY(city_id) REFERENCES cities(id)
     )`);
 
@@ -87,8 +88,8 @@ db.serialize(() => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Users inserted.');
             });
-        db.run(`INSERT INTO shops (shop_name, city_id, img_path) VALUES
-            ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg')`, (err) => {
+        db.run(`INSERT INTO shops (shop_name, city_id, img_path, email) VALUES
+            ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com')`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Shop inserted.');
             });

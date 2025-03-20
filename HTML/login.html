@@ -4,16 +4,44 @@
         <title>Login</title>
         <!-- Required meta tags -->
         <meta charset="utf-8" />
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="../CSS/login_signup.css">
     </head>
 
     <body>
         <button onclick="history.back()">Go Back</button>
-        <div class="container">
-            <p>Login:</p>
-            <input type="email">
-            <br>
-            <input type="password">
-        </div>
+        <section>
+            <div class="colour"></div>
+            <div class="colour"></div>
+            <div class="colour"></div>
+            <div class="box">
+                <div class="square" style="--i: 0"></div>
+                <div class="square" style="--i: 1"></div>
+                <div class="square" style="--i: 2"></div>
+                <div class="square" style="--i: 3"></div>
+                <div class="square" style="--i: 4"></div>
+                <div class="container">
+                    <div class="form">
+                        <h2>Login Form</h2>
+                        <form>
+                            <div class="input__box">
+                                <input type="text" placeholder="Username" />
+                            </div>
+                            <div class="input__box">
+                                <input type="password" placeholder="Password" />
+                            </div>
+                            <div class="input__box">
+                                <input type="submit" value="Login" />
+                            </div>
+                            <p class="forget">
+                                Forgot Password? <a href="#">Click Here</a>
+                            </p>
+                            <p class="forget">
+                                Don't have an account? <a href="#">Sign Up</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
     </body>
 </html>
