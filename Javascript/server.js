@@ -36,6 +36,12 @@ app.get('/searchpage', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
 });
 
+app.get('/productpage', (req, res) => {
+    const product = req.query.productId; // Get product id from query
+    console.log(`Product requested: ${product}`); 
+    res.sendFile(path.join(__dirname, '../HTML/product_page.html'));
+});
+
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/login.html'));
 });
