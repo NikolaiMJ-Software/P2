@@ -10,25 +10,21 @@
 
     <div class="row">
         <!-- Product Image -->
-    <div class="product-image">
-        <img src="test.png" alt="Product Image">
-        <div class="product-var">
-            <img src="test.png" alt="Variant 1">
-            <img src="test.png" alt="Variant 2">
+        <div class="product-image">
+            <img id="img1" src="" alt="Product Image">
+            <div class="product-var">
+                <img id="img2" src="" alt="Variant 1">
+                <img id="img3" src="" alt="Variant 2">
+            </div>
         </div>
-    </div>
 
         <!-- Product Details -->
         <div class="main">
-            <h3 class="store-name">Store Name</h3>
-            <h1 class="product-title">Product 1</h1>
-            <p class="product-description">Short description of the product...</p>
+            <h3 class="store-name" id="shop_id"></h3>
+            <h1 class="product-title" id="product_name"></h1>
+            <p class="product-description" id="description"></p>
 
-            <ul class="specifications">
-                <li>Specification 1</li><br>
-                <li>Specification 2</li><br>
-                <li>Specification 3</li><br>
-            </ul>       
+            <ul class="specifications" id="specifications"></ul>       
 
             <!-- Product Variants -->
             <div class="variant-selection">
@@ -40,16 +36,19 @@
             <br><p>Quantity</p>
             <div class="quantity">
                 <button class="quantity-toggle" id="quantity-toggle">- <span id="quantity-value">1</span> +</button>
-                <p class="stock">3 products in stock</p>
+                <p class="stock" id="stock"></p>
             </div>
 
-            
             <script src="../Javascript/Quantity_selector.js"></script>
+            
 
             <!-- Pricing -->
-            <p class="save">Save: 321 kr.</p>
-            <p class="price"> <span id="price"></span> 1234 kr. <span class="discount">1555 kr.</span></p>
-            <script src="../Javascript/productPage.js"></script>
+            <p class="save">Save: <span id="discount"> kr.</span></p>
+            <p class="price"><span id="price"></span> kr.</p>
+
+            <script src="../Javascript/productPage.js">
+
+            </script>
 
             <!-- Add to Cart Button -->
             <button id="cart_button" class="add-to-cart">Add to cart</button>
