@@ -1,5 +1,5 @@
 //Imports reservation mails function from mail sender
-const { reservation_mails } = require('./mail_sender');
+
 
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -96,7 +96,7 @@ db.close((err) => {
         console.log('Database connection closed.');
     }
 });
-
+/*
 //Work in progress for reservation through button
 const button = document.getElementById("cart_button");
 button.addEventListener("click", reservation);
@@ -111,4 +111,4 @@ function reservation() {
         let email = prompt("Please enter your email", "Your email");
         reservation_mails(email, row.email, id);
     });
-}
+}*/
