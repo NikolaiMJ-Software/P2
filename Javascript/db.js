@@ -5,22 +5,26 @@ const db = new sqlite3.Database('./databases/click_and_collect.db', (err) => {
         console.error('Error opening database:', err.message);
     } else {
         console.log('Connected to SQLite database.');
+        db.run("PRAGMA foreign_keys = ON;");
     }
 });
 
-db.run("PRAGMA foreign_keys = ON;");
 
 
 
 db.serialize(() => {
-    //db.run(`DROP TABLE cities`),
-    //db.run(`DROP TABLE products`),
-    //db.run(`DROP TABLE shops`),
+    db.run(`DROP TABLE IF EXISTS products`);
+    db.run(`DROP TABLE IF EXISTS shops`);
+    db.run(`DROP TABLE IF EXISTS cities`);
+    db.run(`DROP TABLE IF EXISTS users`);
 
     db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         city TEXT UNIQUE,
-        image_path TEXT
+        image_path TEXT,
+        lattitude REAL,
+        longitude REAL
+
     )`, (err) => {
         if (err) console.error("Error creating table:", err.message);
         else console.log("Table 'cities' created with UNIQUE constraint.");
@@ -52,6 +56,7 @@ db.serialize(() => {
         FOREIGN KEY(city_id) REFERENCES cities(id),
         FOREIGN KEY(shop_id) REFERENCES shops(id)
     )`);
+
     db.run(`INSERT INTO cities (city, image_path) VALUES 
         ('Aalborg', 'Images/Aalborg/musikkenshus.jpg'), 
         ('København', 'Images/København/Lille_havfrue.jpg'), 
