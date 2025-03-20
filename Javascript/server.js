@@ -8,6 +8,11 @@ const port = 3000;
 //enable json support
 app.use(express.json());
 
+//remove acces for, database
+app.use('/databases', (req, res)=>{
+    res.statusMessage(403).send('Get Good Bozo');
+});
+
 // Serve static files (CSS, JS, images, etc.)
 app.use(express.static(path.join(__dirname, '../'))); // Serve from parent folder
 
@@ -23,6 +28,19 @@ const db = new sqlite3.Database('./databases/click_and_collect.db', (err) => {
 // Serve main.html when accessing the root URL
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/main.html'));
+});
+
+app.get('/searchpage', (req, res) => {
+    const city = req.query.city; // Get city from query
+    console.log(`City requested: ${city}`); 
+    res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/login.html'));
+});
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/signup.html'));
 });
 
 //API to get all the cities and pictures

@@ -1,4 +1,16 @@
 const nodemailer = require('nodemailer'); // API that allows sending of Gmails
+const sqlite3 = require('sqlite3').verbose(); //API for interacting with product database
+
+const db = new sqlite3.Database('./databases/click_and_collect.db', (err) => {
+  if(err){
+      console.error('Error connecting to database', err.message);
+  } else{
+      console.log('Connected to SQLite database.')
+  }
+});
+
+let product_name = db.get("SELECT product_name FROM products WHERE id = 1")
+console.log(product_name);
 
 //Authenticate email
 const transporter = nodemailer.createTransport({
