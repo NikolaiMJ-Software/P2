@@ -50,9 +50,9 @@ button {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
-    max-width: 1026px;
+    max-width: 946px;
     margin: auto;
     translate: 0px 150px;
 }
