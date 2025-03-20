@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const { reservation_mails } = require('./mail_sender')
 
 const dbPath = path.join(__dirname, '../databases/click_and_collect.db');
 const db = new sqlite3.Database(dbPath, (err) => {
@@ -53,10 +54,17 @@ db.close((err) => {
     }
 });
 
-import reservation_email from "mail_sender.js"
 const button = document.getElementById("cart_button");
-button.addEventListener('click', email_prompt)
-function email_prompt() {
-    let email = prompt("Please enter your email", "Your email");
-    reservation_email(email, seller_email, id);
+button.addEventListener("click", reservation);
+function reservation() {
+    db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [id], (err, row) => {
+        if(err) {
+            console.log("Could not get email from shop");
+        }
+        if(row) {
+            console.log("Succedded in getting shop email");
+        }
+        let email = prompt("Please enter your email", "Your email");
+        reservation_mails(email, row.email, id);
+    });
 }
