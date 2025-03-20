@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 productButton.textContent = product.product_name;
                 productButton.classList.add('product')
                 productButton.onclick = () => {
-                    window.location.href = `../product/?id=${product.product_id}`;
+                    window.location.href = `../productpage/?id=${product.id}`;
 
 
 
