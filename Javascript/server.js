@@ -76,6 +76,16 @@ app.get('/product', (req, res) => {
     });
 });
 
+app.get('/products', (req, res) => {
+    db.all(`SELECT * FROM products ORDER BY id ASC`, (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json(rows);
+    });
+});
+
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
