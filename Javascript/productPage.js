@@ -85,3 +85,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Error fetching product:', error);
 }
 });
+db.close((err) => {
+    if (err) {
+        console.error('Error closing database:', err.message);
+    } else {
+        console.log('Database connection closed.');
+    }
+});
+
+const button = document.getElementById("cart_button");
+button.addEventListener("click", reservation);
+function reservation() {
+    db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [id], (err, row) => {
+        if(err) {
+            console.log("Could not get email from shop");
+        }
+        if(row) {
+            console.log("Succedded in getting shop email");
+        }
+        let email = prompt("Please enter your email", "Your email");
+        reservation_mails(email, row.email, id);
+    });
+}
