@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const img2Path = product.img2_path.startsWith("/") ? product.img2_path : `/${product.img2_path}`;
         const img3Path = product.img3_path.startsWith("/") ? product.img3_path : `/${product.img3_path}`;
         console.log("Final image paths:", img1Path, img2Path);
-        // src update for specific
+        // src update for specific images
         updateImage('img1', img1Path);
         updateImage('img2', img2Path);
         updateImage('img3', img3Path);
