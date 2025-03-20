@@ -1,54 +1,87 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+document.addEventListener('DOMContentLoaded', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id'); // Get product ID from URL
 
-const dbPath = path.join(__dirname, '../databases/click_and_collect.db');
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error('Error opening database:', err.message);
-    } else {
-        console.log('Connected to SQLite database.');
+    if (!productId) {
+        console.warn("No product ID found in URL. Using default ID: 1");
+      //  productId = 1; // Default to product ID 1
     }
-});
 
 
-let id = 1;
+    try {
+        const response = await fetch(`/product?id=${productId}`);
+        const product = await response.json();
 
-db.all(`SELECT * FROM Products WHERE id = ?`, [id], (err, rows) => {
-    if (err) {
-        console.error('Error fetching products:', err.message);
-        return;
-    }
-    const product_name = rows.map(row => row.product_name);
-    const shop_id = rows.map(row => row.shop_id);
-    const stock = rows.map(row => row.stock);
-    const price = rows.map(row => row.price);
-    const description = rows.map(row => row.description);
-    const img1 = rows.map(row => row.img1);
-    const img2 = rows.map(row => row.img2);
-    const img3 = rows.map(row => row.img3);
-    const specifications = rows.map(row => row.specifications);
+        if (product.error) {
+            document.body.innerHTML = `<h1>${product.error}</h1>`;
+            return;
+        }
+
+        //update
+        const updateElement = (id, value) => {
+            if (value) document.getElementById(id).innerText = value;
+        };
+
+        const updateImage = (id, src) => {
+            if (src) {
+                console.log(`Trying to load image: ${src}`);
+                document.getElementById(id).src = src;
+            }
+        };
+
+        //Assign product details
+        updateElement('product_name', product.product_name);
+        updateElement('shop_id', product.shop_id);
+        updateElement('stock', product.stock);
+        updateElement('price', product.price);
+        updateElement('description', product.description);
+        updateElement('discount', product.discount);
+
+
+        const img1Path = product.img1_path.startsWith("/") ? product.img1_path : `/${product.img1_path}`;
+        const img2Path = product.img2_path.startsWith("/") ? product.img2_path : `/${product.img2_path}`;
+        const img3Path = product.img3_path.startsWith("/") ? product.img3_path : `/${product.img3_path}`;
+        console.log("Final image paths:", img1Path, img2Path);
+
+        updateImage('img1', img1Path);
+        updateImage('img2', img2Path);
+        updateImage('img3', img3Path);
+
+        // empty prior
+        if (product.specifications) {
+            const specList = document.getElementById('specifications');
+            specList.innerHTML = '';
+            product.specifications.split(',').forEach(spec => {
+                const li = document.createElement('li');
+                li.innerText = spec.trim();
+                specList.appendChild(li);
+            });
+        }
 
     
-    document.getElementById('product_name').innerText = product_name;
-    document.getElementById('shop_id').innerText = shop_id;
-    document.getElementById('stock').innerText = stock;
-    document.getElementById('price').innerText = price;
-    document.getElementById('description').innerText = description;
-    document.getElementById('img1').innerText = img1;
-    document.getElementById('img2').innerText = img2;
-    document.getElementById('img3').innerText = img3;
-    document.getElementById('specifications').innerText = specifications;
+
     
-    console.log('List of products:', product_name, price, specifications, shop_id, description);
-});
+ // === Quantity Selector ===
+ let quantity = 1;
+ const maxStock = product.stock; // Set max stock from database
 
+ const quantityToggle = document.getElementById('quantity-toggle');
+ const quantityValue = document.getElementById('quantity-value');
 
+ quantityToggle.addEventListener('click', function (event) {
+     const clickX = event.offsetX;
+     const buttonWidth = this.clientWidth;
 
+     if (clickX < buttonWidth / 3 && quantity > 1) {
+         quantity--; // Clicked on the left (-)
+     } else if (clickX > (2 * buttonWidth) / 3 && quantity < maxStock) {
+         quantity++; // Clicked on the right (+)
+     }
 
-db.close((err) => {
-    if (err) {
-        console.error('Error closing database:', err.message);
-    } else {
-        console.log('Database connection closed.');
-    }
+     quantityValue.innerText = quantity;
+ });
+
+} catch (error) {
+    console.error('Error fetching product:', error);
+}
 });

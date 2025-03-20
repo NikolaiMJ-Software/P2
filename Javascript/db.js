@@ -1,6 +1,9 @@
 const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
 
-const db = new sqlite3.Database('./databases/click_and_collect.db', (err) => {
+const dbPath = path.join(__dirname, '../databases/click_and_collect.db');
+
+const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Error opening database:', err.message);
     } else {
@@ -53,6 +56,7 @@ db.serialize(() => {
         img4_path TEXT,
         img5_path TEXT,
         specifications TEXT,
+        discount TEXT,
         FOREIGN KEY(city_id) REFERENCES cities(id),
         FOREIGN KEY(shop_id) REFERENCES shops(id)
     )`);
@@ -92,8 +96,9 @@ db.serialize(() => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Shop inserted.');
             });
-        db.run(`INSERT INTO products (city_id, shop_id, product_name, stock, price, description, img1_path, img2_path, specifications) VALUES
-            ('1', '1', 'den grimme maskine', '10', '25', 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png', 'Den er faktisk virkelig grim')`, (err) => {
+        db.run(`INSERT INTO products (city_id, shop_id, product_name, stock, price, description, img1_path, img2_path, img3_path, specifications, discount) VALUES
+            ('1', '1', 'den grimme maskine', '10', '25', 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png',
+            'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321826.png', 'Den er faktisk virkelig grim', '30')`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('product inserted.');
             });
