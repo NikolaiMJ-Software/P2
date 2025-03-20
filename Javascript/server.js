@@ -54,6 +54,28 @@ app.get('/cities', (req, res) => {
     });
 });
 
+app.get('/product', (req, res) => {
+    const productId = req.query.id;
+    if (!productId) {
+        res.status(400).json({ error: "Product ID is required" });
+        return;
+    }
+
+    db.all(`SELECT * FROM Products WHERE id = ?`, [productId], (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+
+        if (rows.length === 0) {
+            res.status(404).json({ error: 'Product not found' });
+            return;
+        }
+
+        res.json(rows[0]); // Returns first matching product
+    });
+});
+
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });

@@ -1,13 +1,14 @@
 const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
 
-const db = new sqlite3.Database('./databases/click_and_collect.db', (err) => {
+const dbPath = path.join(__dirname, '../databases/click_and_collect.db');
+const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Error opening database:', err.message);
     } else {
         console.log('Connected to SQLite database.');
     }
 });
-
 
 
 let id = 1;
@@ -18,9 +19,31 @@ db.all(`SELECT * FROM Products WHERE id = ?`, [id], (err, rows) => {
         return;
     }
     const product_name = rows.map(row => row.product_name);
+    const shop_id = rows.map(row => row.shop_id);
+    const stock = rows.map(row => row.stock);
+    const price = rows.map(row => row.price);
+    const description = rows.map(row => row.description);
+    const img1 = rows.map(row => row.img1);
+    const img2 = rows.map(row => row.img2);
+    const img3 = rows.map(row => row.img3);
+    const specifications = rows.map(row => row.specifications);
 
-    console.log('List of products:', product_name);
+    
+    document.getElementById('product_name').innerText = product_name;
+    document.getElementById('shop_id').innerText = shop_id;
+    document.getElementById('stock').innerText = stock;
+    document.getElementById('price').innerText = price;
+    document.getElementById('description').innerText = description;
+    document.getElementById('img1').innerText = img1;
+    document.getElementById('img2').innerText = img2;
+    document.getElementById('img3').innerText = img3;
+    document.getElementById('specifications').innerText = specifications;
+    
+    console.log('List of products:', product_name, price, specifications, shop_id, description);
 });
+
+
+
 
 db.close((err) => {
     if (err) {
