@@ -1,4 +1,4 @@
-const { reservation_mails } = require('./mail_sender')
+//const { reservation_mails } = require('./mail_sender')
 
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
