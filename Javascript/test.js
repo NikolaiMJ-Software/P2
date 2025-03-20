@@ -9,7 +9,7 @@ const db = new sqlite3.Database('./databases/click_and_collect.db', (err) => {
 });
 
 
-db.all(`SELECT city FROM cities ORDER BY id ASC`, (err, rows) => {
+/*db.all(`SELECT city FROM cities ORDER BY id ASC`, (err, rows) => {
     if (err) {
         console.error('Error fetching cities:', err.message);
         return;
@@ -33,6 +33,17 @@ db.all(`SELECT image_path FROM cities ORDER BY id ASC`, (err, rows) => {
 
 
     console.log('List of images:', city_image);
+});*/
+let id = 1;
+
+db.all(`SELECT * FROM Products WHERE id = ?`, [id], (err, rows) => {
+    if (err) {
+        console.error('Error fetching products:', err.message);
+        return;
+    }
+    const product_name = rows.map(row => row.product_name);
+
+    console.log('List of products:', product_name);
 });
 
 db.close((err) => {
