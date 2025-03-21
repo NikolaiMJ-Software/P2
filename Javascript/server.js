@@ -34,23 +34,27 @@ const db = new sqlite3.Database(dbPath, (err) => {
         console.log('Connected to SQLite database.');
     }
 });
+
 // Serve main.html when accessing the root URL
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/main.html'));
 });
 
+//path to searchpage
 app.get('/searchpage', (req, res) => {
     const city = req.query.city; // Get city from query
     console.log(`City requested: ${city}`); 
     res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
 });
 
+//path to productpage
 app.get('/productpage', (req, res) => {
     const product = req.query.id; // Get product id from query
     console.log(`Product requested: ${product}`); 
     res.sendFile(path.join(__dirname, '../HTML/product_page.html'));
 });
 
+//path to singup and login pages
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/login.html'));
 });
@@ -69,6 +73,7 @@ app.get('/cities', (req, res) => {
     });
 });
 
+//api to identify the product
 app.get('/product', (req, res) => {
     const productId = req.query.id;
     if (!productId) {
@@ -91,6 +96,7 @@ app.get('/product', (req, res) => {
     });
 });
 
+//api that orders products in decending order
 app.get('/products', (req, res) => {
     db.all(`SELECT * FROM products ORDER BY id ASC`, (err, rows) => {
         if (err) {
