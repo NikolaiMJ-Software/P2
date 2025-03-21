@@ -63,5 +63,19 @@ button {
     background: white;
     border-radius: 10px;
     border: 1px solid #ccc;
-    text-align: center;
+}
+
+.productImage{
+    max-width: 200px;
+    max-height: 200px;
+    position: relative;
+    translate: 0px -75px;
+}
+
+.productName{
+    position: absolute;
+    translate: 0px -50px;
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 18px;
 }

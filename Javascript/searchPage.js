@@ -29,10 +29,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (product.city_id == currentCityId){
                 //initialize all products.
                 const productButton = document.createElement('button');
+                const productImage = document.createElement('img');
+                const productName = document.createElement('p');
 
                 //initialize all attributes.
-                productButton.textContent = product.product_name;
-                productButton.classList.add('product')
+                productButton.classList.add('product');
+
+                productImage.classList.add('productImage');
+                productImage.src = `/${product.img1_path}`;
+
+                productName.classList.add('productName');
+                productName.textContent = product.product_name;
+
 
                 //add onclick function to bring you to the specific products page
                 productButton.onclick = () => {
@@ -41,6 +49,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 //add new product to "products" class
                 productContainer.appendChild(productButton);
+                productButton.appendChild(productImage);
+                productButton.appendChild(productName);
             }
         });
         
