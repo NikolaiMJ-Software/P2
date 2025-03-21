@@ -35,19 +35,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 productButton.classList.add('product')
                 productButton.onclick = () => {
                     window.location.href = `../productpage/?id=${product.id}`;
-
-
-
                 }
-
-
-
                 productContainer.appendChild(productButton);
-
-                
             }
         });
-        
     }
     catch(err){
         console.log(err);
