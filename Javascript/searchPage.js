@@ -33,18 +33,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 //initialize all attributes.
                 productButton.textContent = product.product_name;
                 productButton.classList.add('product')
+
+                //add onclick function to bring you to the specific products page
                 productButton.onclick = () => {
                     window.location.href = `../productpage/?id=${product.id}`;
-
-
-
                 }
 
-
-
+                //add new product to "products" class
                 productContainer.appendChild(productButton);
-
-                
             }
         });
         
