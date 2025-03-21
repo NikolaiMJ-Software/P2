@@ -86,9 +86,10 @@ section {
     padding: 10px 20px;
     letter-spacing: 1px;
     border-radius: 35px;
-    background: rgba(255, 255, 255, 0.2);
+    background: white;
     border: 2px solid #4A7E8F;
 }
+
 
 .form::placeholder {
     color: black;
@@ -97,7 +98,7 @@ section {
 .form .input__box input[type="submit"] {
     color: black;
     cursor: pointer;
-    background: rgba(255, 255, 255, 0.2);
+    background: white;
     max-width: 100px;
     font-weight: 600;
     margin-bottom: 20px;
