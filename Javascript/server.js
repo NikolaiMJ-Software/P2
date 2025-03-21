@@ -1,7 +1,15 @@
-const express = require('express');
-const path = require('path');
-const nodemailer = require('nodemailer');
-const sqlite3 = require('sqlite3').verbose();
+import express from 'express';
+import path from 'path';
+import nodemailer from 'nodemailer';
+import sqlite3 from 'sqlite3';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// Get the filename and directory name of the current module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+console.log(__dirname);
 
 const app = express();
 const port = 3000;
