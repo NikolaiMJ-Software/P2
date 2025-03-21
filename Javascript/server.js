@@ -1,6 +1,15 @@
-const express = require('express');
-const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
+import express from 'express';
+import path from 'path';
+import nodemailer from 'nodemailer';
+import sqlite3 from 'sqlite3';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// Get the filename and directory name of the current module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+console.log(__dirname);
 
 const app = express();
 const port = 3000;
@@ -25,23 +34,27 @@ const db = new sqlite3.Database(dbPath, (err) => {
         console.log('Connected to SQLite database.');
     }
 });
+
 // Serve main.html when accessing the root URL
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/main.html'));
 });
 
+//path to searchpage
 app.get('/searchpage', (req, res) => {
     const city = req.query.city; // Get city from query
     console.log(`City requested: ${city}`); 
     res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
 });
 
+//path to productpage
 app.get('/productpage', (req, res) => {
     const product = req.query.id; // Get product id from query
     console.log(`Product requested: ${product}`); 
     res.sendFile(path.join(__dirname, '../HTML/product_page.html'));
 });
 
+//path to singup and login pages
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/login.html'));
 });
@@ -60,6 +73,7 @@ app.get('/cities', (req, res) => {
     });
 });
 
+//api to identify the product
 app.get('/product', (req, res) => {
     const productId = req.query.id;
     if (!productId) {
@@ -82,6 +96,7 @@ app.get('/product', (req, res) => {
     });
 });
 
+//api that orders products in decending order
 app.get('/products', (req, res) => {
     db.all(`SELECT * FROM products ORDER BY id ASC`, (err, rows) => {
         if (err) {
@@ -91,6 +106,77 @@ app.get('/products', (req, res) => {
         res.json(rows);
     });
 });
+
+
+//mail functionality
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'clickoghent@gmail.com',  // Gmail for sending emails
+        pass: 'cfzv uket bqei kkkw'      // App password
+    }
+});
+
+app.post('/reserve', (req, res) => {
+    //checks if buyer_email and product_id is available
+    const { buyer_email, product_id } = req.body;
+
+    if (!buyer_email || !product_id) {
+        return res.status(400).json({ error: 'Missing Email or Product ID' });
+    }
+
+    // Fetch product and seller email
+    db.get(
+        `SELECT products.product_name, shops.email AS seller_email 
+         FROM products 
+         JOIN shops ON products.shop_id = shops.id 
+         WHERE products.id = ?`, 
+        [product_id],
+        (err, row) => {
+            if (err) {
+                console.error('Error fetching product:', err.message);
+                return res.status(500).json({ error: 'Database error' });
+            }
+            if (!row) {
+                return res.status(404).json({ error: 'Product not found' });
+            }
+
+            // Send reservation emails
+            send_mail(
+                buyer_email,
+                'Reservation af vare på Click&Hent',
+                `Du har reserveret varen: ${row.product_name}`
+            );
+
+            send_mail(
+                row.seller_email,
+                'En af dine varer er reserveret på Click&Hent',
+                `Din vare er reserveret: ${row.product_name}`
+            );
+
+            return res.json({ message: 'Reservation successful' });
+        }
+    );
+});
+
+// Function to send emails
+function send_mail(receiver, subject, text) {
+    const mailOptions = {
+        from: 'clickoghent@gmail.com',
+        to: receiver,
+        subject: subject,
+        text: text,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error:', error);
+        } else {
+            console.log('Email sent:', info.response);
+        }
+    });
+}
+
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../CSS/productPage.css">
 </head>
 <body>
-
+    <a href="" onclick="history.back()" style="text-align: left;">Back</a>
     <div class="row">
         <!-- Product Image -->
         <div class="product-image">
@@ -39,20 +39,20 @@
                 <p class="stock" id="stock"></p>
             </div>
 
-            <script src="../Javascript/Quantity_selector.js"></script>
+
             
 
             <!-- Pricing -->
             <p class="save">Save: <span id="discount"> kr.</span></p>
             <p class="price"><span id="price"></span> kr.</p>
 
-            <script src="../Javascript/productPage.js">
-
-            </script>
-
             <!-- Add to Cart Button -->
             <button id="cart_button" class="add-to-cart">Add to cart</button>
+
         </div>
     </div>
 </body>
+<script src="../Javascript/productPage.js" defer></script>
+<script src="../Javascript/mail_sender.js" defer></script>
+<script src="../Javascript/Quantity_selector.js" defer></script>
 </html>

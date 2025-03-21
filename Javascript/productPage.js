@@ -1,3 +1,5 @@
+
+
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id'); // Get product ID from URL
@@ -22,6 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (value) document.getElementById(id).innerText = value;
         };
 
+        //update the scr attribute
         const updateImage = (id, src) => {
             if (src) {
                 console.log(`Trying to load image: ${src}`);
@@ -37,12 +40,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateElement('description', product.description);
         updateElement('discount', product.discount);
 
-
+        // reassign the path for images
         const img1Path = product.img1_path.startsWith("/") ? product.img1_path : `/${product.img1_path}`;
         const img2Path = product.img2_path.startsWith("/") ? product.img2_path : `/${product.img2_path}`;
         const img3Path = product.img3_path.startsWith("/") ? product.img3_path : `/${product.img3_path}`;
         console.log("Final image paths:", img1Path, img2Path);
-
+        // src update for specific images
         updateImage('img1', img1Path);
         updateImage('img2', img2Path);
         updateImage('img3', img3Path);
@@ -92,7 +95,8 @@ db.close((err) => {
         console.log('Database connection closed.');
     }
 });
-
+/*
+//Work in progress for reservation through button
 const button = document.getElementById("cart_button");
 button.addEventListener("click", reservation);
 function reservation() {
@@ -106,4 +110,4 @@ function reservation() {
         let email = prompt("Please enter your email", "Your email");
         reservation_mails(email, row.email, id);
     });
-}
+}*/
