@@ -31,16 +31,28 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const productButton = document.createElement('button');
                 const productImage = document.createElement('img');
                 const productName = document.createElement('p');
+                const productDesc = document.createElement('p');
+                const productPrice = document.createElement('p');
+                const productDiscount = document.createElement('p');
 
                 //initialize all attributes.
                 productButton.classList.add('product');
-
+                //image
                 productImage.classList.add('productImage');
                 productImage.src = `/${product.img1_path}`;
-
+                //name
                 productName.classList.add('productName');
                 productName.textContent = product.product_name;
-
+                //description
+                productDesc.classList.add('productDesc');
+                productDesc.textContent = product.description;
+                //price
+                productPrice.classList.add('productPrice');
+                productPrice.textContent = product.price + ",-";
+                //discount
+                productDiscount.classList.add('productDiscount');
+                if(product.discount != 0)
+                {productDiscount.textContent = "spar: " + product.discount + ",-"};
 
                 //add onclick function to bring you to the specific products page
                 productButton.onclick = () => {
@@ -51,6 +63,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 productContainer.appendChild(productButton);
                 productButton.appendChild(productImage);
                 productButton.appendChild(productName);
+                productButton.appendChild(productDesc);
+                productButton.appendChild(productPrice);
+                productButton.appendChild(productDiscount);
             }
         });
     }

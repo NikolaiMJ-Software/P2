@@ -69,13 +69,36 @@ button {
     max-width: 200px;
     max-height: 200px;
     position: relative;
-    translate: 0px -75px;
+    translate: 0px -30px;
 }
 
 .productName{
-    position: absolute;
-    translate: 0px -50px;
+    position: relative;
+    translate: 0px -30px;
     text-transform: capitalize;
+    text-decoration: underline;
     font-weight: bold;
     font-size: 18px;
+}
+
+.productDesc{
+    position: relative;
+    translate: 0px -40px;
+    justify-self: left;
+    flex-wrap: wrap;
+    font-size: 14px;
+}
+
+.productPrice{
+    position: relative;
+    translate: 0px 50px;
+    justify-self: right;
+    font-size: 24px;
+}
+
+.productDiscount{
+    position: absolute;
+    font-size: 12px;
+    translate: 217px -30px;
+    text-align: right;
 }
