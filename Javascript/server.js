@@ -95,6 +95,24 @@ app.get('/product', (req, res) => {
         res.json(rows[0]); // Returns first matching product
     });
 });
+// return products sharing the same parent_id
+app.get('/allVariants', (req, res) => {
+    const parentId = req.query.parent_id;
+
+    db.all(
+        `SELECT id, product_name, img1_path FROM products WHERE parent_id = ? OR id = ?`,
+        [parentId, parentId],
+        (err, rows) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+            } else {
+                res.json(rows);
+            }
+        }
+    );
+});
+
+
 
 //api that orders products in decending order
 app.get('/products', (req, res) => {

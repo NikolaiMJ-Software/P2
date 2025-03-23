@@ -41,13 +41,17 @@ body {
 .product-image img {
     width: 100%;
     max-width: 400px;
-    height: auto;
+    height: 300px; 
+    object-fit: contain;
+    background-color: #f8f8f8;
+    border: 1px solid #ccc; 
 }
 
 .product-var {
     display: flex;
     gap: 10px;
     margin-top: 10px;
+    min-height: 60px; /* Prevent layout shift on load */
 }
 
 .product-var img {
