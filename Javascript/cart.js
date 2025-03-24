@@ -34,7 +34,7 @@ export function remove_from_cart(product_id) {
     } else {
         //remove the element with the correct index and replaces the cookie with the new product list
         array.splice(index, 1);
-        document.cookie = `products=${array.join(",")}; path=/; max-age=86400`;
+        document.cookie = `products=${array.join(",")}`;
     }
 }
 //End of cart functionality
