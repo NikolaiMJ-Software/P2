@@ -1,19 +1,39 @@
 <!doctype html>
-<html lang="en">
-    <head>
-        <title>Signup</title>
-        <!-- Required meta tags -->
-        <meta charset="utf-8" />
-        <link rel="stylesheet" type="text/css" href="../CSS/style.css">
-    </head>
-
-    <body>
-        <a href="#" onclick="history.back()" style="text-align: left;">Back</a>
-        <div class="container">
-            <p>Signup:</p>
-            <input type="email">
-            <br>
-            <input type="password">
+<html lang="dk">
+<head>
+    <title>Opret Bruger</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../CSS/login_signup.css">
+</head>
+<body>
+    <a href="#" onclick="history.back()" style="text-align: left;">Back</a>
+    <section>
+        <div class="box">
+            <div class="container">
+                <div class="form">
+                    <h2>Opret Bruger</h2>
+                    <form id="signup-form">
+                        <div class="input__box">
+                            <input type="text" name="fornavn" placeholder="Fornavn"/>
+                        </div>
+                        <div class="input__box">
+                            <input type="text" name="efternavn" placeholder="Efternavn"/>
+                        </div>
+                        <div class="input__box">
+                            <input type="text" name="email" placeholder="Email"/>
+                        </div>
+                        <div class="input__box">
+                            <input type="password" name="password" placeholder="Password"/>
+                        </div>
+                        <div class="input__box">
+                            <input type="submit" value="Opret" />
+                        </div>
+                        <p id="error-message" style="color: red;"></p>
+                    </form>
+                </div>
+            </div>
         </div>
-    </body>
+    </section>
+</body>
+<script src="../javascript/signup.js" defer></script>
 </html>

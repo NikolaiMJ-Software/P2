@@ -5,10 +5,6 @@ import { fileURLToPath } from 'url';
 
 const router = express.Router();
 
-// Setup adgang til database
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
 
 const db = new sqlite3.Database(db_path, (err) => {
@@ -17,26 +13,27 @@ const db = new sqlite3.Database(db_path, (err) => {
     db.run("PRAGMA foreign_keys = ON;");
 });
 
-// kalder /login med en post hvor den requester password og email fra URL
+//allows user to login, by calling the /login
 router.post('/login', (req, res) => {
+    //aquire email and password from the url
     const { email, password } = req.body;
     
-    //hvis email og/eller password ikke er til stede send følgende besked
+    //if Email or password is not defined the following error message will be printed
     if (!email || !password) {
         return res.status(400).json('Email og password er nødvendig');
     }
 
     db.get(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, password], (err, user) => {
-        //hvis server error send den følgende mail
+        //if there is a server error the following message will be printed
         if (err) {
             console.error('Login error:', err);
             return res.status(500).json({ error: 'Internal server error' });
         }
-        //hvis email og/eller password er ugyldigt send følgende besked
+        //if email or password is not valid, the following error will be printed
         if (!user) {
             return res.status(401).send("Ugyldig email eller password");
         }
-
+        //redirect to main page
         return res.redirect('/');
     }
 );
