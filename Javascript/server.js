@@ -103,7 +103,7 @@ app.get('/product', (req, res) => {
 });
 // return products sharing the same parent_id
 app.get('/allVariants', (req, res) => {
-    const parentId = req.query.parent_id;
+    const parentId = Number(req.query.parent_id);
 
     db.all(
         `SELECT id, product_name, img1_path FROM products WHERE parent_id = ? OR id = ?`,
@@ -132,30 +132,28 @@ app.get('/products', (req, res) => {
 });
 
 
-//mail functionality
+//start of mail functionality
+//Authenticating sender email
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'gmail', //type of email sent (dont touch)
     auth: {
         user: 'clickoghent@gmail.com',  // Gmail for sending emails
         pass: 'cfzv uket bqei kkkw'      // App password
     }
 });
 
+//reciever function for sending reservation emails to buyer and seller
 app.post('/reserve', (req, res) => {
     //checks if buyer_email and product_id is available
     const { buyer_email, product_id } = req.body;
-
     if (!buyer_email || !product_id) {
         return res.status(400).json({ error: 'Missing Email or Product ID' });
     }
 
-    // Fetch product and seller email
+    // Check database for seller email based on product id
     db.get(
-        `SELECT products.product_name, shops.email AS seller_email 
-         FROM products 
-         JOIN shops ON products.shop_id = shops.id 
-         WHERE products.id = ?`, 
-        [product_id],
+        `SELECT products.product_name, shops.email AS seller_email FROM products JOIN shops
+        ON products.shop_id = shops.id WHERE products.id = ?`, [product_id],
         (err, row) => {
             if (err) {
                 console.error('Error fetching product:', err.message);
@@ -171,13 +169,13 @@ app.post('/reserve', (req, res) => {
                 'Reservation af vare på Click&Hent',
                 `Du har reserveret varen: ${row.product_name}`
             );
-
             send_mail(
                 row.seller_email,
                 'En af dine varer er reserveret på Click&Hent',
                 `Din vare er reserveret: ${row.product_name}`
             );
 
+            //Send reply if reservation was successful
             return res.json({ message: 'Reservation successful' });
         }
     );
@@ -185,6 +183,7 @@ app.post('/reserve', (req, res) => {
 
 // Function to send emails
 function send_mail(receiver, subject, text) {
+    //data struct for email information
     const mailOptions = {
         from: 'clickoghent@gmail.com',
         to: receiver,
@@ -192,6 +191,7 @@ function send_mail(receiver, subject, text) {
         text: text,
     };
 
+    //sending email and checking if successful
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log('Error:', error);
@@ -200,7 +200,7 @@ function send_mail(receiver, subject, text) {
         }
     });
 }
-
+//End of mail functionality
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
