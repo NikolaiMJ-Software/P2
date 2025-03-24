@@ -20,6 +20,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch('/products'); // Fetch products from the server
         const products = await response.json();
         const productContainer = document.getElementById('productList');
+        const searchInput = document.getElementById('inputProductSearch');
+        const searchForm = document.getElementById('form');
+
+        const productButtons = [];
 
         //go through products, check if city matches selected, initialize
         products.forEach(product => {
@@ -29,25 +33,71 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (product.city_id == currentCityId){
                 //initialize all products.
                 const productButton = document.createElement('button');
+                const productImage = document.createElement('img');
+                const productName = document.createElement('p');
+                const productDesc = document.createElement('p');
+                const productPrice = document.createElement('p');
+                const productDiscount = document.createElement('p');
+                productButton.dataset.product = product.product_name.toLowerCase();
 
                 //initialize all attributes.
-                productButton.textContent = product.product_name;
-                productButton.classList.add('product')
+                productButton.classList.add('product');
+                //image
+                productImage.classList.add('productImage');
+                productImage.src = `/${product.img1_path}`;
+                //name
+                productName.classList.add('productName');
+                productName.textContent = product.product_name;
+                //description
+                productDesc.classList.add('productDesc');
+                productDesc.textContent = product.description;
+                //price
+                productPrice.classList.add('productPrice');
+                productPrice.textContent = product.price + ",-";
+                //discount
+                productDiscount.classList.add('productDiscount');
+                if(product.discount != 0)
+                {productDiscount.textContent = "spar: " + product.discount + ",-"};
+
+                //add onclick function to bring you to the specific products page
                 productButton.onclick = () => {
                     window.location.href = `../productpage/?id=${product.id}`;
-
-
-
                 }
 
-
-
+                //add new product to "products" class
+                productButtons.push(productButton);
                 productContainer.appendChild(productButton);
-
-                
+                productButton.appendChild(productImage);
+                productButton.appendChild(productName);
+                productButton.appendChild(productDesc);
+                productButton.appendChild(productPrice);
+                productButton.appendChild(productDiscount);
             }
         });
-        
+
+        //Search field
+        searchInput.addEventListener('input', () => {
+            const searchValue = searchInput.value.toLowerCase();
+            console.log(searchValue);
+            productButtons.forEach(button => {
+                if (button.dataset.product.includes(searchValue)) {
+                    button.hidden = false; // Show matching cities
+                } else {
+                    button.hidden = true; // Hide non-matching cities
+                }
+            });
+        });
+
+        searchForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const searchValue = searchInput.value.trim().toLowerCase();
+            const matchingProduct = products.find(product => product.product_name.toLowerCase() === searchValue);
+
+            if (matchingProduct) {
+                // Redirect if city is found
+                window.location.href = `../productpage/?id=${encodeURIComponent(matchingProduct.id)}`;
+            }
+        });
     }
     catch(err){
         console.log(err);
