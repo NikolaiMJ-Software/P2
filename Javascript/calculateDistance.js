@@ -26,6 +26,8 @@ export async function getTravelTime() {
       // If there is a returning time (!=0), add the "time" to "travelTimes" with the beloning city
       if (time) {
         travelTimes.push({ city: city.city, time: parseInt(time) });
+      } else {
+        console.error('No route found for: ' + city.city);
       }
     } 
     // Sort "travelTimes"so the nearest city comes first
@@ -72,7 +74,6 @@ export async function calcDistance(userLat, userLon, destLat, destLon){
     return duration.slice(0, -1); // Remove "s"
 
   } catch (error) {
-    console.error("Error Maps API:", error);
     return; // Stop execution if there's an error
   }
 }
