@@ -1,16 +1,14 @@
-
-
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id'); // Get product ID from URL
+    const productId = urlParams.get('id');
 
     if (!productId) {
-        console.warn("No product ID found in URL. Using default ID: 1");
-      //  productId = 1; // Default to product ID 1
+        document.body.innerHTML = "<h1>No product ID provided.</h1>";
+        return;
     }
 
-
     try {
+        // Fetch data from the server
         const response = await fetch(`/product?id=${productId}`);
         const product = await response.json();
 
@@ -18,96 +16,155 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.body.innerHTML = `<h1>${product.error}</h1>`;
             return;
         }
+        //Get product details from the object
+        const {
+            id, parent_id,
+            product_name, shop_id, stock, price, description,
+            discount, specifications,
+            img1_path, img2_path, img3_path, img4_path, img5_path
+        } = product;
 
-        //update
+        // update text content
         const updateElement = (id, value) => {
             if (value) document.getElementById(id).innerText = value;
         };
-
-        //update the scr attribute
+        //function to update the `src` of an image by ID
         const updateImage = (id, src) => {
             if (src) {
-                console.log(`Trying to load image: ${src}`);
-                document.getElementById(id).src = src;
+                const fixedPath = src.startsWith('/') ? src : `/${src}`;
+                document.getElementById(id).src = fixedPath;
             }
         };
+        // Set the product details into the page
+        updateElement('product_name', product_name);
+        updateElement('shop_id', shop_id);
+        updateElement('stock', stock);
+        updateElement('price', price);
+        updateElement('description', description);
+        updateElement('discount', discount);
 
-        //Assign product details
-        updateElement('product_name', product.product_name);
-        updateElement('shop_id', product.shop_id);
-        updateElement('stock', product.stock);
-        updateElement('price', product.price);
-        updateElement('description', product.description);
-        updateElement('discount', product.discount);
+        // Set the main product image (img1)
+        updateImage('img1', img1_path);
 
-        // reassign the path for images
-        const img1Path = product.img1_path.startsWith("/") ? product.img1_path : `/${product.img1_path}`;
-        const img2Path = product.img2_path.startsWith("/") ? product.img2_path : `/${product.img2_path}`;
-        const img3Path = product.img3_path.startsWith("/") ? product.img3_path : `/${product.img3_path}`;
-        console.log("Final image paths:", img1Path, img2Path);
-        // src update for specific images
-        updateImage('img1', img1Path);
-        updateImage('img2', img2Path);
-        updateImage('img3', img3Path);
+        // === Dynamic image gallery
+        // Replace hardcoded thumbnails with dynamic image list
+        const imageVariants = document.getElementById('image-variants');
+        imageVariants.innerHTML = ''; //Clear any existing
 
-        // empty prior
-        if (product.specifications) {
+        // Loop through all available image paths
+        [img1_path, img2_path, img3_path, img4_path, img5_path].forEach(path => {
+            if (path && path.trim() !== '') {
+                const fixedPath = path.startsWith('/') ? path : `/${path}`;
+                
+                // Create new img element for the thumbnail
+                const thumb = document.createElement('img');
+                thumb.src = fixedPath;
+                thumb.alt = 'Extra product image';
+
+                // When clicked, the thumbnail updates the main image
+                thumb.addEventListener('click', () => {
+                    document.getElementById('img1').src = fixedPath;
+                });
+                // Add thumbnail to the gallery container
+                imageVariants.appendChild(thumb);
+            }
+        });
+
+        // === Specifications
+        // If there are specs, split them by commas and display as li elements
+        if (specifications) {
             const specList = document.getElementById('specifications');
             specList.innerHTML = '';
-            product.specifications.split(',').forEach(spec => {
+            specifications.split(',').forEach(spec => {
                 const li = document.createElement('li');
                 li.innerText = spec.trim();
                 specList.appendChild(li);
             });
         }
 
-    
+        // === Quantity Selector
+        let quantity = 1;
+        const maxStock = stock;
 
-    
- // === Quantity Selector ===
- let quantity = 1;
- const maxStock = product.stock; // Set max stock from database
+        const quantityToggle = document.getElementById('quantity-toggle');
+        const quantityValue = document.getElementById('quantity-value');
 
- const quantityToggle = document.getElementById('quantity-toggle');
- const quantityValue = document.getElementById('quantity-value');
+        /* Clicking on the left third of the button subtracts quantity
+           Clicking on the right third adds quantity*/
+        quantityToggle.addEventListener('click', function (event) {
+            const clickX = event.offsetX;
+            const buttonWidth = this.clientWidth;
 
- quantityToggle.addEventListener('click', function (event) {
-     const clickX = event.offsetX;
-     const buttonWidth = this.clientWidth;
+            if (clickX < buttonWidth / 3 && quantity > 1) {
+                quantity--;
+            } else if (clickX > (2 * buttonWidth) / 3 && quantity < maxStock) {
+                quantity++;
+            }
 
-     if (clickX < buttonWidth / 3 && quantity > 1) {
-         quantity--; // Clicked on the left (-)
-     } else if (clickX > (2 * buttonWidth) / 3 && quantity < maxStock) {
-         quantity++; // Clicked on the right (+)
-     }
+            quantityValue.innerText = quantity;
+        });
+     
+// === Fetch variants by parent_id
+try {
+        // Figure out the correct parent ID to fetch all related variants
+    const variantParentId = Number(parent_id || id); // Ensure it's a number
+    console.log("Using parent_id for variants:", variantParentId); // Debug log
 
-     quantityValue.innerText = quantity;
- });
+    // Fetch all variant products
+    const response = await fetch(`/allVariants?parent_id=${variantParentId}`);
+    const variants = await response.json();
+    console.log("Fetched variants:", variants); // Debug log
 
-} catch (error) {
-    console.error('Error fetching product:', error);
+    // Get the container where variant boxes will go
+    const container = document.getElementById('variant-container');
+    container.innerHTML = ''; // Clear any existing content
+
+    // Loop through each variant returned from the backend
+    variants.forEach((variant) => {
+        // Create a new box for the variant
+        const box = document.createElement('div');
+        box.classList.add('variant-box');
+        box.style.width = '100px';
+        box.style.height = '100px';
+        box.style.cursor = 'pointer';
+        box.style.border = '1px solid #ccc';
+        box.style.marginRight = '10px';
+
+        // Fill box with thumbnail image
+        const img = document.createElement('img');
+        const imgPath = variant.img1_path || ''; // Use variant's first image path
+
+        // Ensure the image path starts with a slash (for proper URL resolution)
+        img.src = imgPath.startsWith('/') ? imgPath : `/${imgPath}`;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.alt = variant.product_name;
+
+        // Append image to the box
+        box.appendChild(img);
+
+        // Add click to switch
+        box.addEventListener('click', () => {
+            if (variant.id !== id) {
+                window.location.href = `/productpage/?id=${variant.id}`;
+            }
+        });
+
+        // Highlight current product
+        if (variant.id === id) {
+            box.style.border = '2px solid red';
+        }
+
+        // Append the box to the container
+        container.appendChild(box);
+    });
+} catch (err) {
+    console.error("Error fetching variants:", err);
 }
-});
-db.close((err) => {
-    if (err) {
-        console.error('Error closing database:', err.message);
-    } else {
-        console.log('Database connection closed.');
+
+    } catch (error) {
+        console.error('Error loading product:', error);
+        document.body.innerHTML = `<h1>Error loading product</h1>`;
     }
 });
-/*
-//Work in progress for reservation through button
-const button = document.getElementById("cart_button");
-button.addEventListener("click", reservation);
-function reservation() {
-    db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [id], (err, row) => {
-        if(err) {
-            console.log("Could not get email from shop");
-        }
-        if(row) {
-            console.log("Succedded in getting shop email");
-        }
-        let email = prompt("Please enter your email", "Your email");
-        reservation_mails(email, row.email, id);
-    });
-}*/
