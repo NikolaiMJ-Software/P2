@@ -1,5 +1,6 @@
 import { getTravelTime } from './calculateDistance.js';
 
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch('/cities'); // Fetch cities from the server
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         /* Debugging - Check sorted array
             console.log("Sorted travel times:", travelTimes);
         */
+       
         // If travelTimes is empty the cities priority will be taken from the server
         if (travelTimes.length === 0) {
             alert("Du valgte at sige NEJ til GPS, så byerne ville blive vises som de ligger på serveren.");
