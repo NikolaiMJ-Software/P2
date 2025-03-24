@@ -7,15 +7,11 @@ import { fileURLToPath } from 'url';
 //Makes files work together
 const router = express.Router();
 
-//Sets up constants to make import functionality work
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 //Makes a path to the current database (which can't be directly interacted with)
-const dbPath = path.join(process.cwd(), 'databases', 'click_and_collect.db');
+const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
 
 //Makes a new database with data from the current database (which can be interacted with)
-const db = new sqlite3.Database(dbPath, (err) => {
+const db = new sqlite3.Database(db_path, (err) => {
     if (err) return console.error('Reserve DB error:', err.message);
     console.log('Connected to SQLite database (reserve router).');
     db.run("PRAGMA foreign_keys = ON;");
