@@ -4,56 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Page</title>
-    <link rel="stylesheet" href="../productPage.css">
+    <link rel="stylesheet" href="../CSS/productPage.css">
 </head>
 <body>
-
+    <a href="#" onclick="history.back()" style="text-align: left;">Back</a>
     <div class="row">
         <!-- Product Image -->
-    <div class="product-image">
-        <img src="test.png" alt="Product Image">
-        <div class="product-var">
-            <img src="test.png" alt="Variant 1">
-            <img src="test.png" alt="Variant 2">
+        <div class="product-image">
+            <img id="img1" src="" alt="Product Image">
+            <div class="product-var" id="image-variants"></div>
         </div>
-    </div>
 
         <!-- Product Details -->
         <div class="main">
-            <h3 class="store-name">Store Name</h3>
-            <h1 class="product-title">Product 1</h1>
-            <p class="product-description">Short description of the product...</p>
+            <h3 class="store-name" id="shop_id"></h3>
+            <h1 class="product-title" id="product_name"></h1>
+            <p class="product-description" id="description"></p>
 
-            <ul class="specifications">
-                <li>Specification 1</li><br>
-                <li>Specification 2</li><br>
-                <li>Specification 3</li><br>
-            </ul>       
+            <ul class="specifications" id="specifications"></ul>       
 
             <!-- Product Variants -->
-            <div class="variant-selection">
-                <div class="variant-box"></div>
-                <div class="variant-box"></div>
-            </div>
+            <div id="variant-container" style="display: flex;"></div>
+
 
             <!-- Quantity Selector -->
             <br><p>Quantity</p>
             <div class="quantity">
                 <button class="quantity-toggle" id="quantity-toggle">- <span id="quantity-value">1</span> +</button>
-                <p class="stock">3 products in stock</p>
+                <p class="stock" id="stock"></p>
             </div>
 
+
             
-            <script src="../Javascript/Quantity_selector.js"></script>
 
             <!-- Pricing -->
-            <p class="save">Save: 321 kr.</p>
-            <p class="price">1234 kr. <span class="discount">1555 kr.</span></p>
+            <p class="save" style="display: none;">Save: <span id="discount"></span> kr.</p>
+            <p class="price"><span id="price"></span> kr.</p>
 
             <!-- Add to Cart Button -->
-            <button class="add-to-cart">Add to cart</button>
+            <button id="cart_button" class="add-to-cart">Add to cart</button>
+
         </div>
     </div>
-
 </body>
+<script src="../Javascript/productPage.js" defer></script>
+<script src="../Javascript/mail_sender.js" defer></script>
 </html>

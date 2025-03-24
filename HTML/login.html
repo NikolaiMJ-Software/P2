@@ -1,19 +1,44 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <title>Login</title>
-        <!-- Required meta tags -->
-        <meta charset="utf-8" />
-        <link rel="stylesheet" type="text/css" href="style.css">
-    </head>
-
-    <body>
-        <button onclick="history.back()">Go Back</button>
-        <div class="container">
-            <p>Login:</p>
-            <input type="email">
-            <br>
-            <input type="password">
+<head>
+    <title>Login</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../CSS/login_signup.css">
+</head>
+<body>
+    <a href="#" onclick="history.back()" style="text-align: left;">Back</a>
+    <section>
+        <div class="colour"></div>
+        <div class="colour"></div>
+        <div class="colour"></div>
+        <div class="box">
+            <div class="square" style="--i: 0"></div>
+            <div class="square" style="--i: 1"></div>
+            <div class="square" style="--i: 2"></div>
+            <div class="square" style="--i: 3"></div>
+            <div class="square" style="--i: 4"></div>
+            <div class="container">
+                <div class="form">
+                    <h2>Login</h2>
+                    <form id="login-form">
+                        <div class="input__box">
+                            <input type="text" name="email" placeholder="Email"/>
+                        </div>
+                        <div class="input__box">
+                            <input type="password" name="password" placeholder="Password"/>
+                        </div>
+                        <div class="input__box">
+                            <input type="submit" value="Login" />
+                        </div>
+                        <p id="error-message" style="color: red;"></p>
+                    </form>
+                    <p class="forget">
+                        Don't have an account? <a href="/signup">Sign Up</a>
+                    </p>
+                </div>
+            </div>
         </div>
-    </body>
+    </section>
+    <script src="../javascript/login.js" defer></script>
+</body>
 </html>
