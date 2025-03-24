@@ -5,6 +5,9 @@ import sqlite3 from 'sqlite3';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
+//routes:
+import login_router from './routes_login.js';
+
 // Get the filename and directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,6 +19,7 @@ const port = 3000;
 
 //enable json support
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 //remove acces for, database
 app.use('/databases', (req, res)=>{
@@ -58,6 +62,8 @@ app.get('/productpage', (req, res) => {
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/login.html'));
 });
+app.use('/', login_router);
+
 app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/signup.html'));
 });

@@ -95,7 +95,7 @@ db.serialize(() => {
         });
 
         db.run(`INSERT INTO users (email, name, password) VALUES
-            ('sebastianpleygames.dk@gmail.com', 'Sebastian', '123')`, (err) => {
+            ('nikolai456654@gmail.com', 'Sebastian', '123')`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Users inserted.');
             });
