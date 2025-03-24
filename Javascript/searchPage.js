@@ -20,6 +20,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch('/products'); // Fetch products from the server
         const products = await response.json();
         const productContainer = document.getElementById('productList');
+        const searchInput = document.getElementById('inputProductSearch');
+        const searchForm = document.getElementById('form');
+
+        const productButtons = [];
 
         //go through products, check if city matches selected, initialize
         products.forEach(product => {
@@ -34,6 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const productDesc = document.createElement('p');
                 const productPrice = document.createElement('p');
                 const productDiscount = document.createElement('p');
+                productButton.dataset.product = product.product_name.toLowerCase();
 
                 //initialize all attributes.
                 productButton.classList.add('product');
@@ -60,12 +65,37 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
                 //add new product to "products" class
+                productButtons.push(productButton);
                 productContainer.appendChild(productButton);
                 productButton.appendChild(productImage);
                 productButton.appendChild(productName);
                 productButton.appendChild(productDesc);
                 productButton.appendChild(productPrice);
                 productButton.appendChild(productDiscount);
+            }
+        });
+
+        //Search field
+        searchInput.addEventListener('input', () => {
+            const searchValue = searchInput.value.toLowerCase();
+            console.log(searchValue);
+            productButtons.forEach(button => {
+                if (button.dataset.product.includes(searchValue)) {
+                    button.hidden = false; // Show matching cities
+                } else {
+                    button.hidden = true; // Hide non-matching cities
+                }
+            });
+        });
+
+        searchForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const searchValue = searchInput.value.trim().toLowerCase();
+            const matchingProduct = products.find(product => product.product_name.toLowerCase() === searchValue);
+
+            if (matchingProduct) {
+                // Redirect if city is found
+                window.location.href = `../productpage/?id=${encodeURIComponent(matchingProduct.id)}`;
             }
         });
     }
