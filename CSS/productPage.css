@@ -118,22 +118,19 @@ body {
     gap: 10px;
     justify-content: flex-start;
     margin-top: 10px;
-    margin-bottom: 10px;
-    max-width: 350px; /* 3 images + 2 gaps */
-    background: rgba(255, 0, 0, 0.1); /* light red to debug layout */
-
+    max-width: 350px;
 }
 
-
 .variant-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 60px;
     height: 60px;
     border: 2px solid black;
     background-color: #ffffff;
-    margin-bottom: -10px;
-
+    overflow: hidden;
 }
-
 /* Quantity Selector */
 .quantity {
     display: flex;

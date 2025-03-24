@@ -6,7 +6,8 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 //routes:
-import login_router from './routes_login.js';
+import login_router from './routes/routes_login.js';
+import reserve_router from './routes/routes_reserve.js';
 
 // Get the filename and directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
@@ -131,76 +132,7 @@ app.get('/products', (req, res) => {
     });
 });
 
-
-//start of mail functionality
-//Authenticating sender email
-const transporter = nodemailer.createTransport({
-    service: 'gmail', //type of email sent (dont touch)
-    auth: {
-        user: 'clickoghent@gmail.com',  // Gmail for sending emails
-        pass: 'cfzv uket bqei kkkw'      // App password
-    }
-});
-
-//reciever function for sending reservation emails to buyer and seller
-app.post('/reserve', (req, res) => {
-    //checks if buyer_email and product_id is available
-    const { buyer_email, product_id } = req.body;
-    if (!buyer_email || !product_id) {
-        return res.status(400).json({ error: 'Missing Email or Product ID' });
-    }
-
-    // Check database for seller email based on product id
-    db.get(
-        `SELECT products.product_name, shops.email AS seller_email FROM products JOIN shops
-        ON products.shop_id = shops.id WHERE products.id = ?`, [product_id],
-        (err, row) => {
-            if (err) {
-                console.error('Error fetching product:', err.message);
-                return res.status(500).json({ error: 'Database error' });
-            }
-            if (!row) {
-                return res.status(404).json({ error: 'Product not found' });
-            }
-
-            // Send reservation emails
-            send_mail(
-                buyer_email,
-                'Reservation af vare på Click&Hent',
-                `Du har reserveret varen: ${row.product_name}`
-            );
-            send_mail(
-                row.seller_email,
-                'En af dine varer er reserveret på Click&Hent',
-                `Din vare er reserveret: ${row.product_name}`
-            );
-
-            //Send reply if reservation was successful
-            return res.json({ message: 'Reservation successful' });
-        }
-    );
-});
-
-// Function to send emails
-function send_mail(receiver, subject, text) {
-    //data struct for email information
-    const mailOptions = {
-        from: 'clickoghent@gmail.com',
-        to: receiver,
-        subject: subject,
-        text: text,
-    };
-
-    //sending email and checking if successful
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error:', error);
-        } else {
-            console.log('Email sent:', info.response);
-        }
-    });
-}
-//End of mail functionality
+app.use('/', reserve_router);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
