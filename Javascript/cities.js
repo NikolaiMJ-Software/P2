@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 }
 
-                // Redirect to new page when clicking button
+                // Redirect to new page when clicking button (only Aalborg)
                 cityButton.onclick = () => {
                     if (matchingCity.city.toLowerCase() === 'aalborg') {
                     window.location.href = `../searchpage/?city=${encodeURIComponent(matchingCity.city)}`;
@@ -71,9 +71,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             const searchValue = searchInput.value.trim().toLowerCase();
             const matchingCity = cities.find(city => city.city.toLowerCase() === searchValue);
 
-            if (matchingCity) {
-                // Redirect if city is found
+            // Redirect if city is found (only Aalborg)
+            if (matchingCity.city.toLowerCase() === 'aalborg') {
                 window.location.href = `../searchpage/?city=${encodeURIComponent(matchingCity.city)}`;
+            } else {
+                alert("Byen er ikke sat op endnu.");
             }
         });
 
