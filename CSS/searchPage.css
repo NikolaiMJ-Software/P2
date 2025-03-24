@@ -58,6 +58,7 @@ button {
 }
 
 .product{
+    position: flex;
     width: 300px;
     height: 450px;
     background: white;
@@ -68,12 +69,12 @@ button {
 .productImage{
     max-width: 200px;
     max-height: 200px;
-    position: relative;
+    position: absolute;
     translate: 0px -30px;
 }
 
 .productName{
-    position: relative;
+    position: absolute;
     translate: 0px -30px;
     text-transform: capitalize;
     text-decoration: underline;
@@ -82,15 +83,16 @@ button {
 }
 
 .productDesc{
-    position: relative;
+    position: absolute;
     translate: 0px -40px;
     justify-self: left;
+    text-align: left;
     flex-wrap: wrap;
     font-size: 14px;
 }
 
 .productPrice{
-    position: relative;
+    position: absolute;
     translate: 0px 50px;
     justify-self: right;
     font-size: 24px;
