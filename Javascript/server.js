@@ -69,9 +69,9 @@ app.get('/signup', (req, res) => {
 //signup/login userability
 app.use('/', user_router);
 
-//API to get all the cities and pictures
+//API to get all the cities, pictures and coordinates 
 app.get('/cities', (req, res) => {
-    db.all(`SELECT city, image_path FROM cities ORDER BY id ASC`, (err, rows) => {
+    db.all(`SELECT city, image_path, latitude, longitude FROM cities ORDER BY id ASC`, (err, rows) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;

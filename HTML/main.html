@@ -24,25 +24,8 @@
               </svg>
             </button>
           </form>
-            <div id="city-buttons"></div>
-            <script src="../Javascript/cities.js"></script>
+        <div id="city-buttons"></div>
         </div>
-        <!--<button id="button" type="button">Get location</button>-->
+        <script type="module" src="../Javascript/cities.js"></script>
     </body>
-    <script>
-        const x = document.getElementById("demo");
-        document.getElementById("geoButton").addEventListener("click", getLocation)
-        function getLocation() {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-          } else {
-            x.innerHTML = "Geolocation is not supported by this browser.";
-          }
-        }
-        
-        function showPosition(position) {
-          x.innerHTML = "Latitude: " + position.coords.latitude +
-          "<br>Longitude: " + position.coords.longitude;
-        }
-        </script>
 </html>
