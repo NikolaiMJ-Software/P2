@@ -2,6 +2,7 @@
   "dependencies": {
     "express": "^4.21.2",
     "mailjet": "^0.0.1",
+    "node-fetch": "^3.3.2",
     "node-mailjet": "^6.0.8",
     "nodemailer": "^6.10.0",
     "resend": "^4.1.2",
