@@ -46,6 +46,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Set the main product image (img1)
         updateImage('img1', img1_path);
 
+        //Make save disapear if there is no discount
+        if (discount > 0) {
+            document.getElementById("discount").innerText = discount;
+            document.querySelector(".save").style.display = "block";
+        }
+
         // === Dynamic image gallery
         // Replace hardcoded thumbnails with dynamic image list
         const imageVariants = document.getElementById('image-variants');
