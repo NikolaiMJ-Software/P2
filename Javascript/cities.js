@@ -42,7 +42,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // Redirect to new page when clicking button
                 cityButton.onclick = () => {
+                    if (matchingCity.city.toLowerCase() === 'aalborg') {
                     window.location.href = `../searchpage/?city=${encodeURIComponent(matchingCity.city)}`;
+                    } else {
+                        alert("Byen er ikke sat op endnu.");
+                    }
                 };
 
                 // add city button
