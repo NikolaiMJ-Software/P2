@@ -112,6 +112,19 @@ body {
     margin-bottom: 10px;
 }
 
+#variant-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    max-width: 350px; /* 3 images + 2 gaps */
+    background: rgba(255, 0, 0, 0.1); /* light red to debug layout */
+
+}
+
+
 .variant-box {
     width: 60px;
     height: 60px;
