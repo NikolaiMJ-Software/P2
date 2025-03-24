@@ -97,7 +97,7 @@ app.get('/product', (req, res) => {
 });
 // return products sharing the same parent_id
 app.get('/allVariants', (req, res) => {
-    const parentId = req.query.parent_id;
+    const parentId = Number(req.query.parent_id);
 
     db.all(
         `SELECT id, product_name, img1_path FROM products WHERE parent_id = ? OR id = ?`,

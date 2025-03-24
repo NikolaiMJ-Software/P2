@@ -106,27 +106,34 @@ document.addEventListener('DOMContentLoaded', async () => {
      
 // === Fetch variants by parent_id
 try {
-    const variantBoxes = document.querySelectorAll('.variant-box');
+        // Figure out the correct parent ID to fetch all related variants
+    const variantParentId = Number(parent_id || id); // Ensure it's a number
+    console.log("Using parent_id for variants:", variantParentId); // Debug log
 
-    // Figure out the correct parent ID to fetch all related variants
-    const variantParentId = parent_id || id; // If no parent, it's the parent
-    //Fetch all variant products
+    // Fetch all variant products
     const response = await fetch(`/allVariants?parent_id=${variantParentId}`);
     const variants = await response.json();
+    console.log("Fetched variants:", variants); // Debug log
 
-    // Loop through each variant-box
-    variantBoxes.forEach((box, index) => {
-        const variant = variants[index]; // Match each box to a variant
+    // Get the container where variant boxes will go
+    const container = document.getElementById('variant-container');
+    container.innerHTML = ''; // Clear any existing content
 
-        if (!variant) {
-            box.style.display = 'none'; // Hide unused boxes
-            return;
-        }
+    // Loop through each variant returned from the backend
+    variants.forEach((variant) => {
+        // Create a new box for the variant
+        const box = document.createElement('div');
+        box.classList.add('variant-box');
+        box.style.width = '100px';
+        box.style.height = '100px';
+        box.style.cursor = 'pointer';
+        box.style.border = '1px solid #ccc';
+        box.style.marginRight = '10px';
 
         // Fill box with thumbnail image
         const img = document.createElement('img');
         const imgPath = variant.img1_path || ''; // Use variant's first image path
-        
+
         // Ensure the image path starts with a slash (for proper URL resolution)
         img.src = imgPath.startsWith('/') ? imgPath : `/${imgPath}`;
         img.style.width = '100%';
@@ -134,8 +141,7 @@ try {
         img.style.objectFit = 'cover';
         img.alt = variant.product_name;
 
-        // Clear any existing content
-        box.innerHTML = '';
+        // Append image to the box
         box.appendChild(img);
 
         // Add click to switch
@@ -149,6 +155,9 @@ try {
         if (variant.id === id) {
             box.style.border = '2px solid red';
         }
+
+        // Append the box to the container
+        container.appendChild(box);
     });
 } catch (err) {
     console.error("Error fetching variants:", err);
