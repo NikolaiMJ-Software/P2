@@ -2,7 +2,6 @@ const API_KEY = "AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ"; // Replace with yours
 const url = "https://routes.googleapis.com/directions/v2:computeRoutes"; // The URL for using the API
 
 export async function getTravelTime() {
-  console.log('Start "getTravelTime"');
   const travelTimes = [];
   try {
     // Get Users location

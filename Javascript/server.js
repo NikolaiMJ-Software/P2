@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 //routes:
-import login_router from './routes/routes_login.js';
+import user_router from './routes/routes_user.js';
 import reserve_router from './routes/routes_reserve.js';
 
 // Get the filename and directory name of the current module
@@ -63,11 +63,11 @@ app.get('/productpage', (req, res) => {
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/login.html'));
 });
-app.use('/', login_router);
-
 app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/signup.html'));
 });
+//signup/login userability
+app.use('/', user_router);
 
 //API to get all the cities, pictures and coordinates 
 app.get('/cities', (req, res) => {
