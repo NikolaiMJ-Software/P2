@@ -34,7 +34,7 @@ router.post('/login', (req, res) => {
             return res.status(401).send("Ugyldig email eller password");
         }
         //redirect to main page
-        return res.redirect('/');
+        return res.redirect(`/?email=${encodeURIComponent(email)}`);
     }
 );
     
