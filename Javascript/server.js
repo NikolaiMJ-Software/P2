@@ -42,12 +42,20 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Serve main.html when accessing the root URL
 app.get('/', (req, res) => {
+    const email = req.query.email;
+    if(email){
+        console.log(`Email requested: ${email}`); 
+    }
     res.sendFile(path.join(__dirname, '../HTML/main.html'));
 });
 
 //path to searchpage
 app.get('/searchpage', (req, res) => {
     const city = req.query.city; // Get city from query
+    const email = req.query.email;
+    if(email){
+        console.log(`Email requested: ${email}`); 
+    }
     console.log(`City requested: ${city}`); 
     res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
 });
@@ -55,6 +63,10 @@ app.get('/searchpage', (req, res) => {
 //path to productpage
 app.get('/productpage', (req, res) => {
     const product = req.query.id; // Get product id from query
+    const email = req.query.email;
+    if(email){
+        console.log(`Email requested: ${email}`); 
+    }
     console.log(`Product requested: ${product}`); 
     res.sendFile(path.join(__dirname, '../HTML/product_page.html'));
 });
