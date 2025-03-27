@@ -161,11 +161,7 @@ try {
         // Add click to switch
         box.addEventListener('click', () => {
             if (variant.id !== id) {
-                if(email){
-                    window.location.href = `/productpage/?email=${encodeURIComponent(email)}&id=${variant.id}`;
-                }else{
-                    window.location.href = `/productpage/?id=${variant.id}`;
-                }
+                window.location.href = `/productpage/?id=${variant.id}`;
             }
         });
 

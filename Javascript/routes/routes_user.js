@@ -33,8 +33,11 @@ router.post('/login', (req, res) => {
         if (!user) {
             return res.status(401).send("Ugyldig email eller password");
         }
+
+        req.session.email = user.email; //saving session mail as a cookie
+
         //redirect to main page
-        return res.redirect(`/?email=${encodeURIComponent(email)}`);
+        return res.redirect(`/`);
     }
 );
     
