@@ -28,13 +28,14 @@ app.use('/databases', (req, res)=>{
     res.statusMessage(403).send('Get Good Bozo');
 });
 
+//feature which allows there to be saved a local login
 app.use(session({
     secret: '123', //the totaly secret key for users
     resave: false,
     saveUninitialized: false,
     cookie: {secure: false}
 }));
-
+//identifies the local login, and makes it public for all parts of the server
 app.use((req, res, next) => {
     if (req.session && req.session.email) {
         // Makes it accessible in ALL routes via req.user
@@ -43,6 +44,14 @@ app.use((req, res, next) => {
         req.user = null;
     }
     next();
+});
+//checks if user is logged in or not
+app.get('/user_logged_in', (req, res)=>{
+    if(!req.user){
+        return res.json({logged_in: false});
+    }else{
+        res.json({logged_in: true, email: req.user.email});
+    }
 });
 
 

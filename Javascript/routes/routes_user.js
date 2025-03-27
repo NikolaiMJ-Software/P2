@@ -70,4 +70,15 @@ router.post('/signup', (req, res)=>{
     );
 });
 
+router.get('/logout', (req, res)=>{
+    req.session.destroy((err)=>{
+        if(err){
+            console.error("Failed to end session:", err);
+            return res.status(500).send("Log ud fejl")
+        }
+        res.clearCookie('connect.sid');
+        res.send("Du loggede ud");
+    })
+});
+
 export default router;

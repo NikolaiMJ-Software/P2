@@ -8,8 +8,9 @@
 
     <body>
       <div style="text-align: right;">
-        <button style="font-family: Arial;" onclick="window.location.href='../signup'">Signup</button>
-        <button style="font-family: Arial;" onclick="window.location.href='../login'">Login</button>
+        <button id="signup" style="font-family: Arial;" onclick="window.location.href='../signup'">Signup</button>
+        <button id="login" style="font-family: Arial;" onclick="window.location.href='../login'">Login</button>
+        <button id="logout" style="display: none;">Logout</button>
       </div>
         <div class="container">
           <h1 id="demo">Click & Hent</h1>
@@ -28,5 +29,6 @@
         <progress id="loading-progress" max="100" value="0"></progress>
         </div>
         <script type="module" src="../Javascript/cities.js"></script>
+        <script type="module" src="../Javascript/logout.js"></script>
     </body>
 </html>
