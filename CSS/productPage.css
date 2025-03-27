@@ -31,13 +31,14 @@ body {
 
 /* Product Image */
 .product-image {
-    flex: 45%;
+    flex: 1;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
-
 .product-image img {
     width: 100%;
     max-width: 400px;
@@ -57,6 +58,16 @@ body {
     padding: 8px 12px;
     border-radius: 4px;
     color: #000;
+}
+.fixed-shop-button {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    border: 1px solid #ccc;
 }
 
 
@@ -81,17 +92,21 @@ body {
 
 /* Main Product Details */
 .main {
-    flex: 50%;
-    background-color: #ffffff;
-    padding: 20px;
-    text-align: left;
+    flex: 1;
+    height: 100%;
+    overflow-y: auto; /* Make right side scrollable */
+    padding-right: 15px;
 }
 
 /* Store Name */
 .store-name {
-    font-size: 12px;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
     font-weight: bold;
-    text-transform: uppercase;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
 }
 
 /* Product Title */

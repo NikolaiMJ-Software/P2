@@ -45,6 +45,8 @@ db.serialize(() => {
         city_id INTEGER,
         img_path TEXT,
         email TEXT,
+        latitude REAL,
+        longitude REAL,
         FOREIGN KEY(city_id) REFERENCES cities(id)
     )`);
 
@@ -71,13 +73,13 @@ db.serialize(() => {
 
     db.run(`INSERT INTO cities (city, image_path, latitude, longitude) VALUES 
         ('Aalborg', 'Images/Aalborg/musikkenshus.jpg', 57.0499998, 9.916663),
-        ('København', 'Images/København/Lille_havfrue.jpg', 55.67594, 12.56553),
-        ('Aarhus', 'Images/Aarhus/gamle_by.jpg', 56.1572, 10.2107),
-        ('Odense', 'Images/Odense/H.C._Andersen_Hus.jpg', 55.39594, 10.38831),
-        ('Esbjerg', 'Images/Esbjerg/4hvidemænd.jpg', 55.47028, 8.45187),
         ('Randers', 'Images/Randers/Randers_Regnskov.jpg', 56.4607, 10.03639),
+        ('Aarhus', 'Images/Aarhus/gamle_by.jpg', 56.1572, 10.2107),
         ('Horsens', 'Images/Horsens/Horsens_Fængsel.jpg', 55.86066, 9.85034),
         ('Kolding', 'Images/Kolding/Kolding_Mini_By.jpg', 55.4904, 9.47216),
+        ('Odense', 'Images/Odense/H.C._Andersen_Hus.jpg', 55.39594, 10.38831),
+        ('Esbjerg', 'Images/Esbjerg/4hvidemænd.jpg', 55.47028, 8.45187),
+        ('København', 'Images/København/Lille_havfrue.jpg', 55.67594, 12.56553),
         ('Test', 'Images/Test/test.png', 0, 0)`, (err) => {
             if (err) console.error('Error inserting data:', err.message);
             else console.log('Cities with image paths inserted.');
@@ -95,13 +97,13 @@ db.serialize(() => {
         });
 
         db.run(`INSERT INTO users (email, name, password) VALUES
-            ('nikolai456654@gmail.com', 'Sebastian', '123')`, (err) => {
+            ('sspg.dk@gmail.com', 'Sebastian', '123')`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Users inserted.');
             });
-        db.run(`INSERT INTO shops (shop_name, city_id, img_path, email) VALUES
-            ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com'),
-            ('jerrys vare', '1', 'Images/Aalborg/jerrys_vare/jerry_logo.png', 'nikolai456654@gmail.com')`, (err) => {
+        db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude) VALUES
+            ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com', 57.04543062584897, 9.898746177297006),
+            ('jerrys vare', '1', 'Images/Aalborg/jerrys_vare/jerry_logo.png', 'nikolai456654@gmail.com', 57.04875183105469,9.921673774719238)`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Shop inserted.');
             });

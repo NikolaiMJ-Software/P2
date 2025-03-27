@@ -33,8 +33,11 @@ router.post('/login', (req, res) => {
         if (!user) {
             return res.status(401).send("Ugyldig email eller password");
         }
+
+        req.session.email = user.email; //saving session mail as a cookie
+
         //redirect to main page
-        return res.redirect(`/?email=${encodeURIComponent(email)}`);
+        return res.redirect(`/`);
     }
 );
     
@@ -65,6 +68,17 @@ router.post('/signup', (req, res)=>{
             return res.redirect("/login");
         }
     );
+});
+
+router.get('/logout', (req, res)=>{
+    req.session.destroy((err)=>{
+        if(err){
+            console.error("Failed to end session:", err);
+            return res.status(500).send("Log ud fejl")
+        }
+        res.clearCookie('connect.sid');
+        res.send("Du loggede ud");
+    })
 });
 
 export default router;

@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         //we have city name. we need city id
         const response_city = await fetch('/cities'); // Fetch cities from the server
         const cities = await response_city.json();
+
+        //Get the email from url
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
         
         let currentCityId;
         for (let i = 0; i < cities.length; i++){
@@ -65,7 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 //add onclick function to bring you to the specific products page
                 productButton.onclick = () => {
-                    window.location.href = `../productpage/?id=${product.id}`;
+                    window.location.href = `../productpage/?id=${encodeURIComponent(product.id)}`;
                 }
 
                 //add new product to "products" class
@@ -99,7 +103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (matchingProduct) {
                 // Redirect if city is found
-                window.location.href = `../productpage/?id=${encodeURIComponent(matchingProduct.id)}`;
+                window.location.href = `../productpage/?id=${encodeURIComponent(matchingProduct.product.id)}`;
             }
         });
     }

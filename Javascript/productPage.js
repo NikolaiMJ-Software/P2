@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
+    const currentCity = urlParams.get('city'); 
 
     if (!productId) {
         document.body.innerHTML = "<h1>No product ID provided.</h1>";
@@ -12,17 +13,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch(`/product?id=${productId}`);
         const product = await response.json();
 
+
         if (product.error) {
             document.body.innerHTML = `<h1>${product.error}</h1>`;
             return;
         }
+
+        //Get the email from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+
         //Get product details from the object
         const {
             id, parent_id,
-            product_name, shop_id, stock, price, description,
+            product_name, shop_id, city_id, stock, price, description,
             discount, specifications,
-            img1_path, img2_path, img3_path, img4_path, img5_path
+            img1_path, img2_path, img3_path, img4_path, img5_path,
         } = product;
+
+        const citiesResponse = await fetch('/cities');
+        const cities = await citiesResponse.json();
 
         // update text content
         const updateElement = (id, value) => {
@@ -35,9 +45,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById(id).src = fixedPath;
             }
         };
+
+        
         // Set the product details into the page
         updateElement('product_name', product_name);
-        updateElement('shop_id', shop_id);
+        /*updateElement('shop_id', shop_id);*/
         updateElement('stock', stock);
         updateElement('price', price);
         updateElement('description', description);
@@ -51,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById("discount").innerText = discount;
             document.querySelector(".save").style.display = "block";
         }
-
+        
         // === Dynamic image gallery
         // Replace hardcoded thumbnails with dynamic image list
         const imageVariants = document.getElementById('image-variants');
@@ -108,7 +120,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             quantityValue.innerText = quantity;
-        });
+        }
+    );
      
 // === Fetch variants by parent_id
 try {
@@ -168,6 +181,35 @@ try {
 } catch (err) {
     console.error("Error fetching variants:", err);
 }
+
+//fetch shopname
+try {
+    const shopResponse = await fetch(`/shop?id=${shop_id}`);
+    const shopData = await shopResponse.json();
+
+    if (shopData.shop_name) {
+        const shopBtn = document.getElementById('shop_name_button');
+        shopBtn.textContent = shopData.shop_name;
+    
+        shopBtn.addEventListener('click', () => {
+        
+            const cityMatch = cities.find(city => Number(city.id) === Number(city_id));
+            const cityName = cityMatch ? cityMatch.city : "unknown";
+            
+            //URL to the shop_page
+            let url = `/productlist?city=${encodeURIComponent(cityName)}&shop_id=${shop_id}`;
+            if (email) url += `&email=${encodeURIComponent(email)}`;
+            window.location.href = url;
+        });        
+        ;
+    }
+     else {
+        console.warn("Shop name not found");
+    }
+} catch (err) {
+    console.error("Failed to fetch shop name:", err);
+}
+
 
     } catch (error) {
         console.error('Error loading product:', error);

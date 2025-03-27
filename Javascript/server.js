@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import nodemailer from 'nodemailer';
 import sqlite3 from 'sqlite3';
+import session from 'express-session';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -27,6 +28,33 @@ app.use('/databases', (req, res)=>{
     res.statusMessage(403).send('Get Good Bozo');
 });
 
+//feature which allows there to be saved a local login
+app.use(session({
+    secret: '123', //the totaly secret key for users
+    resave: false,
+    saveUninitialized: false,
+    cookie: {secure: false}
+}));
+//identifies the local login, and makes it public for all parts of the server
+app.use((req, res, next) => {
+    if (req.session && req.session.email) {
+        // Makes it accessible in ALL routes via req.user
+        req.user = { email: req.session.email };
+    } else {
+        req.user = null;
+    }
+    next();
+});
+//checks if user is logged in or not
+app.get('/user_logged_in', (req, res)=>{
+    if(!req.user){
+        return res.json({logged_in: false});
+    }else{
+        res.json({logged_in: true, email: req.user.email});
+    }
+});
+
+
 // Serve static files (CSS, JS, images, etc.)
 app.use(express.static(path.join(__dirname, '../'))); // Serve from parent folder
 
@@ -42,34 +70,29 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Serve main.html when accessing the root URL
 app.get('/', (req, res) => {
-    const email = req.query.email;
-    if(email){
-        console.log(`Email requested: ${email}`); 
-    }
     res.sendFile(path.join(__dirname, '../HTML/main.html'));
 });
 
 //path to searchpage
 app.get('/searchpage', (req, res) => {
     const city = req.query.city; // Get city from query
-    const email = req.query.email;
-    if(email){
-        console.log(`Email requested: ${email}`); 
-    }
     console.log(`City requested: ${city}`); 
+    console.log("User:", req.user?.email);
     res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
 });
 
 //path to productpage
 app.get('/productpage', (req, res) => {
     const product = req.query.id; // Get product id from query
-    const email = req.query.email;
-    if(email){
-        console.log(`Email requested: ${email}`); 
-    }
     console.log(`Product requested: ${product}`); 
     res.sendFile(path.join(__dirname, '../HTML/product_page.html'));
 });
+
+// path to the shop page
+app.get('/productlist', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/shop_page.html'));
+});
+
 
 //path to singup and login pages
 app.get('/login', (req, res) => {
@@ -83,7 +106,7 @@ app.use('/', user_router);
 
 //API to get all the cities, pictures and coordinates 
 app.get('/cities', (req, res) => {
-    db.all(`SELECT city, image_path, latitude, longitude FROM cities ORDER BY id ASC`, (err, rows) => {
+    db.all(`SELECT id, city, image_path, latitude, longitude FROM cities ORDER BY id ASC`, (err, rows) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
@@ -131,6 +154,23 @@ app.get('/allVariants', (req, res) => {
     );
 });
 
+app.get('/shop', (req, res) => {
+    const shopId = req.query.id;
+    if (!shopId) {
+        res.status(400).json({ error: "Shop ID is required" });
+        return;
+    }
+
+    db.get(`SELECT shop_name FROM shops WHERE id = ?`, [shopId], (err, row) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+        } else if (!row) {
+            res.status(404).json({ error: "Shop not found" });
+        } else {
+            res.json(row); // just returns { shop_name: "CoolShop" }
+        }
+    });
+});
 
 
 //api that orders products in decending order

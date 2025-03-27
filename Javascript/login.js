@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const email = form.email.value;
         const password = form.password.value;
-        const encoded_email = btoa(email);
 
         const response = await fetch('/login', {
             method: 'POST',
@@ -17,10 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (response.ok) {
-            window.location.href = `/?email=${encodeURIComponent(encoded_email)}`;
+            window.location.href = `/`;
         } else {
             const errorText = await response.text();
             errorMessage.textContent = errorText;
         }
     });
 });
+
