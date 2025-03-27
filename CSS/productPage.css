@@ -31,13 +31,14 @@ body {
 
 /* Product Image */
 .product-image {
-    flex: 45%;
+    flex: 1;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
-
 .product-image img {
     width: 100%;
     max-width: 400px;
@@ -91,10 +92,10 @@ body {
 
 /* Main Product Details */
 .main {
-    flex: 50%;
-    background-color: #ffffff;
-    padding: 20px;
-    text-align: left;
+    flex: 1;
+    height: 100%;
+    overflow-y: auto; /* Make right side scrollable */
+    padding-right: 15px;
 }
 
 /* Store Name */
