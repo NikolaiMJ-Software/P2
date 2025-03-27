@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         products.forEach(product => {
             // Filter by city AND (if present) shop_id
             if (product.city_id == currentCityId && (!shopId || product.shop_id == shopId)) {
+                //initialize all products.
                 const productButton = document.createElement('button');
                 const productImage = document.createElement('img');
                 const productName = document.createElement('p');
@@ -56,7 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const productDiscount = document.createElement('p');
                 productButton.dataset.product = product.product_name.toLowerCase();
 
-                // Style + content
+                // initialize attributes
                 productButton.classList.add('product');
 
                 productImage.classList.add('productImage');
@@ -97,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
-        // 🔎 Live search
+        // search
         searchInput.addEventListener('input', () => {
             const searchValue = searchInput.value.toLowerCase();
             productButtons.forEach(button => {
@@ -105,7 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
 
-        // 🔍 Search submit
+        //  Search submit
         searchForm.addEventListener('submit', (event) => {
             event.preventDefault();
             const searchValue = searchInput.value.trim().toLowerCase();
