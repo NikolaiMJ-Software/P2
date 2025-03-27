@@ -58,6 +58,16 @@ body {
     border-radius: 4px;
     color: #000;
 }
+.fixed-shop-button {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    border: 1px solid #ccc;
+}
 
 
 .product-var {
