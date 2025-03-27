@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             id, parent_id,
             product_name, shop_id, stock, price, description,
             discount, specifications,
-            img1_path, img2_path, img3_path, img4_path, img5_path
+            img1_path, img2_path, img3_path, img4_path, img5_path,
         } = product;
 
         // update text content
@@ -40,9 +40,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById(id).src = fixedPath;
             }
         };
+
+        
         // Set the product details into the page
         updateElement('product_name', product_name);
-        updateElement('shop_id', shop_id);
+        /*updateElement('shop_id', shop_id);*/
         updateElement('stock', stock);
         updateElement('price', price);
         updateElement('description', description);
@@ -56,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById("discount").innerText = discount;
             document.querySelector(".save").style.display = "block";
         }
-
+        
         // === Dynamic image gallery
         // Replace hardcoded thumbnails with dynamic image list
         const imageVariants = document.getElementById('image-variants');
@@ -113,7 +115,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             quantityValue.innerText = quantity;
-        });
+        }
+    );
      
 // === Fetch variants by parent_id
 try {
@@ -177,6 +180,21 @@ try {
 } catch (err) {
     console.error("Error fetching variants:", err);
 }
+
+//fetch shopname
+try {
+    const shopResponse = await fetch(`/shop?id=${shop_id}`);
+    const shopData = await shopResponse.json();
+
+    if (shopData.shop_name) {
+        updateElement('shop_name', shopData.shop_name);
+    } else {
+        console.warn("Shop name not found");
+    }
+} catch (err) {
+    console.error("Failed to fetch shop name:", err);
+}
+
 
     } catch (error) {
         console.error('Error loading product:', error);

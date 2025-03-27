@@ -123,6 +123,23 @@ app.get('/allVariants', (req, res) => {
     );
 });
 
+app.get('/shop', (req, res) => {
+    const shopId = req.query.id;
+    if (!shopId) {
+        res.status(400).json({ error: "Shop ID is required" });
+        return;
+    }
+
+    db.get(`SELECT shop_name FROM shops WHERE id = ?`, [shopId], (err, row) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+        } else if (!row) {
+            res.status(404).json({ error: "Shop not found" });
+        } else {
+            res.json(row); // just returns { shop_name: "CoolShop" }
+        }
+    });
+});
 
 
 //api that orders products in decending order
