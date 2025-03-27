@@ -8,57 +8,52 @@
 
 /* Body Styling */
 body {
-    background-color: #ffffff; /* White Background */
-    color: #000000; /* Black Text */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
-}
+  }
 
 /* Main Row Layout */
 .row {
     display: flex;
-    background-color: #ffffff;
-    flex-wrap: wrap;
-    align-items: flex-start; 
-    justify-content: center;
-    width: 80%;
-    max-width: 1200px;
+    align-items: flex-start;
     gap: 40px;
-}
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+  
 
 /* Product Image */
 .product-image {
-    flex: 1;
-    height: 100%;
+    width: 45%;
+    max-width: 500px;
+    height: 600px; /* ✅ FIXED HEIGHT */
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-.product-image img {
+    justify-content: flex-start;
+  }
+  
+  .product-image img {
     width: 100%;
-    max-width: 400px;
-    height: 300px; 
-    object-fit: contain;
-    background-color: #f8f8f8;
-    border: 1px solid #ccc; 
-}
+    height: 100%;
+    object-fit: contain; /* ✅ keeps it inside the box */
+    display: block;
+  }
 
-.back-button {
-    position: absolute;
-    top: 20px;
-    left: 19vw; 
-    text-decoration: none;
-    font-size: 16px;
-    background-color: #f0f0f0;
-    padding: 8px 12px;
+  .back-button {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    color: #000;
-}
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+    z-index: 10;
+    margin-bottom: 25px;
+  }
 .fixed-shop-button {
     position: sticky;
     top: 0;
@@ -93,10 +88,8 @@ body {
 /* Main Product Details */
 .main {
     flex: 1;
-    height: 100%;
-    overflow-y: auto; /* Make right side scrollable */
-    padding-right: 15px;
-}
+    min-width: 700px;
+  }
 
 /* Store Name */
 .store-name {
