@@ -9,7 +9,11 @@ async function check_login(){
             document.getElementById('login').style.display = 'none';
             document.getElementById('signup').style.display = 'none';
             document.getElementById('logout').style.display = 'inline-block';
+            if(data.shop_id){
+                document.getElementById('shop').style.display = 'inline-block';
+            }
         }
+
     } catch (error){
         //if any error, catch it here
         console.error("Filed check up:", error);

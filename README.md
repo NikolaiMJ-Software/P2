@@ -9,7 +9,7 @@ Run "app.js"
 
 
 Color theme:
-1. Soft Forest & Lake
+Soft Forest & Lake
 
     - Pale Green – \#A8D5BA
     

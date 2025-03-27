@@ -90,23 +90,26 @@ db.serialize(() => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT UNIQUE NOT NULL,
             name TEXT,
-            password TEXT
+            password TEXT,
+            shop_id INTEGER,
+            FOREIGN KEY(shop_id) REFERENCES shops(id)
         )`, (err) => {
             if (err) console.error("Error creating table:", err.message);
             else console.log("Table 'users' created.");
         });
 
-        db.run(`INSERT INTO users (email, name, password) VALUES
-            ('sspg.dk@gmail.com', 'Sebastian', '123')`, (err) => {
-                if (err) console.error('Error inserting data:', err.message);
-                else console.log('Users inserted.');
-            });
+
         db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude) VALUES
             ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com', 57.04543062584897, 9.898746177297006),
             ('jerrys vare', '1', 'Images/Aalborg/jerrys_vare/jerry_logo.png', 'nikolai456654@gmail.com', 57.04875183105469,9.921673774719238)`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Shop inserted.');
             });
+            db.run(`INSERT INTO users (email, name, password, shop_id) VALUES
+                ('sspg.dk@gmail.com', 'Sebastian', '123', 2)`, (err) => {
+                    if (err) console.error('Error inserting data:', err.message);
+                    else console.log('Users inserted.');
+                });
         db.run(`INSERT INTO products (city_id, shop_id, product_name, stock, price, description, img1_path, img2_path, img3_path, img4_path, specifications, discount, parent_id) 
             VALUES
             (1, 1, 'den grimme maskine (hvid)', 10, 25, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png',
