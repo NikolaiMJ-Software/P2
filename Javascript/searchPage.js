@@ -69,11 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 //add onclick function to bring you to the specific products page
                 productButton.onclick = () => {
-                    if (email) {
-                        window.location.href = `../productpage/?email=${encodeURIComponent(email)}&id=${encodeURIComponent(product.id)}`;
-                    } else {
-                        window.location.href = `../productpage/?id=${encodeURIComponent(product.id)}`;
-                    }
+                    window.location.href = `../productpage/?id=${encodeURIComponent(product.id)}`;
                 }
 
                 //add new product to "products" class
@@ -107,11 +103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (matchingProduct) {
                 // Redirect if city is found
-                if (email) {
-                    window.location.href = `../productpage/?email=${encodeURIComponent(email)}&id=${encodeURIComponent(matchingProduct.id)}`;
-                } else {
-                    window.location.href = `../productpage/?id=${encodeURIComponent(matchingProduct.product.id)}`;
-                }
+                window.location.href = `../productpage/?id=${encodeURIComponent(matchingProduct.product.id)}`;
             }
         });
     }

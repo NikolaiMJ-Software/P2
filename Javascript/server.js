@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import nodemailer from 'nodemailer';
 import sqlite3 from 'sqlite3';
+import session from 'express-session';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -27,6 +28,24 @@ app.use('/databases', (req, res)=>{
     res.statusMessage(403).send('Get Good Bozo');
 });
 
+app.use(session({
+    secret: '123', //the totaly secret key for users
+    resave: false,
+    saveUninitialized: false,
+    cookie: {secure: false}
+}));
+
+app.use((req, res, next) => {
+    if (req.session && req.session.email) {
+        // Makes it accessible in ALL routes via req.user
+        req.user = { email: req.session.email };
+    } else {
+        req.user = null;
+    }
+    next();
+});
+
+
 // Serve static files (CSS, JS, images, etc.)
 app.use(express.static(path.join(__dirname, '../'))); // Serve from parent folder
 
@@ -42,10 +61,6 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Serve main.html when accessing the root URL
 app.get('/', (req, res) => {
-    const email = req.query.email;
-    if(email){
-        console.log(`Email requested: ${email}`); 
-    }
     res.sendFile(path.join(__dirname, '../HTML/main.html'));
 });
 
@@ -53,6 +68,7 @@ app.get('/', (req, res) => {
 app.get('/searchpage', (req, res) => {
     const city = req.query.city; // Get city from query
     console.log(`City requested: ${city}`); 
+    console.log("User:", req.user?.email);
     res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
 });
 
