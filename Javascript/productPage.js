@@ -16,6 +16,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.body.innerHTML = `<h1>${product.error}</h1>`;
             return;
         }
+
+        //Get the email from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+
         //Get product details from the object
         const {
             id, parent_id,
@@ -153,7 +158,11 @@ try {
         // Add click to switch
         box.addEventListener('click', () => {
             if (variant.id !== id) {
-                window.location.href = `/productpage/?id=${variant.id}`;
+                if(email){
+                    window.location.href = `/productpage/?email=${encodeURIComponent(email)}&id=${variant.id}`;
+                }else{
+                    window.location.href = `/productpage/?id=${variant.id}`;
+                }
             }
         });
 

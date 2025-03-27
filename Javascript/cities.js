@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const searchInput = document.getElementById('query');
         const searchForm = document.getElementById('form');
 
+        //Get the email from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+
         const cityButtons = [];
         let travelTimes = await getTravelTime(); // Array for holding cities and travel time
         /* Debugging - Check sorted array
@@ -43,7 +47,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Redirect to new page when clicking button (only Aalborg)
                 cityButton.onclick = () => {
                     if (matchingCity.city.toLowerCase() === 'aalborg') {
-                    window.location.href = `../searchpage/?city=${encodeURIComponent(matchingCity.city)}`;
+                        if(email){
+                            window.location.href = `../searchpage/?email=${encodeURIComponent(email)}&city=${encodeURIComponent(matchingCity.city)}`;
+                        }else{
+                            window.location.href = `../searchpage/?city=${encodeURIComponent(matchingCity.city)}`;
+                        }
                     } else {
                         alert("Byen er ikke sat op endnu.");
                     }
@@ -73,7 +81,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Redirect if city is found (only Aalborg)
             if (matchingCity.city.toLowerCase() === 'aalborg') {
-                window.location.href = `../searchpage/?city=${encodeURIComponent(matchingCity.city)}`;
+                if(email){
+                    window.location.href = `../searchpage/?email=${encodeURIComponent(email)}&city=${encodeURIComponent(matchingCity.city)}`;
+                }else{
+                    window.location.href = `../searchpage/?city=${encodeURIComponent(matchingCity.city)}`;
+                }
             } else {
                 alert("Byen er ikke sat op endnu.");
             }
