@@ -63,6 +63,12 @@ app.get('/productpage', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/product_page.html'));
 });
 
+// path to the shop page
+app.get('/productlist', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/shop_page.html'));
+});
+
+
 //path to singup and login pages
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/login.html'));
@@ -75,7 +81,7 @@ app.use('/', user_router);
 
 //API to get all the cities, pictures and coordinates 
 app.get('/cities', (req, res) => {
-    db.all(`SELECT city, image_path, latitude, longitude FROM cities ORDER BY id ASC`, (err, rows) => {
+    db.all(`SELECT id, city, image_path, latitude, longitude FROM cities ORDER BY id ASC`, (err, rows) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;

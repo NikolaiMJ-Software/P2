@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
+    const currentCity = urlParams.get('city'); 
 
     if (!productId) {
         document.body.innerHTML = "<h1>No product ID provided.</h1>";
@@ -11,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Fetch data from the server
         const response = await fetch(`/product?id=${productId}`);
         const product = await response.json();
+
 
         if (product.error) {
             document.body.innerHTML = `<h1>${product.error}</h1>`;
@@ -24,10 +26,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         //Get product details from the object
         const {
             id, parent_id,
-            product_name, shop_id, stock, price, description,
+            product_name, shop_id, city_id, stock, price, description,
             discount, specifications,
             img1_path, img2_path, img3_path, img4_path, img5_path,
         } = product;
+
+        const citiesResponse = await fetch('/cities');
+        const cities = await citiesResponse.json();
 
         // update text content
         const updateElement = (id, value) => {
@@ -187,8 +192,22 @@ try {
     const shopData = await shopResponse.json();
 
     if (shopData.shop_name) {
-        updateElement('shop_name', shopData.shop_name);
-    } else {
+        const shopBtn = document.getElementById('shop_name_button');
+        shopBtn.textContent = shopData.shop_name;
+    
+        shopBtn.addEventListener('click', () => {
+        
+            const cityMatch = cities.find(city => Number(city.id) === Number(city_id));
+            const cityName = cityMatch ? cityMatch.city : "unknown";
+            
+            //URL to the shop_page
+            let url = `/productlist?city=${encodeURIComponent(cityName)}&shop_id=${shop_id}`;
+            if (email) url += `&email=${encodeURIComponent(email)}`;
+            window.location.href = url;
+        });        
+        ;
+    }
+     else {
         console.warn("Shop name not found");
     }
 } catch (err) {
