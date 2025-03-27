@@ -37,20 +37,20 @@ app.use(session({
 }));
 //identifies the local login, and makes it public for all parts of the server
 app.use((req, res, next) => {
-    if (req.session && req.session.email) {
+    if (req.session && req.session.user) {
         // Makes it accessible in ALL routes via req.user
-        req.user = { email: req.session.email };
+        req.user = req.session.user;
     } else {
         req.user = null;
     }
     next();
 });
 //checks if user is logged in or not
-app.get('/user_logged_in', (req, res)=>{
-    if(!req.user){
-        return res.json({logged_in: false});
-    }else{
-        res.json({logged_in: true, email: req.user.email});
+app.get('/user_logged_in', (req, res) => {
+    if (!req.user) {
+        return res.json({ logged_in: false });
+    } else {
+        res.json({logged_in: true, email: req.user.email, shop_id: req.user.shop_id || null});
     }
 });
 

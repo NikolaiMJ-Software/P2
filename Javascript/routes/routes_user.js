@@ -34,7 +34,10 @@ router.post('/login', (req, res) => {
             return res.status(401).send("Ugyldig email eller password");
         }
 
-        req.session.email = user.email; //saving session mail as a cookie
+        req.session.user = {
+            email: user.email,
+            shop_id: user.shop_id
+        };//saving session user as a cookie
 
         //redirect to main page
         return res.redirect(`/`);
