@@ -89,9 +89,13 @@ body {
 
 /* Store Name */
 .store-name {
-    font-size: 12px;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
     font-weight: bold;
-    text-transform: uppercase;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
 }
 
 /* Product Title */
