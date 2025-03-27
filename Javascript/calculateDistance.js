@@ -5,52 +5,48 @@ const progressBar = document.getElementById('loading-progress');
 export async function getTravelTime() {
   const travelTimes = [];
   try {
-    // Get Users location
+    // Get user's location (latitude and longitude)
     const position = await getCurrentPositionPromise();
     const userLat = position.coords.latitude;
     const userLon = position.coords.longitude;
-    let completed = 0; // Progress bar's progress
+    let completed = 0; // Track progress for the progress bar
 
-    // Fetch cities from the server
+    // Fetch list of cities from server
     const response = await fetch('/cities');
     const cities = await response.json();
-    /* Debugging - Check output from fetch '/cities'
-      console.log(`City: ${city.city}, Latitude: ${city.latitude}, Longitude: ${city.longitude}`);
-    */
 
-    // Calculate distance fo eatch city
-    for (const city of cities) {
-      // Send user and city coordinates to the function calcDistance, and wait before continue
-      let time = await calcDistance(userLat, userLon, city.latitude, city.longitude);
-      /* Debugging - the return time and belonging city
-        console.log(`Adding: ${city.city} - ${time}s`);
-      */
-      // If there is a returning time (!=0), add the "time" to "travelTimes" with the beloning city
-      if (time) {
-        travelTimes.push({ city: city.city, time: parseInt(time) });
-      } else {
-        console.error('No route found for: ' + city.city);
-      }
-      // Progress bar, increment progress as each city is processed
-      completed++;
-      progressBar.value = (completed / cities.length) * 100; // Update the bar's value
-    } 
+    // Prepare and send requests for multiple cities simultaneously
+    const travelTimePromises = cities.map((city) => {
+      return calcDistance(userLat, userLon, city.latitude, city.longitude) // Return promise
+        .then((time) => {
+          if (time) {
+            travelTimes.push({ city: city.city, time: parseInt(time) });
+          } else {
+            console.error(`No route found for: ${city.city}`);
+          }
+          completed++;
+          progressBar.value = (completed / cities.length) * 100; // Update progress bar
+        });
+    });
 
-    //progressBar.value = 100; // Set to 100% after all cities are loaded
-    // Hide bar after loading is done
+    // Wait for all travel time calculations to complete
+    await Promise.all(travelTimePromises);
+
+    // Hide the progress bar after calculation is done
     if (progressBar.value >= 100) {
       progressBar.classList.add('hidden');
-  }
-    // Sort "travelTimes"so the nearest city comes first
+    }
+
+    // Sort travel times so the nearest city comes first
     travelTimes.sort((a, b) => a.time - b.time);
     /* Debugging - Check sorted array
       console.log("Sorted travel times:", travelTimes);
     */
-    return travelTimes;
-    
-   } catch (error) {
-    console.error("Error:", error);
-    return []; // Return empty array in case of an error
+    return travelTimes; // Return the sorted list of travel times
+
+  } catch (error) {
+    console.error("Error fetching travel times:", error);
+    return []; // Return empty array if an error occurs
   }
 }
 
