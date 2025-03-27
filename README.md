@@ -1,13 +1,14 @@
-# P2 <3
-P2 - Click and Collect webpage
+# P2
+P2 - "Click og Hent" webpage
 
-hej <3
+The project is made in VS code, remember to download
+Extensions: "SQLite" and "SQLite Viewer"
 
-et eller andet
+Run "app.js"
 
 
 
-color theme:
+Color theme:
 1. Soft Forest & Lake
 
     - Pale Green – \#A8D5BA

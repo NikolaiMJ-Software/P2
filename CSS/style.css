@@ -100,3 +100,26 @@ button {
     transform: scale(1.05);
     opacity: 0.9;
 }
+
+progress {
+    position: fixed;  /* Fix it to stay at the top */
+    top: 0;           /* Align at the very top of the page */
+    left: 0;          /* Stretch from the left */
+    width: 100%;      /* Full page width */
+    height: 3px;      /* Thin loading bar height */
+    z-index: 9999;    /* Ensure it stays on top of all other elements */
+    background-color: #f0f0f0; /* Background of the progress bar */
+    border: none;
+}
+
+#loading-progress::-webkit-progress-value {
+    background-color: #5E96A2;  /* Green color for the filled part */
+}
+
+#loading-progress::-moz-progress-bar {
+    background-color: #5E96A2;  /* Firefox compatibility */
+}
+
+.hidden {
+    display: none; /* Completely hide the progress bar */
+}

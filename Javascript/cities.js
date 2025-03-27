@@ -1,5 +1,6 @@
 import { getTravelTime } from './calculateDistance.js';
 
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch('/cities'); // Fetch cities from the server
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         /* Debugging - Check sorted array
             console.log("Sorted travel times:", travelTimes);
         */
+       
         // If travelTimes is empty the cities priority will be taken from the server
         if (travelTimes.length === 0) {
             alert("Du valgte at sige NEJ til GPS, så byerne ville blive vises som de ligger på serveren.");
@@ -38,9 +40,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 }
 
-                // Redirect to new page when clicking button
+                // Redirect to new page when clicking button (only Aalborg)
                 cityButton.onclick = () => {
+                    if (matchingCity.city.toLowerCase() === 'aalborg') {
                     window.location.href = `../searchpage/?city=${encodeURIComponent(matchingCity.city)}`;
+                    } else {
+                        alert("Byen er ikke sat op endnu.");
+                    }
                 };
 
                 // add city button
@@ -65,9 +71,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             const searchValue = searchInput.value.trim().toLowerCase();
             const matchingCity = cities.find(city => city.city.toLowerCase() === searchValue);
 
-            if (matchingCity) {
-                // Redirect if city is found
+            // Redirect if city is found (only Aalborg)
+            if (matchingCity.city.toLowerCase() === 'aalborg') {
                 window.location.href = `../searchpage/?city=${encodeURIComponent(matchingCity.city)}`;
+            } else {
+                alert("Byen er ikke sat op endnu.");
             }
         });
 

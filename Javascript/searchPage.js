@@ -50,7 +50,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 productName.textContent = product.product_name;
                 //description
                 productDesc.classList.add('productDesc');
-                productDesc.textContent = product.description;
+                if (product.description.length > 75){
+                    productDesc.textContent = product.description.slice(0, 75);
+                    productDesc.textContent += "...";
+                }
+                else productDesc.textContent = product.description;
                 //price
                 productPrice.classList.add('productPrice');
                 productPrice.textContent = product.price + ",-";

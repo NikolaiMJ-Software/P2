@@ -1,5 +1,6 @@
 const API_KEY = "AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ"; // Replace with yours Google API-key
 const url = "https://routes.googleapis.com/directions/v2:computeRoutes"; // The URL for using the API
+const progressBar = document.getElementById('loading-progress');
 
 export async function getTravelTime() {
   const travelTimes = [];
@@ -8,6 +9,7 @@ export async function getTravelTime() {
     const position = await getCurrentPositionPromise();
     const userLat = position.coords.latitude;
     const userLon = position.coords.longitude;
+    let completed = 0; // Progress bar's progress
 
     // Fetch cities from the server
     const response = await fetch('/cities');
@@ -29,7 +31,16 @@ export async function getTravelTime() {
       } else {
         console.error('No route found for: ' + city.city);
       }
+      // Progress bar, increment progress as each city is processed
+      completed++;
+      progressBar.value = (completed / cities.length) * 100; // Update the bar's value
     } 
+
+    //progressBar.value = 100; // Set to 100% after all cities are loaded
+    // Hide bar after loading is done
+    if (progressBar.value >= 100) {
+      progressBar.classList.add('hidden');
+  }
     // Sort "travelTimes"so the nearest city comes first
     travelTimes.sort((a, b) => a.time - b.time);
     /* Debugging - Check sorted array
