@@ -1,18 +1,6 @@
-import { stringify } from "querystring";
-
-//Makes a path to the current database (which can't be directly interacted with)
-const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
-
-//Makes a new database with data from the current database (which can be interacted with)
-const db = new sqlite3.Database(db_path, (err) => {
-    if (err) return console.error('Reserve DB error:', err.message);
-    console.log('Connected to SQLite database (reserve router).');
-    db.run("PRAGMA foreign_keys = ON;");
-});
-
 //Start of cart functionality
 //Function that adds product to item cart which is stored in cookies
-export function add_to_cart(product_id) {
+function add_to_cart(product_id) {
     //Check if product_id is a number
     if(!Number.isInteger(product_id)) {
         console.error("Invalid product id for adding to cart");
@@ -23,13 +11,13 @@ export function add_to_cart(product_id) {
     if(!products) {
         document.cookie = `products=${product_id}`
     } else {
-        products += ',' + stringify(product_id);
+        products += ',' + product_id;
         document.cookie = `products=${products}`
     }
 }
 
 //Function that removes an item from the cart
-export function remove_from_cart(product_id) {
+function remove_from_cart(product_id) {
     //Get the cookies and split them into an array of strings for the product id's
     let array = getCookie("products").split(",");
     //Find the index that makes the function check_number return true
@@ -47,29 +35,87 @@ export function remove_from_cart(product_id) {
         document.cookie = `products=${array.join(",")}`;
     }
 }
+
+//Function to get a specific cookie (relevant for other functions, taken from internet)
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
 //End of cart functionality
 
 //Start of cart.html functionality
+//Fetch product data from database
+console.log("Fetching product data...");
+const response = await fetch('/products'); // Fetch products from the server
+const products = await response.json();
 
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        console.log("TEST");
-        let data = getCookie("products").split(",").map(Number);
-        const tableBody = document.querySelector("#cart tbody");
-        data.forEach(product => {
-            let remove_button = document.createElement("BUTTON");
-            remove_button.setAttribute("id", product)
-            let row = document.createElement("tr");
-            row.innerHTML =
-            `<td>${db.get(`SELECT product_name FROM products WHERE id = ?`, [product])}</td>
-            <td>${db.get(`SELECT price FROM products WHERE id = ?`, [product])}</td>
-            <td>${remove_button}</td>`;
-            tableBody.appendChild(row);
-        });
-    }
-    catch(error){
-        console.error("There was a problem loading your cart", error);
-    }
-});
+//Function for filling data table for cart
+function fill_table() {
+    console.log("Filling table...");
+    //Gets cart data from the cookie, and check if the there even is data
+    let data = getCookie("products")
+    if (!data) return;
+    data = data.split(",").map(Number);
+    //Gets the location of the element that new rows will go into
+    const tableBody = document.querySelector("#cart tbody");
+    //forEach function that fills each row with product data and button
+    data.forEach(product => {
+        //creates row
+        let row = document.createElement("tr");
 
+        //creates and fills product name element
+        let name_element = document.createElement("td");
+        name_element.textContent = products[product].product_name;
+
+        //creates and fills product price element
+        let price_element = document.createElement("td");
+        price_element.textContent = products[product].price;
+
+        //creates preset button to remove product from cart, 
+        let button_element = document.createElement("td")
+        let remove_button = document.createElement("BUTTON");
+        remove_button.textContent = "Remove";
+        remove_button.addEventListener("click", () => remove_from_table(product));
+        //adds button to a element in the row
+        button_element.appendChild(remove_button);
+
+        //adds all elements as a child to the row, and the row as a child to the table
+        row.appendChild(name_element);
+        row.appendChild(price_element);
+        row.appendChild(button_element);
+        tableBody.appendChild(row);
+    });
+}
+
+//function to remove a product from cart, and refresh table
+function remove_from_table(product_id) {
+    console.log("Removed product with id " + product_id)
+    //removes product from cookie cart
+    remove_from_cart(product_id);
+    //resets table
+    const tableBody = document.querySelector("#cart tbody");
+    tableBody.innerHTML = "";
+    //fills table again
+    fill_table();
+}
+
+//Function that starts automatically fills the table when site has loaded
+while(1) {
+    if (document.readyState !== 'loading') {
+        fill_table();
+        break;
+    }
+}
 //End of cart.html functionality
