@@ -23,9 +23,28 @@
           </form>
     </div>
 
+    <!-- Filter Menu -->
+    <div class="filter-menu">
+      <button id="filterButton">Brug filter</button>
+      <div id="filterDropdown" class="dropdown-content hidden">
+        <label>
+          <input type="checkbox" id="distanceFilter" value="distance"> Efter afstand
+        </label>
+          <!--  Template for more filters
+          <label>
+              <input type="checkbox" id="openNowFilter" value="openNow"> Kun butikker åbne nu
+          </label>
+          -->
+          <button id="applyFiltersButton">Tilføj filtre</button>
+      </div>
+    </div>
+
+    <progress id="loading-progress" value="0" max="100"></progress>
+
     <!--main class "products" to be filled out with lots of smaller products with unique specifics-->
     <main class="products" id="productList"></main>
 
     <script src="../Javascript/searchPage.js"></script>
+    <script type="module" src="../Javascript/filter.js"></script>
 </body>
 </html>
