@@ -9,6 +9,7 @@ import { dirname } from 'path';
 //routes:
 import user_router from './routes/routes_user.js';
 import reserve_router from './routes/routes_reserve.js';
+import shop_dashboard_router from './routes/routes_shop_dashboard.js';
 
 // Get the filename and directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
@@ -157,22 +158,26 @@ app.get('/allVariants', (req, res) => {
 app.get('/shop', (req, res) => {
     const shopId = req.query.id;
 
-    if (!shopId) {
-        res.status(400).json({ error: "Shop ID is required" });
-        return;
+    if (shopId) {
+        // Fetch a specific shop by ID
+        db.get(`SELECT id, shop_name, latitude, longitude FROM shops WHERE id = ?`, [shopId], (err, row) => {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            if (!row) {
+                return res.status(404).json({ error: "Shop not found" });
+            }
+            res.json(row); // Return one shop object
+        });
+    } else {
+        // Fetch all shops
+        db.all(`SELECT id, shop_name, latitude, longitude FROM shops`, (err, rows) => {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            res.json(rows); // Return all shops
+        });
     }
-
-    db.get(`SELECT id, shop_name, latitude, longitude FROM shops WHERE id = ?`, [shopId], (err, row) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        if (!row) {
-            res.status(404).json({ error: "Shop not found" });
-            return;
-        }
-        res.json(row); //  returns one shop object
-    });
 });
 
 //api that orders products in decending order
@@ -187,6 +192,8 @@ app.get('/products', (req, res) => {
 });
 
 app.use('/', reserve_router);
+
+app.use('/', shop_dashboard_router);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

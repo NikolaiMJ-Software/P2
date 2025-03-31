@@ -10,7 +10,12 @@ async function check_login(){
             document.getElementById('signup').style.display = 'none';
             document.getElementById('logout').style.display = 'inline-block';
             if(data.shop_id){
-                document.getElementById('shop').style.display = 'inline-block';
+                const dashboard = document.getElementById('shop');
+                dashboard.style.display = 'inline-block';
+
+                dashboard.addEventListener('click', ()=>{
+                    window.location.href = '/shop_dashboard';
+                });
             }
         }
 

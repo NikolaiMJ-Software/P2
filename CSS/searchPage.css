@@ -2,6 +2,12 @@ body {
     background: whitesmoke;
 }
 
+#cart {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 .productHeader{
     display: flex;
     flex-direction: column;
@@ -166,4 +172,6 @@ progress {
 
 .hidden {
     display: none; /* Completely hide the progress bar */
-}
+
+    
+    

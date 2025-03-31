@@ -4,7 +4,7 @@ body {
     align-items: center; /* Center vertically */
     height: 120vh; /* Full screen height */
     margin: 0;
-    background-color: whitesmoke;
+    background-color: var(--page-bg);;
     flex-wrap: wrap;
 }
 
@@ -21,6 +21,7 @@ h1 {
     font-family: Lucida, serif;
     margin-bottom: 80px;
     font-size: 44px;
+    color: var(--primary-text);
 }
 
 /* Style the search bar */
@@ -31,8 +32,14 @@ form {
     border-radius: 10px;
     overflow: hidden;
     width: 400px; /* Adjust width */
-    background-color: white;
+    background-color: var(--form-bg); 
+    
 }
+
+::placeholder {
+    color: var(--form-ph); 
+}
+
 
 /* Style the input field */
 input {
@@ -41,6 +48,8 @@ input {
     font-size: 20px;
     flex-grow: 1;
     outline: none;
+    background-color: var(--form-bg);
+
 }
 
 /* Style the search button */
@@ -123,3 +132,96 @@ progress {
 .hidden {
     display: none; /* Completely hide the progress bar */
 }
+
+
+/* skal indsættes i header filen */
+
+#theme-switcher {
+    background-color: var(--switch-bg);
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 1.33rem;
+    cursor: pointer;
+    padding: 0.66rem;
+    position: relative;
+    transform: var(--default-border-radius);
+    max-width: 80px;  
+    max-height: 25px;
+    translate: 10px 10px;
+
+}
+
+#theme-switcher::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: var(--switch-circle-bg);
+    border-radius: 50px;
+    z-index: 0;
+    left: 0;
+    transform: translateX(var(--switch-circle-position));
+    transition: var(--default-transition);
+}
+
+#theme-switcher svg {
+    z-index: 1;
+    transition: var(--default-transition);
+}
+    
+
+#icon-sun {
+    fill: var(--icon-sun);
+    
+}
+
+#icon-moon {
+    fill: var(--icon-moon);
+}
+
+
+/* under root indsættes selve cirklen der skal skifte tema */
+
+:root[data-theme="light"] {
+    --page-bg:WHITE ;
+    --primary-text:Black ;
+
+
+
+    --switch-bg: #c1c1c1;
+    --switch-circle-bg: #FFD371;
+    --switch-circle-position: 5px;
+    --icon-sun: #dfb041;
+    --icon-moon: #B1B0B5;
+    --form-bg: #eeeeee;
+    --form-ph: grey;
+
+}
+
+
+:root[data-theme="dark"] {
+    --page-bg:#383643;
+    --primary-text: WHITE ;
+
+    --switch-bg: #49494c;
+    --switch-circle-bg: #7190FF;
+    --switch-circle-position: 55px;
+    --icon-sun: #545457;
+    --icon-moon: #DCE3FF;
+    --form-bg: #2B2A35;
+    --form-ph: grey;
+
+} 
+
+
+:root {
+    --default-border-radius: 8px;
+    --default-transition: color .3s ease-in-out,
+                          background-color .3s ease-in-out,
+                          border-color .3s ease-in-out,
+                          fill .3s ease-in-out,
+                          transform .3s ease-in-out;
+}
+
+
