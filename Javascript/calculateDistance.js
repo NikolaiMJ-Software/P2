@@ -16,7 +16,7 @@ export async function getTravelTime(destination) {
       return calcDistance(userLat, userLon, place.latitude, place.longitude) // Return promise
         .then((time) => {
           if (time) {
-            travelTimes.push({ name: place.city || place.shop_name, time: parseInt(time) });
+            travelTimes.push({ name: place.city || place.shop_name, ...(place.shop_name && { id: place.id }), time: parseInt(time) });
           } else {
             console.error(`No route found for: ${place.city || place.shop_name}`);
           }

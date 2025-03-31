@@ -1,3 +1,4 @@
+import { filters } from './filter.js';
 let currentCity = new URLSearchParams(window.location.search).get(`city`);
 document.getElementById("h1ProductPage").textContent = currentCity; //changes title of page to city
 
@@ -22,12 +23,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log(currentCityId);
 
         const response = await fetch('/products'); // Fetch products from the server
-        const products = await response.json();
+        let products = await response.json();
         const productContainer = document.getElementById('productList');
         const searchInput = document.getElementById('inputProductSearch');
         const searchForm = document.getElementById('form');
-
+    
         const productButtons = [];
+
+        // Get user selected filters, when clicked
+        /*
+        send only the product for the city
+        */
+        document.getElementById('applyFiltersButton').addEventListener('click', async () => {
+            filterDropdown.classList.add('hidden');
+            products = await filters(products);
+            console.log('Sorted list' + products);
+        });
 
         //go through products, check if city matches selected, initialize
         products.forEach(product => {
