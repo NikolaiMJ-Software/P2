@@ -41,10 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Reservation fejlede:", error);
           alert("Reservation fejlede. Venligst prøv igen.");
       }
-          */
+          
   });
 });
-
+*/
 
 
 
