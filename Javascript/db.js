@@ -21,10 +21,15 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 
 db.serialize(() => {
+    db.run(`DROP TABLE IF EXISTS users`);
     db.run(`DROP TABLE IF EXISTS products`);
+    db.run(`DROP TABLE IF EXISTS users`);
     db.run(`DROP TABLE IF EXISTS shops`);
     db.run(`DROP TABLE IF EXISTS cities`);
-    db.run(`DROP TABLE IF EXISTS users`);
+<<<<<<< HEAD
+=======
+
+>>>>>>> f500c9d41b4bdb478734b0ccd493227a74ad06ae
 
     db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -119,11 +124,11 @@ db.serialize(() => {
         
             
             (1, 2, 'Eiffeltårnet', 1, 1000900, 'Du skal selv hente den', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel1.jpg', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel2.webp',
-            'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel3.jpg', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel4.webp', 'Den er virkelig høj, og lavet af franskmænd', 0, NULL),
+            'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel3.jpg', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel4.webp', 'Den er virkelig høj, og lavet af franskmænd', 20, NULL),
             
             (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Black)', 100, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
             'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black3.png',
-            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, NULL),
+            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 240, NULL),
 
                 (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Blue)', 43, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
                 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_blue/titanium_blue1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_blue/titanium_blue2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_blue/titanium_blue3.png',

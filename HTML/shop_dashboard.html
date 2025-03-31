@@ -4,15 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Click & Hent</title>
-    <link rel="stylesheet" type="text/css" href="../CSS/searchPage.css">
+    <link rel="stylesheet" type="text/css" href="../CSS/shop_dashboard.css">
 </head>
 <body>
-  <a href="/HTML/cart.html">
-    <button id="cart" type="button">Din kurv</button>
-  </a>
   <a href="#" onclick="history.back()" style="text-align: left;">Back</a>
     <!--Class for title + input to make them align perfectly and be over/under-->
-    <div class="productHeader">
         <h1 id="h1ProductPage"></h1>
         <form id="form"> 
             <input type="search" id="inputProductSearch" placeholder="Søg efter et produkt...">
@@ -24,30 +20,7 @@
               </svg>
             </button>
           </form>
-    </div>
-
-    <!-- Filter Menu -->
-    <div class="filter-menu">
-      <button id="filterButton">Brug filter</button>
-      <div id="filterDropdown" class="dropdown-content hidden">
-        <label>
-          <input type="checkbox" id="distanceFilter" value="distance"> Efter afstand
-        </label>
-          <!--  Template for more filters
-          <label>
-              <input type="checkbox" id="openNowFilter" value="openNow"> Kun butikker åbne nu
-          </label>
-          -->
-          <button id="applyFiltersButton">Tilføj filtre</button>
-      </div>
-    </div>
-
-    <progress id="loading-progress" value="0" max="100"></progress>
-
-    <!--main class "products" to be filled out with lots of smaller products with unique specifics-->
-    <main class="products" id="productList"></main>
-
-    <script type="module" src="../Javascript/searchPage.js"></script>
-    <script type="module" src="../Javascript/filter.js"></script>
+          <div id="product_list" class="product-list"></div>
+          <script type="module" src="../Javascript/shop_dashboard.js"></script>
 </body>
 </html>

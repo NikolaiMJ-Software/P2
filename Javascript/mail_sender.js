@@ -1,6 +1,4 @@
-
-
-
+/*
 document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("cart_button");
   
@@ -17,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
           alert("Product ID not found!");
           return;
       }
-
+      
       const buyerEmail = prompt("Skriv din email her:");
 
       if (!buyerEmail) {
@@ -43,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Reservation fejlede:", error);
           alert("Reservation fejlede. Venligst prøv igen.");
       }
+          */
   });
 });
 

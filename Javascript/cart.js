@@ -1,18 +1,20 @@
 //Start of cart functionality
 //Function that adds product to item cart which is stored in cookies
 function add_to_cart(product_id) {
+    product_id = parseInt(product_id);
     //Check if product_id is a number
     if(!Number.isInteger(product_id)) {
         console.error("Invalid product id for adding to cart");
     }
     //Get the cookies
     let products = getCookie("products");
+    console.log(products);
     //Make a new cookie if this is the first item in the cart, otherwise add to existing cart
     if(!products) {
-        document.cookie = `products=${product_id}`
+        document.cookie = `products=${product_id}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     } else {
         products += ',' + product_id;
-        document.cookie = `products=${products}`
+        document.cookie = `products=${products}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     }
 }
 
@@ -32,7 +34,7 @@ function remove_from_cart(product_id) {
     } else {
         //remove the element with the correct index and replaces the cookie with the new product list
         array.splice(index, 1);
-        document.cookie = `products=${array.join(",")}`;
+        document.cookie = `products=${array.join(",")};path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
     }
 }
 
@@ -66,7 +68,10 @@ function fill_table() {
     console.log("Filling table...");
     //Gets cart data from the cookie, and check if the there even is data
     let data = getCookie("products")
-    if (!data) return;
+    if (!data) {
+        console.log("Could not load cart...");
+        return;
+    }
     data = data.split(",").map(Number);
     //Gets the location of the element that new rows will go into
     const tableBody = document.querySelector("#cart tbody");
@@ -111,9 +116,21 @@ function remove_from_table(product_id) {
     fill_table();
 }
 
+const button = document.getElementById("cart_button");
+if(button != null) {
+    button.addEventListener("click", async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+        add_to_cart(productId);
+        alert("Du puttet varen i din kurv");
+    });
+}
+
 //Function that starts automatically fills the table when site has loaded
 while(1) {
     if (document.readyState !== 'loading') {
+        let data = getCookie("products");
+        console.log(data);
         fill_table();
         break;
     }
