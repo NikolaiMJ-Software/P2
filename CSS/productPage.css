@@ -27,7 +27,7 @@ body {
 .product-image {
     width: 45%;
     max-width: 500px;
-    height: 600px; /* ✅ FIXED HEIGHT */
+    height: 600px; 
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -37,7 +37,7 @@ body {
   .product-image img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* ✅ keeps it inside the box */
+    object-fit: contain;
     display: block;
   }
 
