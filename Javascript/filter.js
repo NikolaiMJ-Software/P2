@@ -3,7 +3,6 @@ import { getTravelTime } from './calculateDistance.js';
 document.addEventListener("DOMContentLoaded", async () => {
     const filterButton = document.getElementById('filterButton');
     const filterDropdown = document.getElementById('filterDropdown');
-    const applyFiltersButton = document.getElementById('applyFiltersButton');
 
     // Hide the dropdown menu when the filter button is clicked
     filterButton.addEventListener('click', () => {
@@ -33,7 +32,7 @@ export async function filters(products) {
                     }
                 }
             }
-            console.log();
+            console.log('shopsSortedId: ' + shopsSortedId);
             // Change so the products in the first shop is showed first
             for (let i = 0; i < products.shop_id.length; i++){
                 if (products.shop_id[i] === shops.id){

@@ -158,22 +158,26 @@ app.get('/allVariants', (req, res) => {
 app.get('/shop', (req, res) => {
     const shopId = req.query.id;
 
-    if (!shopId) {
-        res.status(400).json({ error: "Shop ID is required" });
-        return;
+    if (shopId) {
+        // Fetch a specific shop by ID
+        db.get(`SELECT id, shop_name, latitude, longitude FROM shops WHERE id = ?`, [shopId], (err, row) => {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            if (!row) {
+                return res.status(404).json({ error: "Shop not found" });
+            }
+            res.json(row); // Return one shop object
+        });
+    } else {
+        // Fetch all shops
+        db.all(`SELECT id, shop_name, latitude, longitude FROM shops`, (err, rows) => {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            res.json(rows); // Return all shops
+        });
     }
-
-    db.get(`SELECT id, shop_name, latitude, longitude FROM shops WHERE id = ?`, [shopId], (err, row) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        if (!row) {
-            res.status(404).json({ error: "Shop not found" });
-            return;
-        }
-        res.json(row); //  returns one shop object
-    });
 });
 
 //api that orders products in decending order
