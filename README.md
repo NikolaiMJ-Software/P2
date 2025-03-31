@@ -2,9 +2,21 @@
 P2 - "Click og Hent" webpage
 
 The project is made in VS code, remember to download
-Extensions: "SQLite" and "SQLite Viewer"
+Install: VS code
+Install: (standart: ” 64-bit Git for Windows Setup”) https://git-scm.com/downloads/win
+and "node.js" https://nodejs.org/en
 
-Run "app.js"
+Open VS Code:
+Press: ctrl+shift+p
+Write: ”gir: clone”, click enter
+Insert: https://github.com/NikolaiMJ-Software/P2.git
+
+Install packet:
+ctrl+shift+x
+”Code Runner”
+
+Run:
+"app.js"
 
 
 
