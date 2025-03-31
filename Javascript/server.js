@@ -155,15 +155,25 @@ app.get('/allVariants', (req, res) => {
 });
 
 app.get('/shop', (req, res) => {
-    db.all(`SELECT id, shop_name, latitude, longitude FROM shops`, (err, rows) => {
+    const shopId = req.query.id;
+
+    if (!shopId) {
+        res.status(400).json({ error: "Shop ID is required" });
+        return;
+    }
+
+    db.get(`SELECT id, shop_name, latitude, longitude FROM shops WHERE id = ?`, [shopId], (err, row) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
         }
-        res.json(rows); // Return all shops with their latitude and longitude
+        if (!row) {
+            res.status(404).json({ error: "Shop not found" });
+            return;
+        }
+        res.json(row); //  returns one shop object
     });
 });
-
 
 //api that orders products in decending order
 app.get('/products', (req, res) => {
