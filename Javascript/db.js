@@ -21,10 +21,10 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 
 db.serialize(() => {
+    db.run(`DROP TABLE IF EXISTS users`);
     db.run(`DROP TABLE IF EXISTS products`);
     db.run(`DROP TABLE IF EXISTS shops`);
     db.run(`DROP TABLE IF EXISTS cities`);
-    db.run(`DROP TABLE IF EXISTS users`);
 
     db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
