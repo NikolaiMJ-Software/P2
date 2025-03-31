@@ -155,7 +155,7 @@ app.get('/allVariants', (req, res) => {
 });
 
 app.get('/shop', (req, res) => {
-    db.all(`SELECT shop_name, latitude, longitude FROM shops`, (err, rows) => {
+    db.all(`SELECT id, shop_name, latitude, longitude FROM shops`, (err, rows) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
