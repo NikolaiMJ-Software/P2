@@ -78,6 +78,7 @@ button {
 }
 
 .productName{
+    display: block;
     position: absolute;
     text-transform: capitalize;
     text-decoration: underline;
