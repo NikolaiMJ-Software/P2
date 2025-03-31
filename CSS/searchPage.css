@@ -78,6 +78,7 @@ button {
 }
 
 .productName{
+    display: inline-block;
     position: absolute;
     text-transform: capitalize;
     text-decoration: underline;
@@ -92,6 +93,7 @@ button {
     overflow: hidden;
     max-height: 3.6em;
     line-height: 1.2em;
+    text-align: center;
 }
 
 
