@@ -186,7 +186,7 @@ try {
 try {
     const shopResponse = await fetch(`/shop?id=${shop_id}`);
     const shopData = await shopResponse.json();
-
+console.log(shop_id);
     if (shopData.shop_name) {
         const shopBtn = document.getElementById('shop_name_button');
         shopBtn.textContent = shopData.shop_name;
