@@ -87,6 +87,11 @@ button {
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+    max-height: 3.6em;
+    line-height: 1.2em;
 }
 
 
