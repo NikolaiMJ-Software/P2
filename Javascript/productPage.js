@@ -63,7 +63,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById("discount").innerText = discount;
             document.querySelector(".save").style.display = "block";
         }
-        
+        // if the price is too large move it to allign better
+        const priceElement = document.getElementById('price');
+        if (price >= 1000) {
+            priceElement.parentElement.style.marginLeft = '1%'; // moves the price 1% to the left
+        } else if (price >= 10000) {
+            priceElement.parentElement.style.marginLeft = '2%'; // moves the price 2% to the left
+        } else {
+            priceElement.parentElement.style.marginLeft = 'auto'; 
+        }
+
+        const discountElement = document.getElementById('discount');
+        if (price >= 100000) {
+            discountElement.parentElement.style.marginLeft = '-8%'; // moves the discount to the left by 8%
+        } else if (price >= 10000) {
+            discountElement.parentElement.style.marginLeft = '-6%'; // moves the discount to the left by 6%
+        }else if (price >= 1000) {
+            discountElement.parentElement.style.marginLeft = '-4%'; // moves the discount to the left by 4%
+        } else {
+            discountElement.parentElement.style.marginLeft = 'auto'; // center it
+        }
+
         // === Dynamic image gallery
         // Replace hardcoded thumbnails with dynamic image list
         const imageVariants = document.getElementById('image-variants');
@@ -186,7 +206,7 @@ try {
 try {
     const shopResponse = await fetch(`/shop?id=${shop_id}`);
     const shopData = await shopResponse.json();
-
+console.log(shop_id);
     if (shopData.shop_name) {
         const shopBtn = document.getElementById('shop_name_button');
         shopBtn.textContent = shopData.shop_name;

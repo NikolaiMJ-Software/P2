@@ -1,8 +1,8 @@
 const API_KEY = "AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ"; // Replace with yours Google API-key
 const url = "https://routes.googleapis.com/directions/v2:computeRoutes"; // The URL for using the API
-const progressBar = document.getElementById('loading-progress');
 
-export async function getTravelTime() {
+export async function getTravelTime(destination) {
+  const progressBar = document.getElementById('loading-progress');
   const travelTimes = [];
   try {
     // Get user's location (latitude and longitude)
@@ -11,24 +11,20 @@ export async function getTravelTime() {
     const userLon = position.coords.longitude;
     let completed = 0; // Track progress for the progress bar
 
-    // Fetch list of cities from server
-    const response = await fetch('/cities');
-    const cities = await response.json();
-
-    // Prepare and send requests for multiple cities simultaneously
-    const travelTimePromises = cities.map((city) => {
-      return calcDistance(userLat, userLon, city.latitude, city.longitude) // Return promise
+    // Prepare and send requests for multiple destination simultaneously
+    const travelTimePromises = destination.map((place) => {
+      return calcDistance(userLat, userLon, place.latitude, place.longitude) // Return promise
         .then((time) => {
           if (time) {
-            travelTimes.push({ city: city.city, time: parseInt(time) });
+            travelTimes.push({ name: place.city || place.shop_name, ...(place.shop_name && { id: place.id }), time: parseInt(time) });
           } else {
-            console.error(`No route found for: ${city.city}`);
+            console.error(`No route found for: ${place.city || place.shop_name}`);
           }
           completed++;
-          progressBar.value = (completed / cities.length) * 100; // Update progress bar
+          progressBar.value = (completed / destination.length) * 100; // Update progress bar
         });
     });
-
+    
     // Wait for all travel time calculations to complete
     await Promise.all(travelTimePromises);
 
@@ -37,7 +33,7 @@ export async function getTravelTime() {
       progressBar.classList.add('hidden');
     }
 
-    // Sort travel times so the nearest city comes first
+    // Sort travel times so the nearest destination comes first
     travelTimes.sort((a, b) => a.time - b.time);
     /* Debugging - Check sorted array
       console.log("Sorted travel times:", travelTimes);

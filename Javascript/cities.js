@@ -1,6 +1,5 @@
 import { getTravelTime } from './calculateDistance.js';
 
-
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch('/cities'); // Fetch cities from the server
@@ -14,7 +13,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const email = urlParams.get('email');
 
         const cityButtons = [];
-        let travelTimes = await getTravelTime(); // Array for holding cities and travel time
+        let travelTimes = await getTravelTime(cities); // Array for holding cities and travel time
+        travelTimes = travelTimes.map(item => ({ city: item.name, time: item.time })); // Convert "name" to "city"
         /* Debugging - Check sorted array
             console.log("Sorted travel times:", travelTimes);
         */
