@@ -64,7 +64,7 @@ router.post('/delete_ware', (req, res)=>{
         return res.status(403).send("Ikke autoriseret");
     }
 
-    db.run(`DELETE FROM products WHERE id = ? AND shop_id = ?`, [id, req.user.shop_id], function (err) {
+    db.run(`DELETE FROM products WHERE id = ? AND shop_id = ?`, [id, req.user.shop_id], (err) => {
         if (err){
             return res.status(500).send("Databasefejl");
         }else{
@@ -74,6 +74,40 @@ router.post('/delete_ware', (req, res)=>{
 
 });
 
+router.post("/add_product", (req, res)=>{
+    const {name, stock, price, discount, description, specifications} = req.body;
+    const shop_id = req.user?.shop_id;
 
+    if (!req.user || !req.user.shop_id) {
+        return res.status(403).send("Ikke autoriseret");
+    }
+
+
+    db.get(`SELECT city_id FROM shops WHERE id = ?`, [shop_id], (err, row) => {
+        if (err){
+            return res.status(500).send("Databasefejl");
+        }
+
+        if (!row) {
+            return res.status(404).send("butik ikke fundet");
+        }
+
+        const city_id = row.city_id
+
+        db.run(`
+            INSERT INTO products (product_name, stock, price, discount, description, specifications, shop_id, city_id)
+            VALUES (?,?,?,?,?,?,?,?)
+            `,[name, stock, price, discount, description, specifications, shop_id, city_id], (err)=>{
+                if(err){
+                    return res.status(500).json({error: err.message});
+                }else{
+                    res.json({succes: true});
+                }
+            }
+        );
+    });
+
+
+});
 
 export default router;
