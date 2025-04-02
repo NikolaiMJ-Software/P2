@@ -18,7 +18,7 @@ const __dirname = dirname(__filename);
 console.log(__dirname);
 
 const app = express();
-const port = 3000;
+const port = 3360;
 
 //enable json support
 app.use(express.json());
@@ -88,6 +88,10 @@ app.get('/productpage', (req, res) => {
     console.log(`Product requested: ${product}`); 
     res.sendFile(path.join(__dirname, '../HTML/product_page.html'));
 });
+
+app.get('/cart', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/cart.html'))
+})
 
 // path to the shop page
 app.get('/productlist', (req, res) => {

@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         //Set page title
         if (shopId) {
-            const shopResponse = await fetch(`/shop?id=${shopId}`);
+            const shopResponse = await fetch(`./shop?id=${shopId}`);
             const shopData = await shopResponse.json();
             
             if (shopData.shop_name) {
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // Get city list
-        const response_city = await fetch('/cities');
+        const response_city = await fetch('./cities');
         const cities = await response_city.json();
 
         // Get current city ID
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (shopId) console.log("Filtering by shop_id:", shopId);
 
         // Get products
-        const response = await fetch('/products');
+        const response = await fetch('./products');
         const products = await response.json();
         const productContainer = document.getElementById('productList');
         const searchInput = document.getElementById('inputProductSearch');
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 productButton.classList.add('product');
 
                 productImage.classList.add('productImage');
-                productImage.src = `/${product.img1_path}`;
+                productImage.src = `./${product.img1_path}`;
 
                 productName.classList.add('productName');
                 productName.textContent = product.product_name;
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 // Redirect to product page
                 productButton.onclick = () => {
-                    let url = `../productpage/?id=${encodeURIComponent(product.id)}`;
+                    let url = `./productpage?id=${encodeURIComponent(product.id)}`;
                     if (email) url += `&email=${encodeURIComponent(email)}`;
                     window.location.href = url;
                 };
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
 
             if (matchingProduct) {
-                let url = `../productpage/?id=${encodeURIComponent(product.id)}&city=${encodeURIComponent(currentCity)}`;
+                let url = `./productpage?id=${encodeURIComponent(product.id)}&city=${encodeURIComponent(currentCity)}`;
                 if (email) url += `&email=${encodeURIComponent(email)}`;
                 window.location.href = url;
             }

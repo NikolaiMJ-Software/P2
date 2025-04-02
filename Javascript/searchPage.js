@@ -5,7 +5,7 @@ document.getElementById("h1ProductPage").textContent = currentCity; //changes ti
 document.addEventListener("DOMContentLoaded", async () => {
     try{
         //we have city name. we need city id
-        const response_city = await fetch('/cities'); // Fetch cities from the server
+        const response_city = await fetch('./cities'); // Fetch cities from the server
         const cities = await response_city.json();
 
         //Get the email from url
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (currentCityId == undefined) throw "city ID not found"
         console.log(currentCityId);
 
-        const response = await fetch('/products'); // Fetch products from the server
+        const response = await fetch('./products'); // Fetch products from the server
         let products = await response.json();
         const productContainer = document.getElementById('productList');
         const searchInput = document.getElementById('inputProductSearch');
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 productButton.classList.add('product');
                 //image
                 productImage.classList.add('productImage');
-                productImage.src = `/${product.img1_path}`;
+                productImage.src = `./${product.img1_path}`;
                 //name
                 productName.classList.add('productName');
                 if (product.product_name.length > 41){
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 //add onclick function to bring you to the specific products page
                 productButton.onclick = () => {
-                    window.location.href = `../productpage/?id=${encodeURIComponent(product.id)}`;
+                    window.location.href = `./productpage?id=${encodeURIComponent(product.id)}`;
                 }
 
                 //add new product to "products" class
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (matchingProduct) {
                 // Redirect if city is found
-                window.location.href = `../productpage/?id=${encodeURIComponent(matchingProduct.product.id)}`;
+                window.location.href = `./productpage?id=${encodeURIComponent(matchingProduct.product.id)}`;
             }
         });
     }

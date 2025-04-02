@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () =>{
     const product_list = document.getElementById("product_list");
 
-    const res = await fetch("/shop_products");
+    const res = await fetch("./shop_products");
     const products = await res.json();
 
     products.forEach(product =>{
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
             const change = e.target.classList.contains("stock-plus") ? 1 : -1;
             const newStock = current + change;
     
-            const updateRes = await fetch("/update_stock", {
+            const updateRes = await fetch("./update_stock", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id, stock: newStock })

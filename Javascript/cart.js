@@ -60,7 +60,7 @@ function getCookie(cname) {
 //Start of cart.html functionality
 //Fetch product data from database
 console.log("Fetching product data...");
-const response = await fetch('/products'); // Fetch products from the server
+const response = await fetch('./products'); // Fetch products from the server
 const products = await response.json();
 
 //Function for filling data table for cart
