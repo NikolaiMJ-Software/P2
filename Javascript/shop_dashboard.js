@@ -1,5 +1,9 @@
 document.addEventListener("DOMContentLoaded", async () =>{
     const product_list = document.getElementById("product_list");
+    const add_button = document.getElementById("add-button");
+    const add_panel = document.getElementById("product-modal");
+    const close_button = document.getElementById("modal-close");
+    const form = document.getElementById("product-form");
 
     const res = await fetch("./shop_products");
     const products = await res.json();
@@ -52,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
             const id = e.target.dataset.id;
             const span = document.getElementById(`stock-${id}`);
 
-            const updateRes = await fetch("/delete_ware", {
+            const updateRes = await fetch("./delete_ware", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id })
@@ -65,6 +69,39 @@ document.addEventListener("DOMContentLoaded", async () =>{
                 alert("Kunne ikke opdatere lagerbeholdning.");
             }
         }
+    });
+
+    add_button.addEventListener("click", async (e) => {
+        add_panel.style.display = "block";
+    });
+
+    close_button.addEventListener("click", async (e) => {
+        add_panel.style.display = "none";
+    });
+
+    form.addEventListener("submit", async (e)=>{
+        e.preventDefault();
+
+        const name = document.getElementById("product-name").value;
+        const stock = parseInt(document.getElementById("product-stock").value);
+        const price = parseFloat(document.getElementById("product-price").value);
+        const disc = parseFloat(document.getElementById("product-discount").value)
+        const desc = document.getElementById("product-desc").value;
+        const specs = document.getElementById("product-specs").value;
+
+        const updateRes = await fetch("./add_product",{
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({name, stock, price, discount: disc, description: desc, specifications: specs})
+        })
+        
+            if (updateRes.ok) {
+                alert("Vare er blevet tilføjet.");
+                location.reload();
+            } else {
+                alert("Kunne ikke opdatere lagerbeholdning.");
+            }
+        
     });
 
 });

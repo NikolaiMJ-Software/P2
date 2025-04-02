@@ -49,10 +49,32 @@ function send_mail(receiver, subject, text) {
     });
 }
 
-router.post('/reserve_vares', (req, res) => {
+router.post('./reserve_wares', (req, res) => {
     const { cart } = req.body;
+    if(req.user) {
+        user_email=req.user.email;
+    } else {
+        console.log("Log in to reserve a ware")
+    }
+    let named_cart = {};
+    for(let i = 0; i <= cart.length; i++) {
+        for(let x = 0; x <= cart[i].length; x++) {
+            named_cart[i].push(db.get("SELECT products.product_name FROM products WHERE products.id = ?", [cart[i[x]]]));
+        }
+    }
     console.log(cart);
-    
+    for(let i = 0; i <= cart.length; i++) {
+        send_mail(
+            db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i[0]]])
+            `En bruger har reserveret varer hos din butik`,
+            `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`
+        );
+    }
+    send_mail(
+        user_email,
+        `Du har reserveret varer på Click&hent`,
+        `Du har reserveret følgende varer på Click&hent: ${named_cart}`
+    )
 });
 
 /*

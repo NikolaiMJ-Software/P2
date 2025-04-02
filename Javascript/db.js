@@ -26,6 +26,7 @@ db.serialize(() => {
     db.run(`DROP TABLE IF EXISTS users`);
     db.run(`DROP TABLE IF EXISTS shops`);
     db.run(`DROP TABLE IF EXISTS cities`);
+
     db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         city TEXT UNIQUE,
@@ -98,6 +99,17 @@ db.serialize(() => {
             else console.log("Table 'users' created.");
         });
 
+        db.run(`CREATE TABLE IF NOT EXISTS comments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_id INTEGER,
+            name TEXT,
+            comment TEXT,
+            timestamp INTEGER,
+            FOREIGN KEY(product_id) REFERENCES products(id)
+            )`, (err) => {
+            if (err) console.error("Error creating table 'comments':", err.message);
+            else console.log("Table 'comments' created.");
+          });
 
         db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude) VALUES
             ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com', 57.048939, 9.921764),
@@ -116,7 +128,7 @@ db.serialize(() => {
             'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321826.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321831.png', 'Den er faktisk virkelig grim', 30, NULL),
                 (1, 1, 'den grimme maskine (sort)', 6, 25, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128322066.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128321832.png',
                 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128321830.png', '', 'Den er faktisk virkelig grim', 30, 1),
-        
+
             
             (1, 2, 'Eiffeltårnet', 1, 1000900, 'Du skal selv hente den', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel1.jpg', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel2.webp',
             'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel3.jpg', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel4.webp', 'Den er virkelig høj, og lavet af franskmænd', 20, NULL),
@@ -133,7 +145,7 @@ db.serialize(() => {
                 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_gray/titanium_gray1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_gray/titanium_gray2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_gray/titanium_gray3.png',
                 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4),
                 
-                (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Gray)', 93, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
+                (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Silver)', 93, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
                 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver3.png',
                 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4)`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
