@@ -22,7 +22,8 @@ export async function filters(products) {
         if (distanceFilter) {
             const closestShops = await getTravelTime(shops); // Sort by travel time
             const closestShopIds = closestShops.map(shop => shop.id); // Create a separate id array
-            console.log(closestShops);
+            console.log('Shortest distance to shops: ', closestShops);
+
             // Sort products
             products.sort((a, b) => {
                 const indexA = closestShopIds.indexOf(a.shop_id);
