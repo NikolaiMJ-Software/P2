@@ -123,10 +123,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         // RIGHTSIDE AD
         console.log(productList);
 
-        // TODO: find the products in the chosen city
+        // find the products in the chosen city
         /* this is done in the creation of products */
 
-        // TODO: Pick a random product
+        // Pick a random product (this puts advertProduct as the products ID)
         let advertProduct = productList[Math.floor(Math.random() * productList.length)];
         console.log(advertProduct);
 
