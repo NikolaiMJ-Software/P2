@@ -195,6 +195,49 @@ app.get('/products', (req, res) => {
     });
 });
 
+// GET all comments for a product
+app.get('/comments', (req, res) => {
+    const productId = req.query.product_id;
+
+    if (!productId) {
+        return res.status(400).json({ error: 'Missing product_id' });
+    }
+
+    db.all(
+        'SELECT name, comment, timestamp FROM comments WHERE product_id = ? ORDER BY timestamp DESC',
+        [productId],
+        (err, rows) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+            } else {
+                res.json(rows);
+            }
+        }
+    );
+});
+
+// POST a new comment
+app.post('/comment', (req, res) => {
+    const { product_id, name, comment } = req.body;
+    const timestamp = Date.now();
+
+    if (!product_id || !comment) {
+        return res.status(400).json({ error: 'Missing product_id or comment' });
+    }
+
+    db.run(
+        'INSERT INTO comments (product_id, name, comment, timestamp) VALUES (?, ?, ?, ?)',
+        [product_id, name || 'Anonymous', comment, timestamp],
+        function (err) {
+            if (err) {
+                res.status(500).json({ error: err.message });
+            } else {
+                res.json({ success: true, id: this.lastID });
+            }
+        }
+    );
+});
+
 app.use('/', reserve_router);
 
 app.use('/', shop_dashboard_router);
