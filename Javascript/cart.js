@@ -8,7 +8,7 @@ function add_to_cart(product_id) {
     }
     //Get the cookies
     let products = getCookie("products");
-    console.log(products);
+    console.log(products)
     //Make a new cookie if this is the first item in the cart, otherwise add to existing cart
     if(!products) {
         document.cookie = `products=${product_id}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
@@ -58,10 +58,6 @@ function getCookie(cname) {
 //End of cart functionality
 
 //Start of cart.html functionality
-//Fetch product data from database
-console.log("Fetching product data...");
-const response = await fetch('./products'); // Fetch products from the server
-const products = await response.json();
 
 //Function for filling data table for cart
 function fill_table() {
@@ -116,23 +112,56 @@ function remove_from_table(product_id) {
     fill_table();
 }
 
+//Add to cart button (for product page)
 const button = document.getElementById("cart_button");
 if(button != null) {
     button.addEventListener("click", async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');
         add_to_cart(productId);
-        alert("Du puttet varen i din kurv");
+        alert("Varen er tilføjet til din kurv");
     });
 }
 
+//Reserve wares button (for cart page)
+const button_reserve = document.getElementById("Confirm_button");
+if(button_reserve != null) {
+    button_reserve.addEventListener("click", reserve_wares);
+}
+function reserve_wares() {
+    let cart = getCookie("products").split(",").map(Number);
+    let sorted_cart = {};
+    for (let i = 0; i < cart.length; i++) {
+        let product_id = cart[i];
+        let shop_id = products[product_id].shop_id;
+        if (!sorted_cart[shop_id]) {
+            sorted_cart[shop_id] = [];
+        }
+        sorted_cart[shop_id].push(product_id);
+    }
+
+    console.log("Sending sorted_cart:", sorted_cart);
+
+    fetch('/reserve_vares', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cart: sorted_cart })
+    });
+}
+//Fetch product data from database
+console.log("Fetching product data...");
+const response = await fetch('./products'); // Fetch products from the server
+const products = await response.json().then(start_up);
+
 //Function that starts automatically fills the table when site has loaded
-while(1) {
-    if (document.readyState !== 'loading') {
-        let data = getCookie("products");
-        console.log(data);
-        fill_table();
-        break;
+function start_up() {
+    while(1) {
+        if (document.readyState !== 'loading') {
+            let data = getCookie("products");
+            console.log(data);
+            fill_table();
+            break;
+        }
     }
 }
 //End of cart.html functionality
