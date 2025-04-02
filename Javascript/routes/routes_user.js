@@ -68,7 +68,7 @@ router.post('/signup', (req, res)=>{
                 return res.status(500).send("Database error");
             }
             //redirect the page to login page
-            return res.redirect("/login");
+            return res.redirect("./login");
         }
     );
 });
