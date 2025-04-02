@@ -9,8 +9,13 @@ export async function getTravelTime(destination) {
     const position = await getCurrentPositionPromise();
     const userLat = position.coords.latitude;
     const userLon = position.coords.longitude;
-    let completed = 0; // Track progress for the progress bar
+    console.log(userLat, userLon);
+    
+    
+    const d = haversineDistanceM(userLat, userLon, 57.048939, 9.921764);
+    //alert(d.toFixed(2) + ' meters away');
 
+    let completed = 0; // Track progress for the progress bar
     // Prepare and send requests for multiple destination simultaneously
     const travelTimePromises = destination.map((place) => {
       return calcDistance(userLat, userLon, place.latitude, place.longitude) // Return promise
@@ -86,4 +91,63 @@ function getCurrentPositionPromise() {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
+}
+
+function haversineDistanceM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
+    function toRad(degree) {
+        return degree * Math.PI / 180;
+    }
+    
+    const lat1 = toRad(lat1Deg);
+    const lon1 = toRad(lon1Deg);
+    const lat2 = toRad(lat2Deg);
+    const lon2 = toRad(lon2Deg);
+    
+    const { sin, cos, sqrt, atan2 } = Math;
+    
+    const R = 6378; // earth radius in km 
+    const dLat = lat2 - lat1;
+    const dLon = lon2 - lon1;
+    const a = sin(dLat / 2) * sin(dLat / 2)
+            + cos(lat1) * cos(lat2)
+            * sin(dLon / 2) * sin(dLon / 2);
+    const c = 2 * atan2(sqrt(a), sqrt(1 - a)); 
+    const d = R * c;
+    return d*1000; // distance in meters
+}
+
+function savePosition(position) {
+  localStorage.setItem("lastLat", position.coords.latitude);
+  localStorage.setItem("lastLon", position.coords.longitude);
+}
+
+function checkPosition(position) {
+  const newLat = position.coords.latitude;
+  const newLon = position.coords.longitude;
+
+  const lastLat = parseFloat(localStorage.getItem("lastLat"));
+  const lastLon = parseFloat(localStorage.getItem("lastLon"));
+
+  if (!isNaN(lastLat) && !isNaN(lastLon)) {
+      const distance = haversineDistanceM(lastLat, lastLon, newLat, newLon);
+      console.log(`Moved: ${distance.toFixed(2)} meters`);
+      
+      if (distance > 10) {
+          console.log("User has moved more than 10 meters.");
+      } else {
+          console.log("User is within 10 meters.");
+      }
+  }
+
+  savePosition(position); // Update stored position
+}
+
+// Start tracking
+if ("geolocation" in navigator) {
+    navigator.geolocation.watchPosition(checkPosition, 
+        (error) => console.error("Error getting location:", error), 
+        { enableHighAccuracy: true, maximumAge: 10000 }
+    );
+} else {
+    console.error("Geolocation is not supported by this browser.");
 }
