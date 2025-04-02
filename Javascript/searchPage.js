@@ -44,7 +44,7 @@ function updateImage(products){
         productPrice.textContent = product.price + ",-";
         //discount
         productDiscount.classList.add('productDiscount');
-        if(product.discount != 0)
+        if(product.discount != 0 && product.discount != null)
         {productDiscount.textContent = "spar: " + product.discount + ",-"};
 
         //add onclick function to bring you to the specific products page
@@ -73,13 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const email = urlParams.get('email');
         
-        let currentCityId;
-        for (let i = 0; i < cities.length; i++){
-            if(cities[i].city == currentCity){
-                currentCityId = i+1;
-                break;
-            }
-        }
+        let currentCityId = cities.filter(city => city.city === currentCity)[0].id;
         if (currentCityId == undefined) throw "city ID not found"
         console.log(currentCityId);
 
@@ -129,10 +123,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         // RIGHTSIDE AD
         console.log(productList);
 
-        // TODO: find the products in the chosen city
+        // find the products in the chosen city
         /* this is done in the creation of products */
 
-        // TODO: Pick a random product
+        // Pick a random product (this puts advertProduct as the products ID)
         let advertProduct = productList[Math.floor(Math.random() * productList.length)];
         console.log(advertProduct);
 

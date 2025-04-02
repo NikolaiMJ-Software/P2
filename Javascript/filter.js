@@ -8,6 +8,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     filterButton.addEventListener('click', () => {
         filterDropdown.classList.toggle('hidden');
     });
+
+    // Change "Pris ⬆" checkbox
+    document.getElementById('priceUpwardFilter').addEventListener('change', (event) => {
+        if (event.target.checked) {
+            // If "Pris ⬆" is chosed, remove "Pris ⬇"
+            document.getElementById('priceDownwardFilter').checked = false;
+        }
+    });
+
+    // Change "Pris ⬇" checkbox
+    document.getElementById('priceDownwardFilter').addEventListener('change', (event) => {
+        if (event.target.checked) {
+            // If "Pris ⬇" is chosed, remove "Pris ⬆"
+            document.getElementById('priceUpwardFilter').checked = false;
+        }
+    });
 });
 
 export async function filters(products) {
