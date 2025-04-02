@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         // Fetch data from the server
-        const response = await fetch(`/product?id=${productId}`);
+        const response = await fetch(`./product?id=${productId}`);
         const product = await response.json();
 
 
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             img1_path, img2_path, img3_path, img4_path, img5_path,
         } = product;
 
-        const citiesResponse = await fetch('/cities');
+        const citiesResponse = await fetch('./cities');
         const cities = await citiesResponse.json();
 
         // update text content
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         //function to update the `src` of an image by ID
         const updateImage = (id, src) => {
             if (src) {
-                const fixedPath = src.startsWith('/') ? src : `/${src}`;
+                const fixedPath = src.startsWith('/') ? src : `./${src}`;
                 document.getElementById(id).src = fixedPath;
             }
         };
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Loop through all available image paths
         [img1_path, img2_path, img3_path, img4_path, img5_path].forEach(path => {
             if (path && path.trim() !== '') {
-                const fixedPath = path.startsWith('/') ? path : `/${path}`;
+                const fixedPath = path.startsWith('/') ? path : `./${path}`;
                 
                 // Create new img element for the thumbnail
                 const thumb = document.createElement('img');
@@ -150,7 +150,7 @@ try {
     console.log("Using parent_id for variants:", variantParentId); // Debug log
 
     // Fetch all variant products
-    const response = await fetch(`/allVariants?parent_id=${variantParentId}`);
+    const response = await fetch(`./allVariants?parent_id=${variantParentId}`);
     const variants = await response.json();
     console.log("Fetched variants:", variants); // Debug log
 
@@ -174,7 +174,7 @@ try {
         const imgPath = variant.img1_path || ''; // Use variant's first image path
 
         // Ensure the image path starts with a slash (for proper URL resolution)
-        img.src = imgPath.startsWith('/') ? imgPath : `/${imgPath}`;
+        img.src = imgPath.startsWith('/') ? imgPath : `./${imgPath}`;
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'cover';
@@ -186,7 +186,7 @@ try {
         // Add click to switch
         box.addEventListener('click', () => {
             if (variant.id !== id) {
-                window.location.href = `/productpage/?id=${variant.id}`;
+                window.location.href = `./productpage?id=${variant.id}`;
             }
         });
 
@@ -204,7 +204,7 @@ try {
 
 //fetch shopname
 try {
-    const shopResponse = await fetch(`/shop?id=${shop_id}`);
+    const shopResponse = await fetch(`./shop?id=${shop_id}`);
     const shopData = await shopResponse.json();
 console.log(shop_id);
     if (shopData.shop_name) {

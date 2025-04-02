@@ -2,7 +2,7 @@
 async function check_login(){
     try{
         //calls the server to check if there is a session logged in user
-        const response = await fetch('/user_logged_in');
+        const response = await fetch('./user_logged_in');
         const data = await response.json();
         //if anyone is logged in, it will hide the login and signup button and show the logout button
         if(data.logged_in){
@@ -14,7 +14,7 @@ async function check_login(){
                 dashboard.style.display = 'inline-block';
 
                 dashboard.addEventListener('click', ()=>{
-                    window.location.href = '/shop_dashboard';
+                    window.location.href = './shop_dashboard';
                 });
             }
         }
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         logout.addEventListener("click", async ()=>{
             try{
                 //calls server using the logout route (found in routes_user.js)
-                const response = await fetch('/logout');
+                const response = await fetch('./logout');
                 const message = await response.text();
                 //if everything works, user is logged out, and page is refreshed
                 console.log("Du logger ud", message);

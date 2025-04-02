@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Click & Hent</title>
-    <link rel="stylesheet" type="text/css" href="../CSS/searchPage.css">
+    <link rel="stylesheet" type="text/css" href="./CSS/searchPage.css">
 </head>
 <body>
-  <a href="/HTML/cart.html">
+  <a href="./cart">
     <button id="cart" type="button">Din kurv</button>
   </a>
   <a href="#" onclick="history.back()" style="text-align: left;">Back</a>
@@ -47,7 +47,21 @@
     <!--main class "products" to be filled out with lots of smaller products with unique specifics-->
     <main class="products" id="productList"></main>
 
-    <script type="module" src="../Javascript/searchPage.js"></script>
-    <script type="module" src="../Javascript/filter.js"></script>
+    <script type="module" src="./Javascript/searchPage.js"></script>
+    <script type="module" src="./Javascript/filter.js"></script>
+
+    <!--barrel roll when "b" is clicked-->
+    <script>
+      document.addEventListener("keydown", function (event) {
+       if (event.key.toLowerCase() === "½") { 
+        document.body.style.transition = "transform .5s ease-in-out";
+        document.body.style.transform = "rotate(360deg)";
+        setTimeout(() => {
+            document.body.style.transform = "none"; // Reset after animation
+        }, 500);
+       }
+      });
+    </script>
+    
 </body>
 </html>

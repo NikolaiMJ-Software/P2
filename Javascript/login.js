@@ -9,14 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = form.email.value;
         const password = form.password.value;
 
-        const response = await fetch('/login', {
+        const response = await fetch('./login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
 
         if (response.ok) {
-            window.location.href = `/`;
+            window.location.href = `./`;
         } else {
             const errorText = await response.text();
             errorMessage.textContent = errorText;
