@@ -2,12 +2,14 @@ import { filters } from './filter.js';
 let currentCity = new URLSearchParams(window.location.search).get(`city`);
 document.getElementById("h1ProductPage").textContent = currentCity; //changes title of page to city
 const productButtons = [], productContainer = document.getElementById('productList');
+let productList = []; //list to contain all items of current chosen city
 
 function updateImage(products){
     productContainer.innerHTML = '';// Remove old products
     //go through products
     products.forEach(product => {
         console.log(product.product_name + " " + product.price);
+        productList += product.id;
 
         //initialize all products.
         const productButton = document.createElement('button');
@@ -123,6 +125,26 @@ document.addEventListener("DOMContentLoaded", async () => {
                 window.location.href = `./productpage?id=${encodeURIComponent(matchingProduct.product.id)}`;
             }
         });
+
+        // RIGHTSIDE AD
+        console.log(productList);
+
+        // TODO: find the products in the chosen city
+        /* this is done in the creation of products */
+
+        // TODO: Pick a random product
+        let advertProduct = productList[Math.floor(Math.random() * productList.length)];
+        console.log(advertProduct);
+
+        // TODO: Get elements of the product
+        
+        
+        // TODO: create classes so it can be modified in css
+        
+        
+        // TODO: set it all up in css afterwards
+
+
     }
     catch(err){
         console.log(err);
