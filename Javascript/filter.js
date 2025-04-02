@@ -8,6 +8,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     filterButton.addEventListener('click', () => {
         filterDropdown.classList.toggle('hidden');
     });
+
+    // Change "Pris ⬆" checkbox
+    document.getElementById('priceUpwardFilter').addEventListener('change', (event) => {
+        if (event.target.checked) {
+            // If "Pris ⬆" is chosed, remove "Pris ⬇"
+            document.getElementById('priceDownwardFilter').checked = false;
+        }
+    });
+
+    // Change "Pris ⬇" checkbox
+    document.getElementById('priceDownwardFilter').addEventListener('change', (event) => {
+        if (event.target.checked) {
+            // If "Pris ⬇" is chosed, remove "Pris ⬆"
+            document.getElementById('priceUpwardFilter').checked = false;
+        }
+    });
 });
 
 export async function filters(products) {
@@ -21,6 +37,21 @@ export async function filters(products) {
         const shops = await responseShop.json();
         
         // Apply filters based on the selected checkboxes
+        if(priceUpwardFilter){
+            // Sort after upward price
+            products.sort((a, b) => { return a.price - b.price; });
+            sortedProducts = products;
+
+        } else if(priceDownwardFilter){
+            // Sort after downward price
+            products.sort((a, b) => { return b.price - a.price; });
+            sortedProducts = products;
+
+        } else {
+            const responseProducts = await fetch('./products'); // Fetch products from the server
+            sortedProducts = await responseProducts.json();
+        }
+        
         if (distanceFilter) {
             // Sort after closest distance to shop
             const closestShops = await getTravelTime(shops); // Sort by travel time
@@ -34,20 +65,6 @@ export async function filters(products) {
                 return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
             });
             sortedProducts = products;
-
-        } else if(priceUpwardFilter){
-            // Sort after upward price
-            products.sort((a, b) => { a.price - b.price });
-            sortedProducts = products;
-
-        } else if(priceDownwardFilter){
-            // Sort after downward price
-            products.sort((a, b) => { b.price - a.price });
-            sortedProducts = products;
-
-        } else {
-            const responseProducts = await fetch('./products'); // Fetch products from the server
-            sortedProducts = await responseProducts.json();
         }
     } catch (error) {
         console.error('Error fetching shops:', error);

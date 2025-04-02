@@ -8,7 +8,7 @@ function add_to_cart(product_id) {
     }
     //Get the cookies
     let products = getCookie("products");
-    console.log(products);
+    console.log(products)
     //Make a new cookie if this is the first item in the cart, otherwise add to existing cart
     if(!products) {
         document.cookie = `products=${product_id}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
@@ -58,10 +58,6 @@ function getCookie(cname) {
 //End of cart functionality
 
 //Start of cart.html functionality
-//Fetch product data from database
-console.log("Fetching product data...");
-const response = await fetch('./products'); // Fetch products from the server
-const products = await response.json();
 
 //Function for filling data table for cart
 function fill_table() {
@@ -152,14 +148,20 @@ function reserve_wares() {
         body: JSON.stringify({ cart: sorted_cart })
     });
 }
+//Fetch product data from database
+console.log("Fetching product data...");
+const response = await fetch('./products'); // Fetch products from the server
+const products = await response.json().then(start_up);
 
 //Function that starts automatically fills the table when site has loaded
-while(1) {
-    if (document.readyState !== 'loading') {
-        let data = getCookie("products");
-        console.log(data);
-        fill_table();
-        break;
+function start_up() {
+    while(1) {
+        if (document.readyState !== 'loading') {
+            let data = getCookie("products");
+            console.log(data);
+            fill_table();
+            break;
+        }
     }
 }
 //End of cart.html functionality
