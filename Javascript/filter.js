@@ -12,39 +12,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 export async function filters(products) {
     // Check the selected filters
-    const distanceFilter = document.getElementById('distanceFilter');
-
+    const distanceFilter = document.getElementById('distanceFilter')?.checked ?? false;
+    let sortedProducts = [];
     try {
-        const response = await fetch('./shop'); // Fetch shops from the server
-        let shops = await response.json();
-
+        const responseShop = await fetch('./shop'); // Fetch shops from the server
+        const shops = await responseShop.json();
+        
         // Apply filters based on the selected checkboxes
         if (distanceFilter) {
-            let closestShops = await getTravelTime(shops); // Sort by travel time
-            console.log('closestShops: ',closestShops);
-
-
-            console.log('\nproducts: ',products);
-            
-            /*
-            
-            // Change so the products in the first shop is showed first
-            for (let i = 0; i < products.shop_id.length; i++){
-                if (products.shop_id[i] === shops.id){
-
-                }
-            }
-            */
-            
-            // debugging - sortest list
-            console.log('Filtered shops:', closestShops);
+            const closestShops = await getTravelTime(shops); // Sort by travel time
+            const closestShopIds = closestShops.map(shop => shop.id); // Create a separate id array
+            console.log(closestShops);
+            // Sort products
+            products.sort((a, b) => {
+                const indexA = closestShopIds.indexOf(a.shop_id);
+                const indexB = closestShopIds.indexOf(b.shop_id);
+                return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
+            });
+            sortedProducts = products;
+        } else {
+            const responseProducts = await fetch('./products'); // Fetch products from the server
+            sortedProducts = await responseProducts.json();
         }
-
-        // NEXT, opdate the product page
-        
     } catch (error) {
         console.error('Error fetching shops:', error);
     }
-    // Return the sortet products array/object
-    return products;
+    // Return the sortet products
+    return sortedProducts;
 };

@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById('applyFiltersButton').addEventListener('click', async () => {
             filterDropdown.classList.add('hidden');
             products = await filters(products);
-            console.log('Sorted list' + products);
+            console.log('Sorted list', products);
         });
 
         //go through products, check if city matches selected, initialize
