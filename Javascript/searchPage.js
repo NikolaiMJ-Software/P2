@@ -2,12 +2,14 @@ import { filters } from './filter.js';
 let currentCity = new URLSearchParams(window.location.search).get(`city`);
 document.getElementById("h1ProductPage").textContent = currentCity; //changes title of page to city
 const productButtons = [], productContainer = document.getElementById('productList');
+let productList = []; //list to contain all items of current chosen city
 
 function updateImage(products){
     productContainer.innerHTML = '';// Remove old products
     //go through products
     products.forEach(product => {
         console.log(product.product_name + " " + product.price);
+        productList += product.id;
 
         //initialize all products.
         const productButton = document.createElement('button');
@@ -42,7 +44,7 @@ function updateImage(products){
         productPrice.textContent = product.price + ",-";
         //discount
         productDiscount.classList.add('productDiscount');
-        if(product.discount != 0)
+        if(product.discount != 0 && product.discount != null)
         {productDiscount.textContent = "spar: " + product.discount + ",-"};
 
         //add onclick function to bring you to the specific products page
@@ -71,13 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const email = urlParams.get('email');
         
-        let currentCityId;
-        for (let i = 0; i < cities.length; i++){
-            if(cities[i].city == currentCity){
-                currentCityId = i+1;
-                break;
-            }
-        }
+        let currentCityId = cities.filter(city => city.city === currentCity)[0].id;
         if (currentCityId == undefined) throw "city ID not found"
         console.log(currentCityId);
 
@@ -123,6 +119,26 @@ document.addEventListener("DOMContentLoaded", async () => {
                 window.location.href = `./productpage?id=${encodeURIComponent(matchingProduct.product.id)}`;
             }
         });
+
+        // RIGHTSIDE AD
+        console.log(productList);
+
+        // TODO: find the products in the chosen city
+        /* this is done in the creation of products */
+
+        // TODO: Pick a random product
+        let advertProduct = productList[Math.floor(Math.random() * productList.length)];
+        console.log(advertProduct);
+
+        // TODO: Get elements of the product
+        
+        
+        // TODO: create classes so it can be modified in css
+        
+        
+        // TODO: set it all up in css afterwards
+
+
     }
     catch(err){
         console.log(err);

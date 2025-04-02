@@ -26,6 +26,7 @@ db.serialize(() => {
     db.run(`DROP TABLE IF EXISTS users`);
     db.run(`DROP TABLE IF EXISTS shops`);
     db.run(`DROP TABLE IF EXISTS cities`);
+
     db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         city TEXT UNIQUE,
@@ -144,7 +145,7 @@ db.serialize(() => {
                 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_gray/titanium_gray1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_gray/titanium_gray2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_gray/titanium_gray3.png',
                 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4),
                 
-                (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Gray)', 93, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
+                (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Silver)', 93, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
                 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver3.png',
                 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4)`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
