@@ -49,5 +49,19 @@
 
     <script type="module" src="./Javascript/searchPage.js"></script>
     <script type="module" src="./Javascript/filter.js"></script>
+
+    <!--barrel roll when "b" is clicked-->
+    <script>
+      document.addEventListener("keydown", function (event) {
+       if (event.key.toLowerCase() === "½") { 
+        document.body.style.transition = "transform .5s ease-in-out";
+        document.body.style.transform = "rotate(360deg)";
+        setTimeout(() => {
+            document.body.style.transform = "none"; // Reset after animation
+        }, 500);
+       }
+      });
+    </script>
+    
 </body>
 </html>
