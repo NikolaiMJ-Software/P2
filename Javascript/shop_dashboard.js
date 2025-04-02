@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
             const id = e.target.dataset.id;
             const span = document.getElementById(`stock-${id}`);
 
-            const updateRes = await fetch("/delete_ware", {
+            const updateRes = await fetch("./delete_ware", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id })
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
         const desc = document.getElementById("product-desc").value;
         const specs = document.getElementById("product-specs").value;
 
-        const updateRes = await fetch("/add_product",{
+        const updateRes = await fetch("./add_product",{
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({name, stock, price, discount: disc, description: desc, specifications: specs})
