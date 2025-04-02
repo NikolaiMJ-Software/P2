@@ -15,7 +15,7 @@ export async function filters(products) {
     const distanceFilter = document.getElementById('distanceFilter');
 
     try {
-        const response = await fetch('/shop'); // Fetch shops from the server
+        const response = await fetch('./shop'); // Fetch shops from the server
         let shops = await response.json();
 
         // Apply filters based on the selected checkboxes
