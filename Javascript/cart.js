@@ -142,12 +142,13 @@ function reserve_wares() {
 
     console.log("Sending sorted_cart:", sorted_cart);
 
-    fetch('/reserve_vares', {
+    fetch('./reserve_wares', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cart: sorted_cart })
     });
 }
+
 //Fetch product data from database
 console.log("Fetching product data...");
 const response = await fetch('./products'); // Fetch products from the server
