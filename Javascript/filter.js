@@ -22,6 +22,7 @@ export async function filters(products) {
         
         // Apply filters based on the selected checkboxes
         if (distanceFilter) {
+            // Sort after closest distance to shop
             const closestShops = await getTravelTime(shops); // Sort by travel time
             const closestShopIds = closestShops.map(shop => shop.id); // Create a separate shop_id array
             console.log('Shortest distance to shops: ', closestShops);
@@ -33,9 +34,16 @@ export async function filters(products) {
                 return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
             });
             sortedProducts = products;
-        } if(priceUpwardFilter){
 
-        } if(priceDownwardFilter){
+        } else if(priceUpwardFilter){
+            // Sort after upward price
+            products.sort((a, b) => { a.price - b.price });
+            sortedProducts = products;
+
+        } else if(priceDownwardFilter){
+            // Sort after downward price
+            products.sort((a, b) => { b.price - a.price });
+            sortedProducts = products;
 
         } else {
             const responseProducts = await fetch('./products'); // Fetch products from the server
