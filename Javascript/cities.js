@@ -2,7 +2,7 @@ import { getTravelTime } from './calculateDistance.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const response = await fetch('/cities'); // Fetch cities from the server
+        const response = await fetch('./cities'); // Fetch cities from the server
         const cities = await response.json();
         const container = document.getElementById('city-buttons'); // Target div
         const searchInput = document.getElementById('query');
@@ -48,9 +48,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 cityButton.onclick = () => {
                     if (matchingCity.city.toLowerCase() === 'aalborg') {
                         if(email){
-                            window.location.href = `../searchpage/?email=${encodeURIComponent(email)}&city=${encodeURIComponent(matchingCity.city)}`;
+                            window.location.href = `./searchpage?email=${encodeURIComponent(email)}&city=${encodeURIComponent(matchingCity.city)}`;
                         }else{
-                            window.location.href = `../searchpage/?city=${encodeURIComponent(matchingCity.city)}`;
+                            window.location.href = `./searchpage?city=${encodeURIComponent(matchingCity.city)}`;
                         }
                     } else {
                         alert("Byen er ikke sat op endnu.");
@@ -82,9 +82,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Redirect if city is found (only Aalborg)
             if (matchingCity.city.toLowerCase() === 'aalborg') {
                 if(email){
-                    window.location.href = `../searchpage/?email=${encodeURIComponent(email)}&city=${encodeURIComponent(matchingCity.city)}`;
+                    window.location.href = `./searchpage?email=${encodeURIComponent(email)}&city=${encodeURIComponent(matchingCity.city)}`;
                 }else{
-                    window.location.href = `../searchpage/?city=${encodeURIComponent(matchingCity.city)}`;
+                    window.location.href = `./searchpage?city=${encodeURIComponent(matchingCity.city)}`;
                 }
             } else {
                 alert("Byen er ikke sat op endnu.");
