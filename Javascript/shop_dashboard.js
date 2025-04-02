@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
                 <button class="stock-button stock-minus" data-id="${product.id}">-</button>
                 <span class="stock-count" id="stock-${product.id}">${product.stock}</span>
                 <button class="stock-button stock-plus" data-id="${product.id}">+</button>
+                <button class="delete-button" data-id="${product.id}">X</button>
             </div>
         `;
 
@@ -33,16 +34,33 @@ document.addEventListener("DOMContentLoaded", async () =>{
             const span = document.getElementById(`stock-${id}`);
             let current = parseInt(span.textContent);
             const change = e.target.classList.contains("stock-plus") ? 1 : -1;
-            const newStock = current + change;
+            const new_stock = current + change;
     
             const updateRes = await fetch("./update_stock", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id, stock: newStock })
+                body: JSON.stringify({ id, stock: new_stock })
             });
     
             if (updateRes.ok) {
-                span.textContent = newStock;
+                span.textContent = new_stock;
+            } else {
+                alert("Kunne ikke opdatere lagerbeholdning.");
+            }
+        }
+        if(e.target.classList.contains("delete-button")){
+            const id = e.target.dataset.id;
+            const span = document.getElementById(`stock-${id}`);
+
+            const updateRes = await fetch("/delete_ware", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            });
+
+            if (updateRes.ok) {
+                alert("Vare er blevet fjernet.");
+                location.reload();
             } else {
                 alert("Kunne ikke opdatere lagerbeholdning.");
             }

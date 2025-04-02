@@ -174,7 +174,7 @@ try {
         const imgPath = variant.img1_path || ''; // Use variant's first image path
 
         // Ensure the image path starts with a slash (for proper URL resolution)
-        img.src = imgPath.startsWith('/') ? imgPath : `/${imgPath}`;
+        img.src = imgPath.startsWith('/') ? imgPath : `./${imgPath}`;
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'cover';

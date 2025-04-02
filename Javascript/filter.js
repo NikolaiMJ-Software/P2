@@ -21,18 +21,13 @@ export async function filters(products) {
         // Apply filters based on the selected checkboxes
         if (distanceFilter) {
             let closestShops = await getTravelTime(shops); // Sort by travel time
+            console.log('closestShops: ',closestShops);
+
+
+            console.log('\nproducts: ',products);
             
             /*
-            // Creat an array basen on the shops_id
-            let shopsSortedId = [];
-            for (let i = 0; i < shops.id.length; i++){
-                for (let j = 0; j < closestShops.id.length; j++){
-                    if (shops.id[i] === closestShops.name[j]){
-                        shopsSortedId.push(shops.id);
-                    }
-                }
-            }
-            console.log('shopsSortedId: ' + shopsSortedId);
+            
             // Change so the products in the first shop is showed first
             for (let i = 0; i < products.shop_id.length; i++){
                 if (products.shop_id[i] === shops.id){

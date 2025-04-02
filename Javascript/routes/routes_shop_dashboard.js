@@ -45,14 +45,33 @@ router.post('/update_stock', (req, res) => {
     if (!req.user || !req.user.shop_id) {
         return res.status(403).send("Ikke autoriseret");
     }
+    if(stock>=0){
+        db.run(`UPDATE products SET stock = ? WHERE id = ? AND shop_id = ?`, [stock, id, req.user.shop_id], function (err) {
+            if (err){
+                return res.status(500).send("Databasefejl");
+            }else{
+                res.send("Stock updated");
+            }
+        });
+    }
+});
 
-    db.run(`UPDATE products SET stock = ? WHERE id = ? AND shop_id = ?`, [stock, id, req.user.shop_id], function (err) {
+
+router.post('/delete_ware', (req, res)=>{
+    const { id } = req.body;
+
+    if (!req.user || !req.user.shop_id) {
+        return res.status(403).send("Ikke autoriseret");
+    }
+
+    db.run(`DELETE FROM products WHERE id = ? AND shop_id = ?`, [id, req.user.shop_id], function (err) {
         if (err){
             return res.status(500).send("Databasefejl");
         }else{
-            res.send("Stock updated");
+            res.send("Item deleted");
         }
     });
+
 });
 
 
