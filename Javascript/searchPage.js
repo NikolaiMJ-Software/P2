@@ -71,13 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const email = urlParams.get('email');
         
-        let currentCityId;
-        for (let i = 0; i < cities.length; i++){
-            if(cities[i].city == currentCity){
-                currentCityId = i+1;
-                break;
-            }
-        }
+        let currentCityId = cities.filter(city => city.city === currentCity)[0].id;
         if (currentCityId == undefined) throw "city ID not found"
         console.log(currentCityId);
 
