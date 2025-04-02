@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 export async function filters(products) {
     // Check the selected filters
     const distanceFilter = document.getElementById('distanceFilter')?.checked ?? false;
+    const priceUpwardFilter = document.getElementById('priceUpwardFilter')?.checked ?? false;
+    const priceDownwardFilter = document.getElementById('priceDownwardFilter')?.checked ?? false;
     let sortedProducts = [];
     try {
         const responseShop = await fetch('./shop'); // Fetch shops from the server
@@ -21,16 +23,20 @@ export async function filters(products) {
         // Apply filters based on the selected checkboxes
         if (distanceFilter) {
             const closestShops = await getTravelTime(shops); // Sort by travel time
-            const closestShopIds = closestShops.map(shop => shop.id); // Create a separate id array
+            const closestShopIds = closestShops.map(shop => shop.id); // Create a separate shop_id array
             console.log('Shortest distance to shops: ', closestShops);
 
-            // Sort products
+            // Sort products, based on the sorted shop id
             products.sort((a, b) => {
                 const indexA = closestShopIds.indexOf(a.shop_id);
                 const indexB = closestShopIds.indexOf(b.shop_id);
                 return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
             });
             sortedProducts = products;
+        } if(priceUpwardFilter){
+
+        } if(priceDownwardFilter){
+
         } else {
             const responseProducts = await fetch('./products'); // Fetch products from the server
             sortedProducts = await responseProducts.json();
