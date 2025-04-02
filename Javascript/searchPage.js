@@ -40,12 +40,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log('Sorted list' + products);
         });
 
+        //Create an array where all product id's can go in (use for advert)
+        let productList = [];
+        
         //go through products, check if city matches selected, initialize
         products.forEach(product => {
             console.log(product.product_name + " " + product.price);
-
+            
             //with city id, get all products with id.
             if (product.city_id == currentCityId){
+
+                //add the current products id if its in current city
+                productList += product.id;
+
                 //initialize all products.
                 const productButton = document.createElement('button');
                 const productImage = document.createElement('img');
@@ -121,6 +128,26 @@ document.addEventListener("DOMContentLoaded", async () => {
                 window.location.href = `./productpage?id=${encodeURIComponent(matchingProduct.product.id)}`;
             }
         });
+
+        // RIGHTSIDE AD
+        console.log(productList);
+
+        // TODO: find the products in the chosen city
+        /* this is done in the creation of products */
+
+        // TODO: Pick a random product
+        let advertProduct = productList[Math.floor(Math.random() * productList.length)];
+        console.log(advertProduct);
+
+        // TODO: Get elements of the product
+        
+        
+        // TODO: create classes so it can be modified in css
+        
+        
+        // TODO: set it all up in css afterwards
+
+
     }
     catch(err){
         console.log(err);
