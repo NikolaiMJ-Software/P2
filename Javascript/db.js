@@ -98,6 +98,17 @@ db.serialize(() => {
             else console.log("Table 'users' created.");
         });
 
+        db.run(`CREATE TABLE IF NOT EXISTS comments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_id INTEGER,
+            name TEXT,
+            comment TEXT,
+            timestamp INTEGER,
+            FOREIGN KEY(product_id) REFERENCES products(id)
+            )`, (err) => {
+            if (err) console.error("Error creating table 'comments':", err.message);
+            else console.log("Table 'comments' created.");
+          });
 
         db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude) VALUES
             ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com', 57.048939, 9.921764),
@@ -116,7 +127,7 @@ db.serialize(() => {
             'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321826.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321831.png', 'Den er faktisk virkelig grim', 30, NULL),
                 (1, 1, 'den grimme maskine (sort)', 6, 25, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128322066.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128321832.png',
                 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128321830.png', '', 'Den er faktisk virkelig grim', 30, 1),
-        
+
             
             (1, 2, 'Eiffeltårnet', 1, 1000900, 'Du skal selv hente den', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel1.jpg', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel2.webp',
             'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel3.jpg', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel4.webp', 'Den er virkelig høj, og lavet af franskmænd', 20, NULL),
