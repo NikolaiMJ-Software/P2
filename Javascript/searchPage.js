@@ -44,7 +44,7 @@ function updateImage(products){
         productPrice.textContent = product.price + ",-";
         //discount
         productDiscount.classList.add('productDiscount');
-        if(product.discount != 0)
+        if(product.discount != 0 && product.discount != null)
         {productDiscount.textContent = "spar: " + product.discount + ",-"};
 
         //add onclick function to bring you to the specific products page
