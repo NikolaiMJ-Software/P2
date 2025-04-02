@@ -24,6 +24,30 @@
         <div class="main">
             <button id="shop_name_button" class="store-name fixed-shop-button"></button>
             <h1 class="product-title" id="product_name"></h1>
+
+            <!-- rating -->
+            <button id="open-rating-popup">Rate this product</button>
+
+<div id="rating-modal" style="display: none;">
+  <div class="modal-content">
+    <button id="close-rating-modal" style="float: right;">&times;</button>
+    <h2>Rate this product</h2>
+
+    <div id="star-rating">
+      <span class="star" data-value="1">&#9734;</span>
+      <span class="star" data-value="2">&#9734;</span>
+      <span class="star" data-value="3">&#9734;</span>
+      <span class="star" data-value="4">&#9734;</span>
+      <span class="star" data-value="5">&#9734;</span>
+    </div>
+
+    <input type="text" id="user-name" placeholder="Your name or nickname">
+    <textarea id="user-comment" placeholder="Write your comment..."></textarea>
+
+    <button id="submit-rating">Submit</button>
+  </div>
+</div>
+
             
             <p class="product-description" id="description"></p>
 
@@ -55,5 +79,6 @@
 </body>
 <script src="./Javascript/productPage.js" defer></script>
 <script type="module" src="./Javascript/cart.js" defer></script>
+<script src="./Javascript/coments.js" defer></script>
 
 </html>
