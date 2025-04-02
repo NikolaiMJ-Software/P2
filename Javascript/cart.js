@@ -116,13 +116,40 @@ function remove_from_table(product_id) {
     fill_table();
 }
 
+//Add to cart button (for product page)
 const button = document.getElementById("cart_button");
 if(button != null) {
     button.addEventListener("click", async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');
         add_to_cart(productId);
-        alert("Du puttet varen i din kurv");
+        alert("Varen er tilføjet til din kurv");
+    });
+}
+
+//Reserve wares button (for cart page)
+const button_reserve = document.getElementById("Confirm_button");
+if(button_reserve != null) {
+    button_reserve.addEventListener("click", reserve_wares);
+}
+function reserve_wares() {
+    let cart = getCookie("products").split(",").map(Number);
+    let sorted_cart = {};
+    for (let i = 0; i < cart.length; i++) {
+        let product_id = cart[i];
+        let shop_id = products[product_id].shop_id;
+        if (!sorted_cart[shop_id]) {
+            sorted_cart[shop_id] = [];
+        }
+        sorted_cart[shop_id].push(product_id);
+    }
+
+    console.log("Sending sorted_cart:", sorted_cart);
+
+    fetch('/reserve_vares', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cart: sorted_cart })
     });
 }
 

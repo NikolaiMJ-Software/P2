@@ -100,8 +100,8 @@ db.serialize(() => {
 
 
         db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude) VALUES
-            ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com', 57.040875, 9.871999),
-            ('jerrys vare', '1', 'Images/Aalborg/jerrys_vare/jerry_logo.png', 'nikolai456654@gmail.com', 57.04543062584897, 9.898746177297006)`, (err) => {
+            ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com', 57.048939, 9.921764),
+            ('jerrys vare', '1', 'Images/Aalborg/jerrys_vare/jerry_logo.png', 'nikolai456654@gmail.com', 57.070059, 9.946330)`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Shop inserted.');
             });

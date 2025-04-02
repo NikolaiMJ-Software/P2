@@ -2,7 +2,9 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 import nodemailer from 'nodemailer';
 import path from 'path';
-import { fileURLToPath } from 'url';
+const app = express();
+
+app.use(express.json());
 
 //Makes files work together
 const router = express.Router();
@@ -47,6 +49,13 @@ function send_mail(receiver, subject, text) {
     });
 }
 
+router.post('/reserve_vares', (req, res) => {
+    const { cart } = req.body;
+    console.log(cart);
+    
+});
+
+/*
 //Reciever function that sends reservations mails for buyer and seller
 router.post('/reserve', (req, res) => {
     //checks if buyer_email and product_id is available
@@ -84,6 +93,7 @@ router.post('/reserve', (req, res) => {
         }
     );
 });
+*/
 
 //This is important, for god who knows what (do not remove)
 export default router;
