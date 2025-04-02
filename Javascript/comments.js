@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function loadComments() {
-    fetch(`/comments?product_id=${productId}`)
+    fetch(`./comments?product_id=${productId}`)
       .then(res => res.json())
       .then(comments => {
         commentList.innerHTML = '';
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    fetch('/comment', {
+    fetch('./comment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ product_id: productId, name, comment })

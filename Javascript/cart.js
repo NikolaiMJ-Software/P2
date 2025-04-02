@@ -152,17 +152,13 @@ function reserve_wares() {
 //Fetch product data from database
 console.log("Fetching product data...");
 const response = await fetch('./products'); // Fetch products from the server
-const products = await response.json().then(start_up);
+const products = await response.json();
 
 //Function that starts automatically fills the table when site has loaded
-function start_up() {
-    while(1) {
-        if (document.readyState !== 'loading') {
-            let data = getCookie("products");
-            console.log(data);
-            fill_table();
-            break;
-        }
-    }
-}
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Page loaded");
+    let data = getCookie("products");
+    console.log(data);
+    fill_table();
+});
 //End of cart.html functionality
