@@ -2,12 +2,14 @@ import { filters } from './filter.js';
 let currentCity = new URLSearchParams(window.location.search).get(`city`);
 document.getElementById("h1ProductPage").textContent = currentCity; //changes title of page to city
 const productButtons = [], productContainer = document.getElementById('productList');
+let productList = []; //list to contain all items of current chosen city
 
 function updateImage(products){
     productContainer.innerHTML = '';// Remove old products
     //go through products
     products.forEach(product => {
         console.log(product.product_name + " " + product.price);
+        productList += product.id;
 
         //initialize all products.
         const productButton = document.createElement('button');
