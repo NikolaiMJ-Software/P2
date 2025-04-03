@@ -2,7 +2,7 @@ import { filters } from './filter.js';
 let currentCity = new URLSearchParams(window.location.search).get(`city`);
 document.getElementById("h1ProductPage").textContent = currentCity; //changes title of page to city
 const productButtons = [], productContainer = document.getElementById('productList');
-let productList = []; //list to contain all items of current chosen city
+let productList = [], advertContainer = document.getElementById('advertList'); //list to contain all items of current chosen city, and container to place advert in.
 
 function updateImage(products){
     productContainer.innerHTML = '';// Remove old products
@@ -121,24 +121,65 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         // RIGHTSIDE AD
-        console.log(productList);
-
         // find the products in the chosen city
         /* this is done in the creation of products */
 
         // Pick a random product (this puts advertProduct as the products ID)
-        let advertProduct = productList[Math.floor(Math.random() * productList.length)];
-        console.log(advertProduct);
+        /* A limit was set so that it can't choose the smallest nor biggest ID we have,
+           to not cause issues when getting a number (it would sometimes give "undefined"),
+           and this is the easiest solution that works to quickly move on */
+        let advertProduct = productList[Math.max(1, Math.floor(Math.random() * productList.length)-1)];
 
-        // TODO: Get elements of the product
-        
-        
-        // TODO: create classes so it can be modified in css
-        
-        
-        // TODO: set it all up in css afterwards
+        // Get the chosen product
+        let advertChosen = products.find(product => product.id === products[advertProduct].id-1);
+        console.log(advertChosen.product_name);
 
+        // create classes so it can be modified in css and add elements
+        const advertButton = document.createElement('button');
+        const advertImage = document.createElement('img');
+        const advertName = document.createElement('p');
+        const advertDesc = document.createElement('p');
+        const advertPrice = document.createElement('p');
+        const advertDiscount = document.createElement('p');
 
+        advertButton.classList.add('advertButton');
+        //image
+        advertImage.classList.add('productImage');
+        advertImage.src = `./${advertChosen.img1_path}`;
+        //name
+        advertName.classList.add('productName');
+        if (advertChosen.product_name.length > 41){
+            advertName.textContent = advertChosen.product_name.slice(0, 41);
+            advertName.textContent += "...";
+        }
+        else advertName.textContent = advertChosen.product_name;
+        //description
+        advertDesc.classList.add('productDesc');
+        if (advertChosen.description.length > 75){
+            advertDesc.textContent = advertChosen.description.slice(0, 75);
+            advertDesc.textContent += "...";
+        }
+        else advertDesc.textContent = advertChosen.description;
+        //price
+        advertPrice.classList.add('productPrice');
+        advertPrice.textContent = advertChosen.price + ",-";
+        //discount
+        advertDiscount.classList.add('productDiscount');
+        if(advertChosen.discount != 0 && advertChosen.discount != null)
+        {advertDiscount.textContent = "spar: " + advertChosen.discount + ",-"};
+
+        // button function redirecting to product page
+        advertButton.onclick = () => {
+            window.location.href = `./productpage?id=${encodeURIComponent(advertChosen.id)}`;
+        }
+
+        // place button in container and add all elements to the button
+        advertContainer.appendChild(advertButton);
+        advertButton.appendChild(advertImage);
+        advertButton.appendChild(advertName);
+        advertButton.appendChild(advertDesc);
+        advertButton.appendChild(advertPrice);
+        advertButton.appendChild(advertDiscount);
     }
     catch(err){
         console.log(err);
