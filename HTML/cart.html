@@ -5,22 +5,27 @@
     </head>
     <body>
       <a href="#" onclick="history.back()" style="text-align: left;">Back</a>
+      <div class="cart-container">
         <table id="cart">
-            <thead>
-              <tr>
-                <th colspan="3">Product cart</th>
-              </tr>
-              <tr>
-                <th>Product name</th>
-                <th>Cost</th>
-                <th>Remove?</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Rows will be added here -->
-            </tbody>
-          </table>
-          <button id="Confirm_button" type="button">Confirm reservation</button>
+          <thead>
+            <tr>
+              <th colspan="3">Kurv</th>
+            </tr>
+            <tr>
+              <th>Produkt navn</th>
+              <th>Pris</th>
+              <th>Fjern?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Rows will be added here -->
+          </tbody>
+        </table>
+        <div id="cart-summary">
+          <h1 id="total_cost">Total cost: 0 kr</h1>
+          <button id="Confirm_button" type="button">Reserver produkter</button>
+        </div>
+      </div>
     </body>
     <script type="module" src="./Javascript/cart.js"></script>
 </html>

@@ -9,5 +9,16 @@ table {
 
 button {
     position: relative;
-    left: 500px;
+}
+.cart-container {
+    display: flex;
+    align-items: flex-start; /* Aligns items at the top */
+    gap: 20px; /* Space between table and summary box */
+}
+#cart-summary {
+    width: 300px;
+    padding: 15px;
+    border: 2px solid black;
+    background-color: #f9f9f9;
+    text-align: center;
 }
