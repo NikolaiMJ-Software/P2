@@ -124,6 +124,33 @@ button {
     right: 5%;
 }
 
+.advert{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    max-width: 300px;
+    position: absolute;
+    top: 415px;
+    right: 5%;
+}
+
+@media (max-width: 1800px) {
+    .advert {
+        display: none;
+    }
+}
+
+.advertButton{
+    position: relative;
+    width: 300px;
+    height: 450px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
 .filter-menu {
     position: relative;
     display: inline-block;
