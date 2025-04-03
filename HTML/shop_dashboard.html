@@ -7,41 +7,40 @@
     <link rel="stylesheet" type="text/css" href="./CSS/shop_dashboard.css">
 </head>
 <body>
-  <a href="#" onclick="history.back()" style="text-align: left;">Back</a>
+  <a href="#" onclick="history.back()">← Tilbage</a>
 
+  <button class="add-button" id="add-button">Tilføj Produkt</button>
 
-        <button class="add-button" id="add-button">Tilføj Produkt</button>
+  <main>
+    <div id="product_list" class="product-list"></div>
+  </main>
 
-          <div id="product_list" class="product-list"></div>
+  <div id="product-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" id="modal-close">&times;</span>
+      <h2>Tilføj nyt produkt</h2>
+      <form id="product-form" enctype="multipart/form-data">
+        <input type="text" id="product-name" name="name" placeholder="Produktnavn" required>
+        <input type="number" id="product-stock" name="stock" placeholder="Lagerbeholdning" required>
+        <input type="number" id="product-price" name="price" placeholder="Pris" required>
+        <input type="number" id="product-discount" name="discount" placeholder="Rabat">
+        <textarea id="product-desc" name="description" placeholder="Beskrivelse"></textarea>
+        <textarea id="product-specs" name="specifications" placeholder="Specifikationer"></textarea>
 
+        <label>Hovedbillede (påkrævet):</label>
+        <input type="file" name="img1" required accept="image/*">
 
-          <div id="product-modal" class="modal">
-            <div class="modal-content">
-              <span class="close-button" id="modal-close">&times;</span>
-              <h2>Tilføj nyt produkt</h2>
-              <form id="product-form" enctype="multipart/form-data">
-                <input type="text" id="product-name" name="name" placeholder="Produktnavn" required>
-                <input type="number" id="product-stock" name="stock" placeholder="Lagerbeholdning" required>
-                <input type="number" id="product-price" name="price" placeholder="Pris" required>
-                <input type="number" id="product-discount" name="discount" placeholder="Discount">
-                <textarea id="product-desc" name="description" placeholder="Beskrivelse"></textarea>
-                <textarea id="product-specs" name="specifications" placeholder="Specifikationer"></textarea>
+        <label>Ekstra billeder:</label>
+        <input type="file" name="img2" accept="image/*">
+        <input type="file" name="img3" accept="image/*">
+        <input type="file" name="img4" accept="image/*">
+        <input type="file" name="img5" accept="image/*">
 
-                <label>Hovedbillede (påkrævet):</label>
-                <input type="file" name="img1" required accept="image/*">
+        <button type="submit">Tilføj</button>
+      </form>
+    </div>
+  </div>
 
-                <label>Ekstra billeder:</label>
-                <input type="file" name="img2" accept="image/*">
-                <input type="file" name="img3" accept="image/*">
-                <input type="file" name="img4" accept="image/*">
-                <input type="file" name="img5" accept="image/*">
-
-                <button type="submit">Tilføj</button>
-              </form>
-            </div>
-          </div>
-
-
-          <script type="module" src="./Javascript/shop_dashboard.js"></script>
+  <script type="module" src="./Javascript/shop_dashboard.js"></script>
 </body>
 </html>
