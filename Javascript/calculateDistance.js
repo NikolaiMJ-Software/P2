@@ -4,26 +4,17 @@ const travelTimesCities = [];
 const travelTimesShops = [];
 
 export async function getTravelTime(destination) {  
+    /*   
+    navigator.geolocation.watchPosition(checkPosition, 
+        (error) => console.error("Error getting location:", error), 
+        { enableHighAccuracy: true, maximumAge: 10000 }
+    );
+    */
+  
   try {
-    // Get user's position
+    // Get user's position 
     const position = await getCurrentPositionPromise();
     
-    if ("geolocation" in navigator) { 
-      /*   
-      navigator.geolocation.watchPosition(checkPosition, 
-          (error) => console.error("Error getting location:", error), 
-          { enableHighAccuracy: true, maximumAge: 10000 }
-      );
-      */
-    } else {
-        if (destination?.cities){
-          alert("Du valgte at sige NEJ til GPS, så byerne ville blive vises som de ligger på serveren.");
-        } else if (destination?.shops) {
-          alert("Filteret kræver at du har aktiveret GPS");
-        }
-    }
-
-    console.log('Got users postion: ', position.coords.latitude, position.coords.longitude);
     
     // Check if the user's position has change
     if(checkPosition(position)){
