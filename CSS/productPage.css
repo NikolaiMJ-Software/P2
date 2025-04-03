@@ -265,15 +265,16 @@ body {
 }
 
 #star-rating .star {
-  font-size: 25px;
+  font-size: 28px;
   cursor: pointer;
   color: gray;
+  transition: color 0.2s ease;
 }
 
+#star-rating .star.hovered,
 #star-rating .star.selected {
   color: gold;
 }
-
 #user-name, #user-comment {
   width: 100%;
   margin: 10px 0;
@@ -288,41 +289,6 @@ dialog {
     max-width: 300px;
   }
   
-  .modal-content {
-    text-align: center;
-  }
-  
-  #star-rating .star {
-    font-size: 24px;
-    cursor: pointer;
-    color: gray;
-  }
-  
-  #star-rating .star.selected {
-    color: gold;
-  }
-  #rating-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    width: 500px;
-    max-height: 90vh; 
-    overflow-y: auto;
-    text-align: center;
-  }
   #submit-rating {
     margin-bottom: 10px;
   }
@@ -338,3 +304,9 @@ dialog {
     margin-bottom: 5px;
   }  
   
+  .average-stars {
+    font-size: 18px;
+    color: gold;
+    margin: 8px 0 12px;
+    text-align: left;
+  }

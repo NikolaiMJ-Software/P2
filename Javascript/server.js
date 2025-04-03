@@ -218,7 +218,7 @@ app.get('/comments', (req, res) => {
 
 // POST a new comment
 app.post('/comment', (req, res) => {
-    const { product_id, name, comment } = req.body;
+    const { product_id, name, comment, rating } = req.body; // <-- ADD `rating`
     const timestamp = Date.now();
 
     if (!product_id || !comment) {
@@ -226,8 +226,8 @@ app.post('/comment', (req, res) => {
     }
 
     db.run(
-        'INSERT INTO comments (product_id, name, comment, timestamp) VALUES (?, ?, ?, ?)',
-        [product_id, name || 'Anonymous', comment, timestamp],
+        'INSERT INTO comments (product_id, name, comment, rating, timestamp) VALUES (?, ?, ?, ?, ?)',
+        [product_id, name || 'Anonymous', comment, rating, timestamp],
         function (err) {
             if (err) {
                 res.status(500).json({ error: err.message });
@@ -237,6 +237,28 @@ app.post('/comment', (req, res) => {
         }
     );
 });
+
+
+//get average from the rating
+app.get('/rating', (req, res) => {
+    const productId = req.query.product_id;
+
+    if (!productId) return res.status(400).json({ error: 'Missing product_id' });
+
+    db.get(
+        `SELECT AVG(rating) as avg_rating, COUNT(rating) as total
+        FROM comments WHERE product_id = ? AND rating IS NOT NULL`,
+        [productId],
+        (err, row) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({
+            average: row.avg_rating ? Number(row.avg_rating).toFixed(1) : null,
+            count: row.total
+            });
+        }
+    );
+});
+
 
 app.use('/', reserve_router);
 

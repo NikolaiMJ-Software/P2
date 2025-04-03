@@ -90,6 +90,7 @@ db.serialize(() => {
         product_id INTEGER,
         name TEXT,
         comment TEXT,
+        rating INTEGER,
         timestamp INTEGER,
         FOREIGN KEY(product_id) REFERENCES products(id)
         )`, (err) => {
