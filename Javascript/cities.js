@@ -1,6 +1,7 @@
-import { getTravelTime } from './calculateDistance.js';
+import { getTravelTime, getCurrentPositionPromise } from './calculateDistance.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+    getCurrentPositionPromise();
     try {
         const response = await fetch('./cities'); // Fetch cities from the server
         const cities = await response.json();
@@ -15,9 +16,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const cityButtons = [];
         let travelTimes = await getTravelTime(cities); // Array for holding cities and travel time
         travelTimes = travelTimes.map(item => ({ city: item.name, time: item.time })); // Convert "name" to "city"
-        // Debugging - Check sorted array
+        /*Debugging - Check sorted array
             console.log("Sorted travel times:", travelTimes);
-        
+        */
        
         // If travelTimes is empty the cities priority will be taken from the server
         if (travelTimes.length === 0) {

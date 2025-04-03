@@ -1,4 +1,5 @@
 //Start of cart functionality
+let total_cost = 0;
 //Function that adds product to item cart which is stored in cookies
 function add_to_cart(product_id) {
     product_id = parseInt(product_id);
@@ -62,6 +63,7 @@ function getCookie(cname) {
 //Function for filling data table for cart
 function fill_table() {
     console.log("Filling table...");
+    total_cost = 0;
     //Gets cart data from the cookie, and check if the there even is data
     let data = getCookie("products")
     if (!data) {
@@ -83,6 +85,7 @@ function fill_table() {
         //creates and fills product price element
         let price_element = document.createElement("td");
         price_element.textContent = products[product].price;
+        total_cost += products[product].price;
 
         //creates preset button to remove product from cart, 
         let button_element = document.createElement("td")
@@ -91,6 +94,8 @@ function fill_table() {
         remove_button.addEventListener("click", () => remove_from_table(product));
         //adds button to a element in the row
         button_element.appendChild(remove_button);
+
+        document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
 
         //adds all elements as a child to the row, and the row as a child to the table
         row.appendChild(name_element);
@@ -130,6 +135,10 @@ if(button_reserve != null) {
 }
 function reserve_wares() {
     let cart = getCookie("products").split(",").map(Number);
+    if (cart.length === 0) {
+        alert("Kurven er tom!");
+        return;
+    }
     let sorted_cart = {};
     for (let i = 0; i < cart.length; i++) {
         let product_id = cart[i];
