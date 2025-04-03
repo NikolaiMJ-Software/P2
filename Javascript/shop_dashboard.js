@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
 
         add_product.innerHTML=`
             <div class="product-left">
+                <button class="edit-button" data-id="${product.id}">✎</button>
                 <img class="product-image" src="${product.img1_path}" alt="${product.product_name}">
                 <div class="product-info">
                     <div class="product-name">${product.product_name}</div>
