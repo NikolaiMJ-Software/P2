@@ -82,18 +82,19 @@ document.addEventListener("DOMContentLoaded", async () =>{
     form.addEventListener("submit", async (e)=>{
         e.preventDefault();
 
-        const name = document.getElementById("product-name").value;
+        /*const name = document.getElementById("product-name").value;
         const stock = parseInt(document.getElementById("product-stock").value);
         const price = parseFloat(document.getElementById("product-price").value);
         const disc = parseFloat(document.getElementById("product-discount").value)
         const desc = document.getElementById("product-desc").value;
-        const specs = document.getElementById("product-specs").value;
+        const specs = document.getElementById("product-specs").value;*/
+
+        const form_data = new FormData(form);
 
         const updateRes = await fetch("./add_product",{
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({name, stock, price, discount: disc, description: desc, specifications: specs})
-        })
+            body: form_data,
+        });
         
             if (updateRes.ok) {
                 alert("Vare er blevet tilføjet.");

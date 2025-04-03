@@ -22,8 +22,8 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 db.serialize(() => {
     db.run(`DROP TABLE IF EXISTS users`);
+    db.run(`DROP TABLE IF EXISTS comments`);
     db.run(`DROP TABLE IF EXISTS products`);
-    db.run(`DROP TABLE IF EXISTS users`);
     db.run(`DROP TABLE IF EXISTS shops`);
     db.run(`DROP TABLE IF EXISTS cities`);
 
@@ -71,8 +71,33 @@ db.serialize(() => {
     FOREIGN KEY(city_id) REFERENCES cities(id),
     FOREIGN KEY(parent_id) REFERENCES products(id)
     )`);
+        
 
-    db.run(`INSERT INTO cities (city, image_path, latitude, longitude) VALUES 
+    db.run(`CREATE TABLE users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT UNIQUE NOT NULL,
+        name TEXT,
+        password TEXT,
+        shop_id INTEGER,
+        FOREIGN KEY(shop_id) REFERENCES shops(id)
+    )`, (err) => {
+        if (err) console.error("Error creating table:", err.message);
+        else console.log("Table 'users' created.");
+    });
+
+    db.run(`CREATE TABLE IF NOT EXISTS comments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_id INTEGER,
+        name TEXT,
+        comment TEXT,
+        timestamp INTEGER,
+        FOREIGN KEY(product_id) REFERENCES products(id)
+        )`, (err) => {
+        if (err) console.error("Error creating table 'comments':", err.message);
+        else console.log("Table 'comments' created.");
+      });
+
+        db.run(`INSERT INTO cities (city, image_path, latitude, longitude) VALUES 
         ('Aalborg', 'Images/Aalborg/musikkenshus.jpg', 57.0499998, 9.916663),
         ('Randers', 'Images/Randers/Randers_Regnskov.jpg', 56.4607, 10.03639),
         ('Aarhus', 'Images/Aarhus/gamle_by.jpg', 56.1572, 10.2107),
@@ -85,31 +110,8 @@ db.serialize(() => {
             if (err) console.error('Error inserting data:', err.message);
             else console.log('Cities with image paths inserted.');
         });
-        
 
-        db.run(`CREATE TABLE users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT UNIQUE NOT NULL,
-            name TEXT,
-            password TEXT,
-            shop_id INTEGER,
-            FOREIGN KEY(shop_id) REFERENCES shops(id)
-        )`, (err) => {
-            if (err) console.error("Error creating table:", err.message);
-            else console.log("Table 'users' created.");
-        });
 
-        db.run(`CREATE TABLE IF NOT EXISTS comments (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            product_id INTEGER,
-            name TEXT,
-            comment TEXT,
-            timestamp INTEGER,
-            FOREIGN KEY(product_id) REFERENCES products(id)
-            )`, (err) => {
-            if (err) console.error("Error creating table 'comments':", err.message);
-            else console.log("Table 'comments' created.");
-          });
 
         db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude) VALUES
             ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com', 57.048939, 9.921764),
@@ -130,8 +132,8 @@ db.serialize(() => {
                 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128321830.png', '', 'Den er faktisk virkelig grim', 30, 1),
 
             
-            (1, 2, 'Eiffeltårnet', 1, 1000900, 'Du skal selv hente den', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel1.jpg', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel2.webp',
-            'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel3.jpg', 'Images/Aalborg/jerrys_vare/Eiffeltårnet/Eiffel4.webp', 'Den er virkelig høj, og lavet af franskmænd', 20, NULL),
+            (1, 2, 'Eiffeltårnet', 1, 1000900, 'Du skal selv hente den', 'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel1.jpg', 'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel2.webp',
+            'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel3.jpg', 'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel4.webp', 'Den er virkelig høj, og lavet af franskmænd', 20, NULL),
             
             (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Black)', 100, 9259, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
             'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black3.png',
