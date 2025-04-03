@@ -149,16 +149,24 @@ function reserve_wares() {
     });
 }
 
-//Fetch product data from database
-console.log("Fetching product data...");
-const response = await fetch('./products'); // Fetch products from the server
-const products = await response.json();
+async function check_readiness() {
+    console.log("Fetching product data...");
+    const response = await fetch('./products'); // Fetch products from the server
+    const products = await response.json();  // Ensure products is fetched before using it
 
-//Function that starts automatically fills the table when site has loaded
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Page loaded");
-    let data = getCookie("products");
-    console.log(data);
-    fill_table();
-});
+    function startUp() {
+        console.log("Page loaded");
+        let data = getCookie("products");
+        console.log(data);
+        fill_table();
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", startUp);
+    } else {
+        startUp();  // If already loaded, run immediately
+    }
+}
+
+check_readiness();
 //End of cart.html functionality

@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const commentInput = document.getElementById('user-comment');
   const modal = document.getElementById('rating-modal');
 
-  // ✅ ADD these lines to control the popup
   const openBtn = document.getElementById('open-rating-popup');
   const closeBtn = document.getElementById('close-rating-modal');
 

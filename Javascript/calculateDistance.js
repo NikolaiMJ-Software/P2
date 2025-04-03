@@ -12,7 +12,7 @@ export async function getTravelTime(destination) {
     console.log(userLat, userLon);
     
     
-    const d = haversineDistanceM(userLat, userLon, 57.048939, 9.921764);
+    //const d = haversineDistanceM(userLat, userLon, 57.048939, 9.921764);
     //alert(d.toFixed(2) + ' meters away');
 
     let completed = 0; // Track progress for the progress bar
@@ -92,7 +92,7 @@ function getCurrentPositionPromise() {
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 }
-
+/*
 function haversineDistanceM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
     function toRad(degree) {
         return degree * Math.PI / 180;
@@ -151,3 +151,4 @@ if ("geolocation" in navigator) {
 } else {
     console.error("Geolocation is not supported by this browser.");
 }
+    */
