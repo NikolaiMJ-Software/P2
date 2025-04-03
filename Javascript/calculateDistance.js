@@ -4,17 +4,10 @@ const travelTimesCities = [];
 const travelTimesShops = [];
 
 export async function getTravelTime(destination) {  
-    /*   
-    navigator.geolocation.watchPosition(checkPosition, 
-        (error) => console.error("Error getting location:", error), 
-        { enableHighAccuracy: true, maximumAge: 10000 }
-    );
-    */
-  
+ 
   try {
     // Get user's position 
-    const position = await getCurrentPositionPromise();
-    
+    const position = await getWatchPositionPromise();
     
     // Check if the user's position has change
     if(checkPosition(position)){
@@ -123,39 +116,72 @@ export async function calcDistance(userLat, userLon, destLat, destLon){
   }
 }
 
-// Help function to get users location
-function getCurrentPositionPromise() {
-  
+// Help function to get first users location
+export function getCurrentPositionPromise() {
   return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(resolve, reject, {
-      enableHighAccuracy: true,
-      timeout: 5000,  // Maksimal ventetid på 5 sekunder
-      maximumAge: 10000 // Genbrug position op til 10 sekunder gammel
-    });
-  });
-  
- /*
-  return new Promise((resolve, reject) => {
-    const watchId = navigator.geolocation.watchPosition(
-        (position) => {
-            resolve(position); // Returnér den første position
-            navigator.geolocation.clearWatch(watchId); // Stop overvågning
-        },
-        reject,
-        { enableHighAccuracy: true, maximumAge: 1000 }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        // Store the position in localStorage
+        localStorage.setItem("getLastLat", position.coords.latitude);
+        localStorage.setItem("getLastLon", position.coords.longitude);
+
+        console.log("Stored position in localStorage:", position.coords.latitude, position.coords.longitude);
+        
+        // Resolve with the position
+        resolve();
+      },
+      (error) => {
+        console.error("Error getting position:", error);
+        reject(error);
+      },
+      {
+        enableHighAccuracy: false,
+        maximumAge: 10000, // Cache position for up to 10 sec
+      }
     );
   });
-
-  if ("geolocation" in navigator) {
-      navigator.geolocation.watchPosition(checkPosition, 
-          (error) => console.error("Error getting location:", error), 
-          { enableHighAccuracy: true, maximumAge: 10000 }
-      );
-  } else {
-      console.error("Geolocation is not supported by this browser.");
-  }
-      */
 }
+
+// Help function to update users location
+export function getWatchPositionPromise() {
+  return new Promise((resolve, reject) => {
+    // Try to get last saved position first
+    const lastLat = localStorage.getItem("getLastLat");
+    const lastLon = localStorage.getItem("getLastLon");
+
+    if (lastLat && lastLon) {
+      console.log("Using last known position:", lastLat, lastLon);
+      resolve({ coords: { latitude: parseFloat(lastLat), longitude: parseFloat(lastLon) } });
+    }
+
+    // Start watching position in the background
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        // Store updated position
+        localStorage.setItem("getLastLat", position.coords.latitude);
+        localStorage.setItem("getLastLon", position.coords.longitude);
+        
+        console.log("Updated background location:", position.coords.latitude, position.coords.longitude);
+        
+      },
+      (error) => {
+        console.error("GPS error:", error);
+        if (!lastLat || !lastLon) reject(error); // Reject only if no fallback exists
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 10000 // Allow cached positions up to 10 sec old
+      }
+    );
+
+    // Automatically clear watch after 5 minutes to save battery
+    setTimeout(() => {
+      navigator.geolocation.clearWatch(watchId);
+      console.log("Stopped watching position to save battery.");
+    }, 300000); // 5 minutes
+  });
+}
+
 
 // Clac coordinates changes in meters
 export function haversineDistanceM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
