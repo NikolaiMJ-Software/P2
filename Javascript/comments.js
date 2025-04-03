@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Fetch and display average star rating
   function fetchAverageRating() {
-    fetch(`/rating?product_id=${productId}`)
+    fetch(`./rating?product_id=${productId}`)
       .then(res => res.json())
       .then(data => {
         displayAverageRating(data.average, data.count);
