@@ -4,6 +4,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const filterButton = document.getElementById('filterButton');
     const filterDropdown = document.getElementById('filterDropdown');
 
+    // Reset all checkboxes to unchecked on page load
+    document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+        checkbox.checked = false; // Uncheck all checkboxes
+    });
+
     // Hide the dropdown menu when the filter button is clicked
     filterButton.addEventListener('click', () => {
         filterDropdown.classList.toggle('hidden');
