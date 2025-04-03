@@ -206,3 +206,19 @@ button:hover {
   color: white;
   margin-top: 10px;
 }
+
+.edit-button {
+  background-color: #5E96A2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.edit-button:hover {
+  background-color: #4A7E8F;
+}
