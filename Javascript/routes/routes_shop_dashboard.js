@@ -131,7 +131,7 @@ router.post("/add_product", upload.fields([
             }
 
             const city_name = city_row.city;
-            const dir = path.join('images', city_name, shop_name, name);
+            const dir = path.join('Images', city_name, shop_name, name);
             const specific_dir = path.join(process.cwd(), dir);
 
             await fse.ensureDir(specific_dir);
@@ -141,7 +141,7 @@ router.post("/add_product", upload.fields([
                 if (file) {
                     const newPath = path.join(specific_dir, file.originalname);
                     fs.renameSync(file.path, newPath); // move the file
-                    return `/${dir}/${file.originalname}`.replace(/\\/g, '/'); // for DB
+                    return `${dir}/${file.originalname}`.replace(/\\/g, '/'); // for DB
                 }
                 return null;
             });
