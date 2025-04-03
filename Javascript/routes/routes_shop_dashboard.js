@@ -85,15 +85,40 @@ router.post('/delete_ware', (req, res)=>{
         return res.status(403).send("Ikke autoriseret");
     }
 
-    db.run(`DELETE FROM products WHERE id = ? AND shop_id = ?`, [id, req.user.shop_id], (err) => {
-        if (err){
+    db.get(`SELECT product_name, city_id FROM products WHERE id = ? and shop_id = ?`, [id, req.user.shop_id], (err, product)=>{
+        if(err || !product){
             return res.status(500).send("Databasefejl");
-        }else{
-            res.send("Item deleted");
         }
-    });
 
-});
+        db.get(`SELECT city FROM cities WHERE id = ?`, [product.city_id], (err, city)=>{
+            if(err || !city){
+                return res.status(500).send("Databasefejl");
+            }
+
+                db.get(`SELECT shop_name FROM shops WHERE id = ?`, [req.user.shop_id], (err, shop)=>{
+                    if(err || !shop){
+                        return res.status(500).send("Databasefejl");
+                    }
+
+                    const folder_path = path.join(process.cwd(), 'images', city.city, shop.shop_name, product.product_name);
+
+                    db.run(`DELETE FROM products WHERE id = ? AND shop_id = ?`, [id, req.user.shop_id], (err) => {
+                        if (err){
+                            return res.status(500).send("Databasefejl");
+                        }
+                        fs.rm(folder_path, { recursive: true, force: true }, (err) => {
+                            if (err){
+                                console.error("Kunne ikke slette billedmappe:", err);
+                            }
+
+                            res.send("Varer og billeder slettet.");
+                        });
+                    });
+            
+                });
+            });
+        });
+    });
 
 router.post("/add_product", upload.fields([
     {name: 'img1', maxCount: 1},
