@@ -58,6 +58,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Set the main product image (img1)
         updateImage('img1', img1_path);
 
+        const priceContainer = document.querySelector('.price');
+        if (price <= 0) {
+          priceContainer.style.display = 'none';
+        }
+
         //Make save disapear if there is no discount
         if (discount > 0) {
             document.getElementById("discount").innerText = discount;
