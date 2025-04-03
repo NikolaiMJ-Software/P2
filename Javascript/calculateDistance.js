@@ -1,21 +1,62 @@
 const API_KEY = "AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ"; // Replace with yours Google API-key
 const url = "https://routes.googleapis.com/directions/v2:computeRoutes"; // The URL for using the API
+const travelTimesCities = [];
+const travelTimesShops = [];
 
-export async function getTravelTime(destination) {
-  const progressBar = document.getElementById('loading-progress');
-  const travelTimes = [];
+export async function getTravelTime(destination) {  
+    /*   
+    navigator.geolocation.watchPosition(checkPosition, 
+        (error) => console.error("Error getting location:", error), 
+        { enableHighAccuracy: true, maximumAge: 10000 }
+    );
+    */
+  
   try {
-    // Get user's location (latitude and longitude)
+    // Get user's position 
     const position = await getCurrentPositionPromise();
+    
+    
+    // Check if the user's position has change
+    if(checkPosition(position)){
+      // Calc new travel times
+      console.log('Starting calc new traveltimes');
+      let travelTimes = calcTravelTimes(position, destination);
+
+      // Save new travel times to the corresponding input
+      if(destination?.cities){
+        travelTimesCities.splice(0, travelTimesCities.length, ...travelTimes);
+      } else if (destination?.shops){
+        travelTimesShops.splice(0, travelTimesShops.length, ...travelTimes);
+      }
+      return travelTimes;
+
+    } else {
+      console.log('Return saved traveltimes');
+
+      // Return last saved sorted lists 
+      if(destination?.cities && travelTimesCities !== 0 ){
+        return travelTimesCities;
+      } else if(destination?.shops && travelTimesShops != 0){
+        return travelTimesShops;
+      } else{
+        return calcTravelTimes(position, destination);
+      }
+    }
+
+  } catch (error) {
+    console.error("Error no GPS:", error);
+    return []; // Return empty array if an error occurs
+  }
+}
+
+export async function calcTravelTimes(position, destination){
+  const progressBar = document.getElementById('loading-progress');
+  let completed = 0; // Track progress for the progress bar
+  const travelTimes = [];
+  try{
     const userLat = position.coords.latitude;
     const userLon = position.coords.longitude;
-    console.log(userLat, userLon);
-    
-    
-    //const d = haversineDistanceM(userLat, userLon, 57.048939, 9.921764);
-    //alert(d.toFixed(2) + ' meters away');
 
-    let completed = 0; // Track progress for the progress bar
     // Prepare and send requests for multiple destination simultaneously
     const travelTimePromises = destination.map((place) => {
       return calcDistance(userLat, userLon, place.latitude, place.longitude) // Return promise
@@ -40,10 +81,7 @@ export async function getTravelTime(destination) {
 
     // Sort travel times so the nearest destination comes first
     travelTimes.sort((a, b) => a.time - b.time);
-    /* Debugging - Check sorted array
-      console.log("Sorted travel times:", travelTimes);
-    */
-    return travelTimes; // Return the sorted list of travel times
+    return travelTimes;
 
   } catch (error) {
     console.error("Error fetching travel times:", error);
@@ -71,7 +109,6 @@ export async function calcDistance(userLat, userLon, destLat, destLon){
       },
       body: JSON.stringify(requestBody)
     });
-    // Convert return to JSON
     const data = await response.json();
     /* Debugging - check the return data
       console.log(data);
@@ -88,12 +125,40 @@ export async function calcDistance(userLat, userLon, destLat, destLon){
 
 // Help function to get users location
 function getCurrentPositionPromise() {
+  
   return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
+    navigator.geolocation.getCurrentPosition(resolve, reject, {
+      enableHighAccuracy: true,
+      timeout: 5000,  // Maksimal ventetid på 5 sekunder
+      maximumAge: 10000 // Genbrug position op til 10 sekunder gammel
+    });
   });
+  
+ /*
+  return new Promise((resolve, reject) => {
+    const watchId = navigator.geolocation.watchPosition(
+        (position) => {
+            resolve(position); // Returnér den første position
+            navigator.geolocation.clearWatch(watchId); // Stop overvågning
+        },
+        reject,
+        { enableHighAccuracy: true, maximumAge: 1000 }
+    );
+  });
+
+  if ("geolocation" in navigator) {
+      navigator.geolocation.watchPosition(checkPosition, 
+          (error) => console.error("Error getting location:", error), 
+          { enableHighAccuracy: true, maximumAge: 10000 }
+      );
+  } else {
+      console.error("Geolocation is not supported by this browser.");
+  }
+      */
 }
-/*
-function haversineDistanceM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
+
+// Clac coordinates changes in meters
+export function haversineDistanceM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
     function toRad(degree) {
         return degree * Math.PI / 180;
     }
@@ -113,18 +178,19 @@ function haversineDistanceM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
             * sin(dLon / 2) * sin(dLon / 2);
     const c = 2 * atan2(sqrt(a), sqrt(1 - a)); 
     const d = R * c;
-    return d*1000; // distance in meters
+    return d * 1000; // distance in meters
 }
 
-function savePosition(position) {
+// Save users position
+export function savePosition(position) {
   localStorage.setItem("lastLat", position.coords.latitude);
   localStorage.setItem("lastLon", position.coords.longitude);
 }
 
-function checkPosition(position) {
+// Check if users position has changed more than 10 meters
+export function checkPosition(position) {
   const newLat = position.coords.latitude;
   const newLon = position.coords.longitude;
-
   const lastLat = parseFloat(localStorage.getItem("lastLat"));
   const lastLon = parseFloat(localStorage.getItem("lastLon"));
 
@@ -134,21 +200,13 @@ function checkPosition(position) {
       
       if (distance > 10) {
           console.log("User has moved more than 10 meters.");
+          // Update stored position
+          savePosition(position);
+          return true;
+
       } else {
           console.log("User is within 10 meters.");
+          return false;
       }
-  }
-
-  savePosition(position); // Update stored position
+  }  
 }
-
-// Start tracking
-if ("geolocation" in navigator) {
-    navigator.geolocation.watchPosition(checkPosition, 
-        (error) => console.error("Error getting location:", error), 
-        { enableHighAccuracy: true, maximumAge: 10000 }
-    );
-} else {
-    console.error("Geolocation is not supported by this browser.");
-}
-    */

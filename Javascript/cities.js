@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const cityButtons = [];
         let travelTimes = await getTravelTime(cities); // Array for holding cities and travel time
         travelTimes = travelTimes.map(item => ({ city: item.name, time: item.time })); // Convert "name" to "city"
-        /* Debugging - Check sorted array
+        // Debugging - Check sorted array
             console.log("Sorted travel times:", travelTimes);
-        */
+        
        
         // If travelTimes is empty the cities priority will be taken from the server
         if (travelTimes.length === 0) {
-            alert("Du valgte at sige NEJ til GPS, så byerne ville blive vises som de ligger på serveren.");
+            alert("Du valgte at sige NEJ til GPS, så byerne vil blive vist som de ligger på serveren.");
             travelTimes = cities.map(city => ({ city: city.city }));
         }
         

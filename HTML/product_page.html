@@ -26,31 +26,31 @@
             <h1 class="product-title" id="product_name"></h1>
 
             <!-- rating -->
-            <button id="open-rating-popup">Rate this product</button>
+            <div id="average-rating-display" class="average-stars" style="cursor: pointer;"></div>
 
-<div id="rating-modal" style="display: none;">
-  <div class="modal-content">
-    <button id="close-rating-modal" style="float: right;">&times;</button>
-    <h2>Rate this product</h2>
+                <div id="rating-modal" style="display: none;">
+                <div class="modal-content">
+                    <button id="close-rating-modal" style="float: right;">&times;</button>
+                    <h2>Rate this product</h2>
 
-    <div id="star-rating">
-      <span class="star" data-value="1">&#9734;</span>
-      <span class="star" data-value="2">&#9734;</span>
-      <span class="star" data-value="3">&#9734;</span>
-      <span class="star" data-value="4">&#9734;</span>
-      <span class="star" data-value="5">&#9734;</span>
-    </div>
+                    <div id="star-rating">
+                    <span class="star" data-value="1">&#9734;</span>
+                    <span class="star" data-value="2">&#9734;</span>
+                    <span class="star" data-value="3">&#9734;</span>
+                    <span class="star" data-value="4">&#9734;</span>
+                    <span class="star" data-value="5">&#9734;</span>
+                    </div>
 
-    <input type="text" id="user-name" placeholder="Your name or nickname">
-    <textarea id="user-comment" placeholder="Write your comment..."></textarea>
+                    <input type="text" id="user-name" placeholder="Your name or nickname">
+                    <textarea id="user-comment" placeholder="Write your comment..."></textarea>
 
-    <button id="submit-rating">Submit</button>
-    <div class="comment-preview">
-        <h3>All Comments</h3>
-        <ul id="comments-list"></ul>
-      </div>
-  </div>
-</div>
+                    <button id="submit-rating">Submit</button>
+                    <div class="comment-preview">
+                        <h3>All Comments</h3>
+                        <ul id="comments-list"></ul>
+                    </div>
+                </div>
+                </div>
 
             
             <p class="product-description" id="description"></p>
