@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
        
         // If travelTimes is empty the cities priority will be taken from the server
         if (travelTimes.length === 0) {
+            alert("Du valgte at sige NEJ til GPS, så byerne vil blive vist som de ligger på serveren.");
             travelTimes = cities.map(city => ({ city: city.city }));
         }
         
