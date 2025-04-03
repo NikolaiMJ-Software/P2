@@ -77,9 +77,21 @@ app.get('/', (req, res) => {
 //path to searchpage
 app.get('/searchpage', (req, res) => {
     const city = req.query.city; // Get city from query
-    console.log(`City requested: ${city}`); 
-    console.log("User:", req.user?.email);
-    res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
+    
+    db.all(`SELECT * FROM cities WHERE city = ?`, [city], (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        
+        if (!rows[0]){
+            res.status(404).json({ error: 'City not found' });
+            return;
+        }
+        console.log(`City requested: ${city}`); 
+        console.log("User:", req.user?.email);
+        res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
+    })
 });
 
 //path to productpage
