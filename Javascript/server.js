@@ -204,7 +204,7 @@ app.get('/comments', (req, res) => {
     }
 
     db.all(
-        'SELECT name, comment, timestamp FROM comments WHERE product_id = ? ORDER BY timestamp DESC',
+        'SELECT name, comment, rating, timestamp FROM comments WHERE product_id = ? ORDER BY timestamp DESC',
         [productId],
         (err, rows) => {
             if (err) {

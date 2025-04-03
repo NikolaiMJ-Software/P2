@@ -27,14 +27,35 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch(`./comments?product_id=${productId}`)
       .then(res => res.json())
       .then(comments => {
+        // Clear both containers
         commentList.innerHTML = '';
+        const bottomList = document.getElementById('comments-list-bottom');
+        if (bottomList) bottomList.innerHTML = '';
+  
         comments.forEach(c => {
           const li = document.createElement('li');
-          li.innerHTML = `<strong>${c.name}</strong>: ${c.comment}<br><small>${new Date(c.timestamp).toLocaleString()}</small>`;
+          li.style.marginBottom = '12px'; // spacing
+        
+          let starsHTML = '';
+          const full = Math.floor(c.rating || 0);
+          const half = (c.rating % 1 >= 0.5);
+          for (let i = 0; i < full; i++) starsHTML += '★';
+          for (let i = full + (half ? 1 : 0); i < 5; i++) starsHTML += '☆';
+        
+          li.innerHTML = `
+            <div>
+              <strong>${c.name}</strong> 
+              <span class="average-stars">${starsHTML}</span>
+            </div>            <div>${c.comment}</div>
+            <small>${new Date(c.timestamp).toLocaleString()}</small>
+          `;
+        
           commentList.appendChild(li);
+          if (bottomList) bottomList.appendChild(li.cloneNode(true));
         });
       });
   }
+  
 
   // Handle submission
   submitBtn.addEventListener('click', () => {
