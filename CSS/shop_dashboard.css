@@ -216,6 +216,13 @@ form button[type="submit"] {
 }
 
 
+.current-img-info {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #5E96A2;
+  font-style: italic;
+}
+
 
 
 .edit-button {

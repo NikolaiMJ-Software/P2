@@ -66,13 +66,18 @@
         <p>Produkt specifikationer:</p>
         <textarea id="update-product-specs" name="update-specifications" placeholder="Specifikationer"></textarea>
       
-        <label>Hovedbillede (påkrævet):</label>
-        <input type="file" name="update-img1" required accept="image/*">
+        <label>Hovedbillede:</label>
+        <p id="current-img1-name" class="current-img-info"></p>
+        <input type="file" name="update-img1" accept="image/*">
       
         <label>Ekstra billeder:</label>
+        <p id="current-img2-name" class="current-img-info"></p>
         <input type="file" name="update-img2" accept="image/*">
+        <p id="current-img3-name" class="current-img-info"></p>
         <input type="file" name="update-img3" accept="image/*">
+        <p id="current-img4-name" class="current-img-info"></p>
         <input type="file" name="update-img4" accept="image/*">
+        <p id="current-img5-name" class="current-img-info"></p>
         <input type="file" name="update-img5" accept="image/*">
       
         <button type="submit">Opdater</button>
