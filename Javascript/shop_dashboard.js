@@ -92,6 +92,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
 
     close_button.addEventListener("click", async (e) => {
         add_panel.style.display = "none";
+        document.getElementById("product-form").reset();
     });
 
     form.addEventListener("submit", async (e)=>{
@@ -107,10 +108,11 @@ document.addEventListener("DOMContentLoaded", async () =>{
             if (updateRes.ok) {
                 alert("Vare er blevet tilføjet.");
                 location.reload();
+                document.getElementById("product-form").reset();
             } else {
                 alert("Kunne ikke opdatere lagerbeholdning.");
+                document.getElementById("product-form").reset();
             }
-        
     });
 
 });
