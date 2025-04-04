@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
 
         add_product.innerHTML=`
             <div class="product-left">
+                <button class="edit-button" data-id="${product.id}">✎</button>
                 <img class="product-image" src="${product.img1_path}" alt="${product.product_name}">
                 <div class="product-info">
                     <div class="product-name">${product.product_name}</div>
@@ -91,6 +92,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
 
     close_button.addEventListener("click", async (e) => {
         add_panel.style.display = "none";
+        document.getElementById("product-form").reset();
     });
 
     form.addEventListener("submit", async (e)=>{
@@ -106,10 +108,11 @@ document.addEventListener("DOMContentLoaded", async () =>{
             if (updateRes.ok) {
                 alert("Vare er blevet tilføjet.");
                 location.reload();
+                document.getElementById("product-form").reset();
             } else {
                 alert("Kunne ikke opdatere lagerbeholdning.");
+                document.getElementById("product-form").reset();
             }
-        
     });
 
 });
