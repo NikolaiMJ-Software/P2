@@ -7,12 +7,15 @@
     <link rel="stylesheet" href="./CSS/productPage.css">
 </head>
 <body>
-    <header>
-        <a href="#" onclick="history.back()" class="back-button">Back</a>
-    </header>
-    <a href="./cart">
-        <button id="cart" type="button">Din kurv</button>
-    </a>
+    <button id="back" style="text-align: left;" onclick="history.back()">Back</button>
+  <div style="text-align: right; translate: 0px -53px; justify-self: right; max-width: 500px;">
+    <button id="cart" style="font-family: Arial;" onclick="window.location.href='./cart'">Din kurv</button>
+    <button id="signup" style="font-family: Arial;" onclick="window.location.href='./signup'">Signup</button>
+    <button id="login" style="font-family: Arial;" onclick="window.location.href='./login'">Login</button>
+    <button id="logout" style="display: none;">Logout</button>
+    <button id="shop" style="display: none;">shop</button>
+  </div>
+    
     <div class="row">
         <!-- Product Image -->
         <div class="product-image">
@@ -89,5 +92,6 @@
 <script src="./Javascript/productPage.js" defer></script>
 <script type="module" src="./Javascript/cart.js" defer></script>
 <script src="./Javascript/comments.js" defer></script>
+<script src="./Javascript/logout.js"></script>
 
 </html>
