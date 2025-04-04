@@ -71,6 +71,7 @@ function fill_table() {
     let data = getCookie("products")
     if (!data) {
         console.log("Could not load cart...");
+        document.getElementById("total_cost").textContent = "Endelig pris: 0 kr.";
         return;
     }
     data = data.split(",").map(Number);
@@ -83,12 +84,12 @@ function fill_table() {
 
         //creates and fills product name element
         let name_element = document.createElement("td");
-        name_element.textContent = products[product].product_name;
+        name_element.textContent = products[product-1].product_name;
 
         //creates and fills product price element
         let price_element = document.createElement("td");
-        price_element.textContent = products[product].price;
-        total_cost += products[product].price;
+        price_element.textContent = products[product-1].price;
+        total_cost += products[product-1].price;
 
         //creates preset button to remove product from cart, 
         let button_element = document.createElement("td")
