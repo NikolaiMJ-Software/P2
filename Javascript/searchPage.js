@@ -128,10 +128,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         /* A limit was set so that it can't choose the smallest nor biggest ID we have,
            to not cause issues when getting a number (it would sometimes give "undefined"),
            and this is the easiest solution that works to quickly move on */
-        let advertProduct = productList[Math.max(1, Math.floor(Math.random() * productList.length)-1)];
+        let advertProduct = productList[Math.floor(Math.random() * productList.length)];
 
         // Get the chosen product
-        let advertChosen = products.find(product => product.id === products[advertProduct].id-1);
+        let advertChosen = products[advertProduct-1];
         console.log(advertChosen.product_name);
 
         // create classes so it can be modified in css and add elements
