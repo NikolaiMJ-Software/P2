@@ -1,4 +1,7 @@
 //Start of cart functionality
+
+let products = [];
+
 //Function that adds product to item cart which is stored in cookies
 function add_to_cart(product_id) {
     product_id = parseInt(product_id);
@@ -152,7 +155,7 @@ function reserve_wares() {
 async function check_readiness() {
     console.log("Fetching product data...");
     const response = await fetch('./products'); // Fetch products from the server
-    const products = await response.json();  // Ensure products is fetched before using it
+    products = await response.json();  // Ensure products is fetched before using it
 
     function startUp() {
         console.log("Page loaded");
