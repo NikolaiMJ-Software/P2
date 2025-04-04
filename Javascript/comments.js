@@ -37,11 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
           li.style.marginBottom = '12px'; // spacing
         
           let starsHTML = '';
-          const full = Math.floor(c.rating || 0);
-          const half = (c.rating % 1 >= 0.5);
+          let rating = Math.min(c.rating || 0, 5); // cap at 5
+          const full = Math.floor(rating);
+          const half = (rating % 1 >= 0.5);
           for (let i = 0; i < full; i++) starsHTML += '★';
           for (let i = full + (half ? 1 : 0); i < 5; i++) starsHTML += '☆';
-        
+
           li.innerHTML = `
             <div>
               <strong>${c.name}</strong> 

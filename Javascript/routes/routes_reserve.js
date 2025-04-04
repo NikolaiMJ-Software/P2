@@ -49,12 +49,13 @@ function send_mail(receiver, subject, text) {
     });
 }
 
-router.post('./reserve_wares', (req, res) => {
+router.post('/reserve_wares', (req, res) => {
     const { cart } = req.body;
     if(req.user) {
         user_email=req.user.email;
     } else {
         console.log("Log in to reserve a ware")
+        return error;
     }
     let named_cart = {};
     for(let i = 0; i <= cart.length; i++) {
