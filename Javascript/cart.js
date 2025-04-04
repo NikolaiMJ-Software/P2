@@ -127,8 +127,12 @@ if(button != null) {
     button.addEventListener("click", async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');
-        add_to_cart(productId);
-        alert("Varen er tilføjet til din kurv");
+        let amount = parseInt(document.getElementById("quantity-value").textContent)
+        for(let i=0; i<amount; i++) {
+            add_to_cart(productId);
+            console.log(i);
+        }
+        alert("Din vare(er) er tilføjet til kurven");
     });
 }
 
@@ -180,6 +184,7 @@ async function check_readiness() {
         startUp();  // If already loaded, run immediately
     }
 }
-
-check_readiness();
+if(document.getElementById("cart") != null) {
+    check_readiness();
+}
 //End of cart.html functionality
