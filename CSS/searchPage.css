@@ -124,16 +124,15 @@ button {
     right: 5%;
 }
 
-.advert{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    max-width: 300px;
+.advert {
     position: absolute;
     top: 415px;
-    right: 5%;
-}
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 946px;
+    box-sizing: border-box;
+    translate: 650px 0px;
+  }
 
 @media (max-width: 1800px) {
     .advert {
