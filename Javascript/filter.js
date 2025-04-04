@@ -4,6 +4,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const filterButton = document.getElementById('filterButton');
     const filterDropdown = document.getElementById('filterDropdown');
 
+    // Reset all checkboxes to unchecked on page load
+    document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+        checkbox.checked = false; // Uncheck all checkboxes
+    });
+
     // Hide the dropdown menu when the filter button is clicked
     filterButton.addEventListener('click', () => {
         filterDropdown.classList.toggle('hidden');
@@ -55,6 +60,9 @@ export async function filters(products) {
         if (distanceFilter) {
             // Sort after closest distance to shop
             const closestShops = await getTravelTime(shops); // Sort by travel time
+            if (closestShops.length === 0) {
+                alert("Filteret kræver, at du har aktiveret GPS");
+            }
             const closestShopIds = closestShops.map(shop => shop.id); // Create a separate shop_id array
             console.log('Shortest distance to shops: ', closestShops);
 

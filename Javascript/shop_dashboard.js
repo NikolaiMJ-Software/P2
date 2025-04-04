@@ -12,18 +12,33 @@ document.addEventListener("DOMContentLoaded", async () =>{
         const add_product = document.createElement("div");
         add_product.classList.add("product-card")
 
+
+        const has_discount = product.discount && product.discount > 0;
+        const discounted_price = has_discount ? product.price - (product.price * product.discount) / 100 : product.price;
+
         add_product.innerHTML=`
             <div class="product-left">
+                <button class="edit-button" data-id="${product.id}">✎</button>
                 <img class="product-image" src="${product.img1_path}" alt="${product.product_name}">
                 <div class="product-info">
                     <div class="product-name">${product.product_name}</div>
                     <div class="product-desc">${product.description}</div>
+                    <div class="product-specs">${product.specifications}</div>
                 </div>
             </div>
             <div class="product-stock">
                 <button class="stock-button stock-minus" data-id="${product.id}">-</button>
                 <span class="stock-count" id="stock-${product.id}">${product.stock}</span>
                 <button class="stock-button stock-plus" data-id="${product.id}">+</button>
+                <div class="product-price">
+                ${
+                    has_discount
+                    ? `<span class="price-discounted">${discounted_price.toFixed(2)} kr.</span>
+                       <span class="price-original">${product.price} kr.</span>
+                       <span class="price-tag">-${product.discount}%</span>`
+                    : `${product.price} kr.`
+                }
+                </div>
                 <button class="delete-button" data-id="${product.id}">X</button>
             </div>
         `;
@@ -82,18 +97,12 @@ document.addEventListener("DOMContentLoaded", async () =>{
     form.addEventListener("submit", async (e)=>{
         e.preventDefault();
 
-        const name = document.getElementById("product-name").value;
-        const stock = parseInt(document.getElementById("product-stock").value);
-        const price = parseFloat(document.getElementById("product-price").value);
-        const disc = parseFloat(document.getElementById("product-discount").value)
-        const desc = document.getElementById("product-desc").value;
-        const specs = document.getElementById("product-specs").value;
+        const form_data = new FormData(form);
 
         const updateRes = await fetch("./add_product",{
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({name, stock, price, discount: disc, description: desc, specifications: specs})
-        })
+            body: form_data,
+        });
         
             if (updateRes.ok) {
                 alert("Vare er blevet tilføjet.");

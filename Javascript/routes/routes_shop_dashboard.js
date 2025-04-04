@@ -1,6 +1,9 @@
 import express from 'express';
 import sqlite3 from 'sqlite3';
 import path from 'path';
+import multer from 'multer';
+import fs from 'fs';
+import fse from 'fs-extra';
 
 
 //Makes files work together
@@ -15,6 +18,24 @@ const db = new sqlite3.Database(db_path, (err) => {
     console.log('Connected to SQLite database (dashboard router).');
     db.run("PRAGMA foreign_keys = ON;");
 });
+
+
+
+//Multer storage and file handling
+const storage = multer.diskStorage({
+    destination: function (req, file, cb){
+
+        const dir = path.join(process.cwd(), 'images', 'temp');
+
+        fs.mkdirSync(dir, {recursive: true});
+        cb(null,dir);
+    },
+    filename: function (req, file, cb){
+        cb(null, Date.now()+'-'+file.originalname);
+    }
+});
+
+const upload = multer({storage: storage});
 
 
 
@@ -64,17 +85,48 @@ router.post('/delete_ware', (req, res)=>{
         return res.status(403).send("Ikke autoriseret");
     }
 
-    db.run(`DELETE FROM products WHERE id = ? AND shop_id = ?`, [id, req.user.shop_id], (err) => {
-        if (err){
+    db.get(`SELECT product_name, city_id FROM products WHERE id = ? and shop_id = ?`, [id, req.user.shop_id], (err, product)=>{
+        if(err || !product){
             return res.status(500).send("Databasefejl");
-        }else{
-            res.send("Item deleted");
         }
+
+        db.get(`SELECT city FROM cities WHERE id = ?`, [product.city_id], (err, city)=>{
+            if(err || !city){
+                return res.status(500).send("Databasefejl");
+            }
+
+                db.get(`SELECT shop_name FROM shops WHERE id = ?`, [req.user.shop_id], (err, shop)=>{
+                    if(err || !shop){
+                        return res.status(500).send("Databasefejl");
+                    }
+
+                    const folder_path = path.join(process.cwd(), 'images', city.city, shop.shop_name, product.product_name);
+
+                    db.run(`DELETE FROM products WHERE id = ? AND shop_id = ?`, [id, req.user.shop_id], (err) => {
+                        if (err){
+                            return res.status(500).send("Databasefejl");
+                        }
+                        fs.rm(folder_path, { recursive: true, force: true }, (err) => {
+                            if (err){
+                                console.error("Kunne ikke slette billedmappe:", err);
+                            }
+
+                            res.send("Varer og billeder slettet.");
+                        });
+                    });
+            
+                });
+            });
+        });
     });
 
-});
-
-router.post("/add_product", (req, res)=>{
+router.post("/add_product", upload.fields([
+    {name: 'img1', maxCount: 1},
+    {name: 'img2', maxCount: 1},
+    {name: 'img3', maxCount: 1},
+    {name: 'img4', maxCount: 1},
+    {name: 'img5', maxCount: 1}]), 
+    async (req, res)=>{
     const {name, stock, price, discount, description, specifications} = req.body;
     const shop_id = req.user?.shop_id;
 
@@ -83,7 +135,7 @@ router.post("/add_product", (req, res)=>{
     }
 
 
-    db.get(`SELECT city_id FROM shops WHERE id = ?`, [shop_id], (err, row) => {
+    db.get(`SELECT city_id, shop_name FROM shops WHERE id = ?`, [shop_id], (err, row) => {
         if (err){
             return res.status(500).send("Databasefejl");
         }
@@ -92,19 +144,48 @@ router.post("/add_product", (req, res)=>{
             return res.status(404).send("butik ikke fundet");
         }
 
-        const city_id = row.city_id
+        const city_id = row.city_id;
+        const shop_name = row.shop_name;
 
-        db.run(`
-            INSERT INTO products (product_name, stock, price, discount, description, specifications, shop_id, city_id)
-            VALUES (?,?,?,?,?,?,?,?)
-            `,[name, stock, price, discount, description, specifications, shop_id, city_id], (err)=>{
-                if(err){
-                    return res.status(500).json({error: err.message});
-                }else{
-                    res.json({succes: true});
-                }
+        db.get(`SELECT city FROM cities WHERE id= ?`, [city_id], async (err, city_row)=>{
+            if (err){
+                return res.status(500).send("Databasefejl");
             }
-        );
+            if (!city_row) {
+                return res.status(404).send("butik ikke fundet");
+            }
+
+            const city_name = city_row.city;
+            const dir = path.join('Images', city_name, shop_name, name);
+            const specific_dir = path.join(process.cwd(), dir);
+
+            await fse.ensureDir(specific_dir);
+
+            const file_paths = [1, 2, 3, 4, 5].map(n => {
+                const file = req.files[`img${n}`]?.[0];
+                if (file) {
+                    const newPath = path.join(specific_dir, file.originalname);
+                    fs.renameSync(file.path, newPath); // move the file
+                    return `${dir}/${file.originalname}`.replace(/\\/g, '/'); // for DB
+                }
+                return null;
+            });
+            db.run(`
+                INSERT INTO products (product_name, stock, price, discount, description, specifications, shop_id, city_id,
+                img1_path, img2_path, img3_path, img4_path, img5_path)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+                `,[name, stock, price, discount, description, specifications, shop_id, city_id, file_paths[0], file_paths[1], file_paths[2], file_paths[3], file_paths[4]], (err)=>{
+                    if(err){
+                        return res.status(500).json({error: err.message});
+                    }else{
+                        res.json({succes: true});
+                    }
+                }
+            );
+
+        });
+
+
     });
 
 
