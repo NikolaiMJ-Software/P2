@@ -115,7 +115,7 @@ export async function calcDistance(userLat, userLon, destLat, destLon){
     }
 }
 
-// Help function to get first users location
+// Help function to get first location from user
 export function getCurrentPositionPromise() {
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
@@ -147,7 +147,7 @@ export function getWatchPositionPromise() {
         const lastLat = localStorage.getItem("getLastLat");
         const lastLon = localStorage.getItem("getLastLon");
 
-        if (lastLat && lastLon) {
+        if (lastLat && lastLon && !("geolocation" in navigator)) {
             console.log("Using last known position:", lastLat, lastLon);
             resolve({ coords: { latitude: parseFloat(lastLat), longitude: parseFloat(lastLon) } });
         }
@@ -164,7 +164,7 @@ export function getWatchPositionPromise() {
             },
             (error) => {
             console.error("GPS error:", error);
-                if (!lastLat || !lastLon) reject(error); // Reject only if no fallback exists
+                reject(); // Reject only if no fallback exists
             },
             {
                 enableHighAccuracy: true,
