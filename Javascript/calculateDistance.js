@@ -6,8 +6,18 @@ const travelTimesShops = [];
 export async function getTravelTime(destination) {  
     try {
         // Get user's position 
-        const position = await getWatchPositionPromise();
-
+        let position;
+        if (checkLastVisit()){
+            console.log('The position was to old, calc new travel time');
+            position = await Promise.race([
+                getWatchPositionPromise(),
+                getCurrentPositionPromise()
+            ]);
+        } else {
+            console.log('still time:')
+            position = await getWatchPositionPromise();
+        }
+        updateLastVisit();
         // Check if the user's position has change
         if(checkPosition(position)){
             // Calc new travel times
@@ -24,9 +34,11 @@ export async function getTravelTime(destination) {
 
         } else {
             console.log('Return saved traveltimes');
-
             // Return last saved sorted lists 
-            if(destination?.cities && travelTimesCities !== 0 ){
+            if (checkLastVisit()){
+                console.log('The position was to old, calc new travel time');
+                return calcTravelTimes(position, destination);
+            } else if(destination?.cities && travelTimesCities !== 0 ){
                 return travelTimesCities;
             } else if(destination?.shops && travelTimesShops != 0){
                 return travelTimesShops;
@@ -115,96 +127,96 @@ export async function calcDistance(userLat, userLon, destLat, destLon){
     }
 }
 
-// Help function to get first location from user
+// Help function to get first users location
 export function getCurrentPositionPromise() {
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
             (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
                 // Store the position in localStorage
-                localStorage.setItem("firstLat", position.coords.latitude);
-                localStorage.setItem("firstLon", position.coords.longitude);
+                localStorage.setItem("lastLat", position.coords.latitude);
+                localStorage.setItem("lastLon", position.coords.longitude);
                 console.log("Stored position in localStorage:", position.coords.latitude, position.coords.longitude);
-                
-                // Resolve with the position
-                resolve();
+                resolve({ coords: { latitude: lat, longitude: lon } });
             },
             (error) => {
                 console.error("Error getting position:", error);
                 reject(error);
             },
-            {
-                enableHighAccuracy: false,
-                maximumAge: 10000, // Cache position for up to 10 sec
-            }
+            { enableHighAccuracy: false }
         );
     });
 }
 
-let counter = false;
+// Function to check if more than 1 minutes have passed
+function checkLastVisit() {
+    const lastVisit = localStorage.getItem("lastVisit");
+    const now = Date.now();
+
+    // If the last visit timestamp exists and the difference is more than 1 minutes
+    if (lastVisit && (now - lastVisit > 1 * 60 * 1000)) {
+        // More than 1 minutes have passed, reset coordinates
+        localStorage.removeItem("lastLat");
+        localStorage.removeItem("lastLon");
+        console.log("More than 1 minutes have passed, resetting coordinates.");
+        return true; // Indicating that the values have been reset
+    }
+
+    // If 1 minutes have not passed, return false
+    return false;
+}
+
+// Function to update the last visit timestamp
+function updateLastVisit() {
+    const now = Date.now();
+    console.log('Last visit: ', now);
+    localStorage.setItem("lastVisit", now);
+}
+
 // Help function to update users location
 export function getWatchPositionPromise() {
-    return new Promise(async (resolve, reject) => {
-        // Check GPS permission first
-        let permissionState = "prompt";
+    return new Promise((resolve, reject) => {
+        // Try to get last saved position first
+        const lastLat = localStorage.getItem("lastLat");
+        const lastLon = localStorage.getItem("lastLon");
 
-        try {
-            const result = await navigator.permissions.query({ name: "geolocation" });
-            permissionState = result.state;
-        } catch (err) {
-            console.warn("Permissions API not supported");
+        const isTooOld = checkLastVisit();
+        if (!isTooOld && lastLat && lastLon) {
+            console.log("Using last known position:", lastLat, lastLon);
+            resolve({ coords: { latitude: parseFloat(lastLat), longitude: parseFloat(lastLon) } });
         }
 
-        const firstLat = localStorage.getItem("firstLat");
-        const firstLon = localStorage.getItem("firstLon");
-
-        if (firstLat && firstLon) {
-            console.log('Using first known position:')
-            // Første position returneres én gang
-            localStorage.removeItem("firstLat");
-            localStorage.removeItem("firstLon");
-            resolve({ coords: { latitude: parseFloat(firstLat), longitude: parseFloat(firstLon) } });
-            return;
-        }
-
-        // Only use localStorage cache if permission is granted
-        if (permissionState === "granted"){
-            const lastLat = localStorage.getItem("getLastLat");
-            const lastLon = localStorage.getItem("getLastLon");
-        
-            if (lastLat && lastLon) {
-                console.log("Using last known position:", lastLat, lastLon);
-                resolve({ coords: { latitude: parseFloat(lastLat), longitude: parseFloat(lastLon) } });
-                return;
-            }
-        }
- 
         // Start watching position in the background
         const watchId = navigator.geolocation.watchPosition(
             (position) => {
-                // Save current position
-                localStorage.setItem("getLastLat", position.coords.latitude);
-                localStorage.setItem("getLastLon", position.coords.longitude);
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                // Store updated position
+                localStorage.setItem("lastLat", position.coords.latitude);
+                localStorage.setItem("lastLon", position.coords.longitude);
+                
                 console.log("Updated background location:", position.coords.latitude, position.coords.longitude);
-                resolve({ coords: position.coords });
-            },
-            (error) => {
-                console.error("GPS error:", error);
-                // User denied permission – do NOT set gpsPermissionGranted
-                if (error.code === error.PERMISSION_DENIED) {
-                    // Optional: you could store a denied flag if you want
-                    resolve({ coords: null }); // Or reject(error)
-                } else {
-                    reject(error);
+                if (isTooOld){
+                    resolve({ coords: { latitude: lat, longitude: lon } });
                 }
             },
-            { enableHighAccuracy: true }
+            (error) => {
+            console.error("GPS error:", error);
+                if (!lastLat || !lastLon) reject(error); // Reject only if no fallback exists
+            },
+            {
+                enableHighAccuracy: true,
+                maximumAge: 0 // Allow only new position
+            }
         );
 
         // Automatically clear watch after 5 minutes to save battery
         setTimeout(() => {
             navigator.geolocation.clearWatch(watchId);
             console.log("Stopped watching position to save battery.");
-            }, 300000); // 5 minutes
+            }, 30000); // 30 sec
     });
 }
 
