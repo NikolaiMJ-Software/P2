@@ -216,7 +216,7 @@ export function getWatchPositionPromise() {
         setTimeout(() => {
             navigator.geolocation.clearWatch(watchId);
             console.log("Stopped watching position to save battery.");
-            }, 30000); // 30 sec
+            }, 300000); // 5 min
     });
 }
 
