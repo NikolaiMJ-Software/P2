@@ -7,7 +7,7 @@ export async function getTravelTime(destination) {
     try {
         // Get user's position 
         const position = await getWatchPositionPromise();
-        
+
         // Check if the user's position has change
         if(checkPosition(position)){
             // Calc new travel times
@@ -121,8 +121,8 @@ export function getCurrentPositionPromise() {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 // Store the position in localStorage
-                localStorage.setItem("lastLat", position.coords.latitude);
-                localStorage.setItem("lastLon", position.coords.longitude);
+                localStorage.setItem("firstLat", position.coords.latitude);
+                localStorage.setItem("firstLon", position.coords.longitude);
                 console.log("Stored position in localStorage:", position.coords.latitude, position.coords.longitude);
                 
                 // Resolve with the position
@@ -140,36 +140,64 @@ export function getCurrentPositionPromise() {
     });
 }
 
+let counter = false;
 // Help function to update users location
 export function getWatchPositionPromise() {
-    return new Promise((resolve, reject) => {
-        // Try to get last saved position first
-        const lastLat = localStorage.getItem("getLastLat");
-        const lastLon = localStorage.getItem("getLastLon");
+    return new Promise(async (resolve, reject) => {
+        // Check GPS permission first
+        let permissionState = "prompt";
 
-        if (lastLat && lastLon && !("geolocation" in navigator)) {
-            console.log("Using last known position:", lastLat, lastLon);
-            resolve({ coords: { latitude: parseFloat(lastLat), longitude: parseFloat(lastLon) } });
+        try {
+            const result = await navigator.permissions.query({ name: "geolocation" });
+            permissionState = result.state;
+        } catch (err) {
+            console.warn("Permissions API not supported");
         }
 
+        const firstLat = localStorage.getItem("firstLat");
+        const firstLon = localStorage.getItem("firstLon");
+
+        if (firstLat && firstLon) {
+            console.log('Using first known position:')
+            // Første position returneres én gang
+            localStorage.removeItem("firstLat");
+            localStorage.removeItem("firstLon");
+            resolve({ coords: { latitude: parseFloat(firstLat), longitude: parseFloat(firstLon) } });
+            return;
+        }
+
+        // Only use localStorage cache if permission is granted
+        if (permissionState === "granted"){
+            const lastLat = localStorage.getItem("getLastLat");
+            const lastLon = localStorage.getItem("getLastLon");
+        
+            if (lastLat && lastLon) {
+                console.log("Using last known position:", lastLat, lastLon);
+                resolve({ coords: { latitude: parseFloat(lastLat), longitude: parseFloat(lastLon) } });
+                return;
+            }
+        }
+ 
         // Start watching position in the background
         const watchId = navigator.geolocation.watchPosition(
             (position) => {
-                // Store updated position
+                // Save current position
                 localStorage.setItem("getLastLat", position.coords.latitude);
                 localStorage.setItem("getLastLon", position.coords.longitude);
-                
                 console.log("Updated background location:", position.coords.latitude, position.coords.longitude);
-            
+                resolve({ coords: position.coords });
             },
             (error) => {
-            console.error("GPS error:", error);
-                reject(); // Reject only if no fallback exists
+                console.error("GPS error:", error);
+                // User denied permission – do NOT set gpsPermissionGranted
+                if (error.code === error.PERMISSION_DENIED) {
+                    // Optional: you could store a denied flag if you want
+                    resolve({ coords: null }); // Or reject(error)
+                } else {
+                    reject(error);
+                }
             },
-            {
-                enableHighAccuracy: true,
-                maximumAge: 10000 // Allow cached positions up to 10 sec old
-            }
+            { enableHighAccuracy: true }
         );
 
         // Automatically clear watch after 5 minutes to save battery
