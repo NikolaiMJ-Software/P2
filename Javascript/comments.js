@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const commentList = document.getElementById('comments-list');
   const submitBtn = document.getElementById('submit-rating');
-  const nameInput = document.getElementById('user-name');
   const commentInput = document.getElementById('user-comment');
   const modal = document.getElementById('rating-modal');
 
@@ -11,22 +10,76 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeBtn = document.getElementById('close-rating-modal');
   const avgStars = document.getElementById('average-rating-display');
 
+  let userName = null;
+  let isLoggedIn = false;
+  let hasCommented = false;
+  let selectedRating = 0;
+  let allComments = [];
   // Open popup
   openBtn?.addEventListener('click', () => {
+    if (!isLoggedIn) {
+      alert("You must be logged in to rate or comment.");
+      return;
+    }
+if (hasCommented) {
+  if (confirm("You have already commented on this product. Do you want to update your comment?")) {
+    // Pre-fill comment box and stars
+    const previousComment = allComments.find(c => c.name === userName);
+    if (previousComment) {
+      commentInput.value = previousComment.comment;
+      selectedRating = previousComment.rating;
+
+      stars.forEach(s => {
+        const val = parseInt(s.dataset.value);
+        s.classList.toggle('selected', val <= selectedRating);
+      });
+    }
+
+    modal.style.display = 'flex';
+  }
+  return;
+}
+
     modal.style.display = 'flex';
   });
   avgStars?.addEventListener('click', () => {
+    if (!isLoggedIn) {
+      alert("You must be logged in to rate or comment.");
+      return;
+    }
+    if (hasCommented) {
+      if (confirm("You have already commented on this product. Do you want to update your comment?")) {
+        // Pre-fill comment box and stars
+        const previousComment = allComments.find(c => c.name === userName);
+        if (previousComment) {
+          commentInput.value = previousComment.comment;
+          selectedRating = previousComment.rating;
+    
+          stars.forEach(s => {
+            const val = parseInt(s.dataset.value);
+            s.classList.toggle('selected', val <= selectedRating);
+          });
+        }
+    
+        modal.style.display = 'flex';
+      }
+      return;
+    }
+    
     modal.style.display = 'flex';
   });
+
   // Close popup
   closeBtn?.addEventListener('click', () => {
-  modal.style.display = 'none';
+    modal.style.display = 'none';
   });
+
   // Load comments from server
   function loadComments() {
     fetch(`./comments?product_id=${productId}`)
       .then(res => res.json())
       .then(comments => {
+        allComments = comments;
         // Clear both containers
         commentList.innerHTML = '';
         const bottomList = document.getElementById('comments-list-bottom');
@@ -54,13 +107,21 @@ document.addEventListener('DOMContentLoaded', () => {
           commentList.appendChild(li);
           if (bottomList) bottomList.appendChild(li.cloneNode(true));
         });
+
+        if (isLoggedIn && userName) {
+          hasCommented = comments.some(c => c.name === userName);
+        }
       });
   }
-  
 
   // Handle submission
   submitBtn.addEventListener('click', () => {
-    const name = nameInput.value.trim();
+    if (!isLoggedIn) {
+      alert("You must be logged in to rate or comment.");
+      return;
+    }
+
+    const name = userName;
     const comment = commentInput.value.trim();
 
     if (!comment) {
@@ -69,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     fetch('./comment', {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         product_id: productId,
@@ -80,16 +141,23 @@ document.addEventListener('DOMContentLoaded', () => {
     })
       .then(res => res.json())
       .then(() => {
-        nameInput.value = '';
         commentInput.value = '';
         modal.style.display = 'none'; //close after submit
         loadComments();
         fetchAverageRating(); // update average after new rating
+        hasCommented = true;
       });
   });
 
-  loadComments();
-  let selectedRating = 0;
+  fetch('/user_logged_in')
+    .then(res => res.json())
+    .then(data => {
+      isLoggedIn = data.logged_in;
+      if (isLoggedIn) {
+        userName = data.name || data.email;
+      }
+      loadComments(); // Call after checking login
+    });
 
   // Get all stars inside the rating "box"
   const stars = document.querySelectorAll('#star-rating .star');

@@ -36,7 +36,8 @@ router.post('/login', (req, res) => {
 
         req.session.user = {
             email: user.email,
-            shop_id: user.shop_id
+            shop_id: user.shop_id,
+            name: user.name
         };//saving session user as a cookie
 
         //redirect to main page
