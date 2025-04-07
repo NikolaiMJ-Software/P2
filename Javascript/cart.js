@@ -85,6 +85,7 @@ function fill_table() {
             amount++;
             document.getElementById(product).textContent = amount;
             total_cost += products[product-1].price;
+            document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
         } else {
             //create new row
             let row = document.createElement("tr");
@@ -98,18 +99,29 @@ function fill_table() {
             price_element.textContent = products[product-1].price;
             total_cost += products[product-1].price;
 
-            //creates preset button to remove product from cart, 
-            let button_element = document.createElement("td")
+            //creates and fills quantity toggle
+            let button_element = document.createElement("td");
             let remove_button = document.createElement("BUTTON");
             remove_button.style.display = 'flex';
-            remove_button.textContent = "- ";
-            let quantity = document.createElement("p");
+
+            // "-" element
+            let minus = document.createElement("span");
+            minus.textContent = "-";
+
+            // Quantity value
+            let quantity = document.createElement("span");
             quantity.textContent = "1";
             quantity.setAttribute("id", product);
-            let plus = document.createElement("p");
-            plus.textContent = " +";
+
+            // "+" element
+            let plus = document.createElement("span");
+            plus.textContent = "+";
+
+            // Append to button
+            remove_button.appendChild(minus);
             remove_button.appendChild(quantity);
             remove_button.appendChild(plus);
+
             //remove_button.setAttribute("id", product)
             remove_button.addEventListener("click", function (event) {
                 const clickX = event.offsetX;
@@ -123,14 +135,13 @@ function fill_table() {
             //adds button to a element in the row
             button_element.appendChild(remove_button);
 
-            document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
-
             //adds all elements as a child to the row, and the row as a child to the table
             row.appendChild(name_element);
             row.appendChild(price_element);
             row.appendChild(button_element);
             tableBody.appendChild(row);
 
+            document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
             past_product = product;
         }
     });
@@ -142,7 +153,7 @@ function adjust_table(action, product_id) {
         console.log("Removed product with id " + product_id);
         remove_from_cart(product_id);
     } else if(action === "+") {
-        console.log("Added product with id" + product_id);
+        console.log("Added product with id " + product_id);
         add_to_cart(product_id);
     } else {
         console.log("Invalid action");
@@ -171,7 +182,7 @@ if(button != null) {
 //Reserve wares button (for cart page)
 const button_reserve = document.getElementById("Confirm_button");
 if(button_reserve != null) {
-    if(window.getComputedStyle(document.getElementById("login")).display === "none") {
+    if(window.getComputedStyle(document.getElementById("login")).display != "none") {
         alert("du skal være login for at kunne reservere vare");
     }else {
         button_reserve.addEventListener("click", reserve_wares);
