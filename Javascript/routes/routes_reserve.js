@@ -49,24 +49,33 @@ function send_mail(receiver, subject, text) {
     });
 }
 
-router.post('/reserve_wares', (req, res) => {
+router.post('/reserve_wares', async (req, res) => {
     const { cart } = req.body;
-    if(req.user) {
-        user_email=req.user.email;
-    } else {
+    if(!req.user) {
         console.log("Log in to reserve a ware")
-        return error;
+        return res.status(401).json({ error: "Log in to reserve a ware" });;
     }
-    let named_cart = {};
-    for(let i = 0; i <= cart.length; i++) {
+    let user_email = req.user.email;
+    let named_cart = [];
+    for(let i = 0; i < cart.length; i++) {
+        named_cart[i] = []
         for(let x = 0; x <= cart[i].length; x++) {
-            named_cart[i].push(db.get("SELECT products.product_name FROM products WHERE products.id = ?", [cart[i[x]]]));
+            try {
+                const product = await db.get("SELECT products.product_name FROM products WHERE products.id = ?",[cart[i][x]]);
+                if (product) {
+                    named_cart[i].push(product.product_name);
+                }
+            } catch (error) {
+                console.error("Database error:", error);
+                return res.status(500).json({ error: "Database query failed" });
+            }
         }
     }
     console.log(cart);
     for(let i = 0; i <= cart.length; i++) {
+        const shop_mail = await db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i][0]]);
         send_mail(
-            db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i[0]]])
+            shop_mail,
             `En bruger har reserveret varer hos din butik`,
             `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`
         );
@@ -76,6 +85,7 @@ router.post('/reserve_wares', (req, res) => {
         `Du har reserveret varer på Click&hent`,
         `Du har reserveret følgende varer på Click&hent: ${named_cart}`
     )
+    return res.json({ success: true });
 });
 
 /*
