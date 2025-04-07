@@ -86,6 +86,10 @@
   </div>
 
   <script type="module" src="./Javascript/shop_dashboard.js"></script>
+  <script>
+    if(localStorage.currentPage) localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
+    localStorage.currentPage = `./shop_dashboard`
+  </script>
 </body>
 </html>
 

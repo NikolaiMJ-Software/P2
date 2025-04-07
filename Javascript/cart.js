@@ -41,7 +41,6 @@ function remove_from_cart(product_id) {
         document.cookie = `products=${array.join(",")};path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
     }
 }
-
 //Function to get a specific cookie (relevant for other functions, taken from internet)
 function getCookie(cname) {
     let name = cname + "=";
@@ -162,6 +161,7 @@ function reserve_wares() {
     fetch('./reserve_wares', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ cart: sorted_cart })
     });
 }

@@ -77,7 +77,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         let currentCityId = cities.filter(city => city.city === currentCity)[0].id;
         if (currentCityId == undefined) throw "city ID not found"
-        console.log(currentCityId);
 
         const response = await fetch('./products'); // Fetch products from the server
         let products = await response.json();

@@ -63,7 +63,7 @@
     <script type="module" src="./Javascript/filter.js"></script>
     <script type="module" src="./Javascript/logout.js"></script>
 
-    <!--barrel roll when "b" is clicked-->
+    <!--barrel roll when "½" is clicked-->
     <script>
       document.addEventListener("keydown", function (event) {
        if (event.key.toLowerCase() === "½") { 
@@ -75,6 +75,10 @@
         }, 500);
        }
       });
+    </script>
+    <script>
+    localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
+    localStorage.currentPage = `./searchpage?city=${new URLSearchParams(window.location.search).get("city")}`;
     </script>
     
 </body>
