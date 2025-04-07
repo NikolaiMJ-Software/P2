@@ -101,12 +101,13 @@ function fill_table() {
             //creates preset button to remove product from cart, 
             let button_element = document.createElement("td")
             let remove_button = document.createElement("BUTTON");
-            remove_button.textContent = "-";
+            remove_button.style.display = 'flex';
+            remove_button.textContent = "- ";
             let quantity = document.createElement("p");
             quantity.textContent = "1";
             quantity.setAttribute("id", product);
             let plus = document.createElement("p");
-            plus.textContent = "+";
+            plus.textContent = " +";
             remove_button.appendChild(quantity);
             remove_button.appendChild(plus);
             //remove_button.setAttribute("id", product)
@@ -170,7 +171,11 @@ if(button != null) {
 //Reserve wares button (for cart page)
 const button_reserve = document.getElementById("Confirm_button");
 if(button_reserve != null) {
-    button_reserve.addEventListener("click", reserve_wares);
+    if(window.getComputedStyle(document.getElementById("login")).display === "none") {
+        alert("du skal være login for at kunne reservere vare");
+    }else {
+        button_reserve.addEventListener("click", reserve_wares);
+    }
 }
 function reserve_wares() {
     let cart = getCookie("products").split(",").map(Number);
@@ -188,7 +193,7 @@ function reserve_wares() {
         sorted_cart[shop_id].push(product_id);
     }
 
-    console.log("Sending sorted_cart:", sorted_cart);
+    console.log("Sending sorted cart:", sorted_cart);
 
     fetch('./reserve_wares', {
         method: 'POST',
