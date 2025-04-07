@@ -11,23 +11,24 @@ function add_to_cart(product_id) {
         console.error("Invalid product id for adding to cart");
     }
     //Get the cookies
-    let products = getCookie("products");
+    let products = getCookie("products").split(",");
     console.log(products)
     //Make a new cookie if this is the first item in the cart, otherwise add to existing cart
     if(!products) {
         document.cookie = `products=${product_id}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     } else {
-        products += ',' + product_id;
-        document.cookie = `products=${products}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
+        products.push(product_id);
+        products.sort();
+        document.cookie = `products=${products.join(",")}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     }
 }
 
 //Function that removes an item from the cart
 function remove_from_cart(product_id) {
     //Get the cookies and split them into an array of strings for the product id's
-    let array = getCookie("products").split(",");
+    let products = getCookie("products").split(",");
     //Find the index that makes the function check_number return true
-    let index = array.findIndex(check_number)
+    let index = products.findIndex(check_number)
     //Returns true if number (string) is the same as product_id (integer)
     function check_number(number) {
         return number == product_id;
@@ -37,8 +38,8 @@ function remove_from_cart(product_id) {
         console.error("The product could not be found in the cart");
     } else {
         //remove the element with the correct index and replaces the cookie with the new product list
-        array.splice(index, 1);
-        document.cookie = `products=${array.join(",")};path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
+        products.splice(index, 1);
+        document.cookie = `products=${products.join(",")};path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
     }
 }
 
@@ -95,7 +96,15 @@ function fill_table() {
         let button_element = document.createElement("td")
         let remove_button = document.createElement("BUTTON");
         remove_button.textContent = "Remove";
-        remove_button.addEventListener("click", () => remove_from_table(product));
+        remove_button.addEventListener("click", function (event) {
+            const clickX = event.offsetX;
+            const buttonWidth = this.clientWidth;
+            if (clickX < buttonWidth / 3) {
+                adjust_table("-", product);
+            } else if (clickX > (2 * buttonWidth) / 3) {
+                adjust_table("+", product);
+            }
+        });
         //adds button to a element in the row
         button_element.appendChild(remove_button);
 
@@ -110,14 +119,19 @@ function fill_table() {
 }
 
 //function to remove a product from cart, and refresh table
-function remove_from_table(product_id) {
-    console.log("Removed product with id " + product_id)
-    //removes product from cookie cart
-    remove_from_cart(product_id);
+function adjust_table(action, product_id) {
+    if(action === "-") {
+        console.log("Removed product with id " + product_id);
+        remove_from_cart(product_id);
+    } else if(action === "+") {
+        console.log("Added product with id" + product_id);
+        add_to_cart(product_id);
+    } else {
+        console.log("Invalid action");
+    }
     //resets table
     const tableBody = document.querySelector("#cart tbody");
     tableBody.innerHTML = "";
-    //fills table again
     fill_table();
 }
 
