@@ -1,4 +1,7 @@
+import { updateLastVisit } from './calculateDistance.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
+    updateLastVisit(); // Update users last visit
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
     const currentCity = urlParams.get('city'); 
@@ -222,7 +225,7 @@ console.log(shop_id);
             const cityName = cityMatch ? cityMatch.city : "unknown";
             
             //URL to the shop_page
-            let url = `/productlist?city=${encodeURIComponent(cityName)}&shop_id=${shop_id}`;
+            let url = `./productlist?city=${encodeURIComponent(cityName)}&shop_id=${shop_id}`;
             if (email) url += `&email=${encodeURIComponent(email)}`;
             window.location.href = url;
         });        

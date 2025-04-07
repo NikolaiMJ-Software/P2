@@ -1,23 +1,38 @@
 const API_KEY = "AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ"; // Replace with yours Google API-key
 const url = "https://routes.googleapis.com/directions/v2:computeRoutes"; // The URL for using the API
-const travelTimesCities = [];
-const travelTimesShops = [];
+let travelTimesCities = [];
+let travelTimesShops = [];
 
 export async function getTravelTime(destination) {  
     try {
-        // Get user's position 
+        // Fetch shops and cities from the server
+        const responseShop = await fetch('./shop');
+        const response = await fetch('./cities');
+        // Converter to json
+        const shops = await responseShop.json();
+        const cities = await response.json();
+
+        if(destination === 'shops'){
+            destination = shops;
+        } else if(destination === 'cities') {
+            destination = cities;
+        }
+
+        // Get user's position, if it's too old it will get a new one 
         let position;
         if (checkLastVisit()){
-            console.log('The position was to old, calc new travel time');
+            console.log("More than 5 minutes have passed, resetting coordinates.");
+            console.log('The position was to old, calc new travel time.');
             position = await Promise.race([
                 getWatchPositionPromise(),
                 getCurrentPositionPromise()
             ]);
         } else {
-            console.log('still time:')
+            console.log('Still time:')
             position = await getWatchPositionPromise();
         }
-        updateLastVisit();
+        updateLastVisit(); // Update users last visit
+        
         // Check if the user's position has change
         if(checkPosition(position)){
             // Calc new travel times
@@ -25,30 +40,37 @@ export async function getTravelTime(destination) {
             let travelTimes = calcTravelTimes(position, destination);
 
             // Save new travel times to the corresponding input
-            if(destination?.cities){
-                travelTimesCities.splice(0, travelTimesCities.length, ...travelTimes);
-            } else if (destination?.shops){
-                travelTimesShops.splice(0, travelTimesShops.length, ...travelTimes);
+            if(destination === cities){
+                travelTimesCities = travelTimes;
+            } else if (destination === shops){
+                travelTimesShops = travelTimes;
             }
             return travelTimes;
 
         } else {
-            console.log('Return saved traveltimes');
             // Return last saved sorted lists 
-            if (checkLastVisit()){
-                console.log('The position was to old, calc new travel time');
-                return calcTravelTimes(position, destination);
-            } else if(destination?.cities && travelTimesCities !== 0 ){
+            if(destination === cities && travelTimesCities.length !== 0 ){
+                console.log('Return saved traveltimes: cities');
                 return travelTimesCities;
-            } else if(destination?.shops && travelTimesShops != 0){
+            } else if(destination === shops && travelTimesShops.length !== 0){
+                console.log('Return saved traveltimes: shops');
                 return travelTimesShops;
             } else{
-                return calcTravelTimes(position, destination);
+                console.log('No existing list calc new:');
+                let newTravelTimes = calcTravelTimes(position, destination);
+
+                // Save new travel times to the corresponding input
+                if(destination === cities){
+                    travelTimesCities = newTravelTimes;
+                } else if (destination === shops){
+                    travelTimesShops = newTravelTimes;
+                }
+                return newTravelTimes;
             }
         }
 
     } catch (error) {
-        console.error("Error no GPS:", error);
+        console.error("Fejl getTravelTime:", error);
         return []; // Return empty array if an error occurs
     }
 }
@@ -68,7 +90,7 @@ export async function calcTravelTimes(position, destination){
             if (time) {
                 travelTimes.push({ name: place.city || place.shop_name, ...(place.shop_name && { id: place.id }), time: parseInt(time) });
             } else {
-                console.error(`No route found for: ${place.city || place.shop_name}`);
+                console.error(`Ingen rute fundet: ${place.city || place.shop_name}`);
             }
             completed++;
             progressBar.value = (completed / destination.length) * 100; // Update progress bar
@@ -88,7 +110,7 @@ export async function calcTravelTimes(position, destination){
         return travelTimes;
 
     } catch (error) {
-        console.error("Error fetching travel times:", error);
+        console.error("Fejl kunne ikke få rejsetider:", error);
         return []; // Return empty array if an error occurs
     }
 }
@@ -135,13 +157,13 @@ export function getCurrentPositionPromise() {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
                 // Store the position in localStorage
-                localStorage.setItem("lastLat", position.coords.latitude);
-                localStorage.setItem("lastLon", position.coords.longitude);
+                localStorage.setItem("newLat", position.coords.latitude);
+                localStorage.setItem("newLon", position.coords.longitude);
                 console.log("Stored position in localStorage:", position.coords.latitude, position.coords.longitude);
                 resolve({ coords: { latitude: lat, longitude: lon } });
             },
             (error) => {
-                console.error("Error getting position:", error);
+                console.error("Fejl ingen potition:", error);
                 reject(error);
             },
             { enableHighAccuracy: false }
@@ -149,37 +171,39 @@ export function getCurrentPositionPromise() {
     });
 }
 
-// Function to check if more than 1 minutes have passed
+// Function to check if more than 5 minutes have passed
 function checkLastVisit() {
     const lastVisit = localStorage.getItem("lastVisit");
     const now = Date.now();
 
-    // If the last visit timestamp exists and the difference is more than 1 minutes
-    if (lastVisit && (now - lastVisit > 1 * 60 * 1000)) {
-        // More than 1 minutes have passed, reset coordinates
+    // If the last visit timestamp exists and the difference is more than 5 minutes
+    if (lastVisit && (now - lastVisit > 5 * 60 * 1000)) {
+        // More than 5 minutes have passed, reset coordinates and arraies
         localStorage.removeItem("lastLat");
         localStorage.removeItem("lastLon");
-        console.log("More than 1 minutes have passed, resetting coordinates.");
+        localStorage.removeItem("newLat");
+        localStorage.removeItem("newLon");
+        travelTimesCities = [];
+        travelTimesShops = [];
         return true; // Indicating that the values have been reset
     }
 
-    // If 1 minutes have not passed, return false
+    // If 5 minutes have not passed, return false
     return false;
 }
 
 // Function to update the last visit timestamp
-function updateLastVisit() {
-    const now = Date.now();
-    console.log('Last visit: ', now);
-    localStorage.setItem("lastVisit", now);
+export function updateLastVisit() {
+    console.log('Last visit: ', Date.now());
+    localStorage.setItem("lastVisit", Date.now());
 }
 
 // Help function to update users location
 export function getWatchPositionPromise() {
     return new Promise((resolve, reject) => {
         // Try to get last saved position first
-        const lastLat = localStorage.getItem("lastLat");
-        const lastLon = localStorage.getItem("lastLon");
+        const lastLat = localStorage.getItem("newLat");
+        const lastLon = localStorage.getItem("newLon");
 
         const isTooOld = checkLastVisit();
         if (!isTooOld && lastLat && lastLon) {
@@ -194,8 +218,8 @@ export function getWatchPositionPromise() {
                 const lon = position.coords.longitude;
 
                 // Store updated position
-                localStorage.setItem("lastLat", position.coords.latitude);
-                localStorage.setItem("lastLon", position.coords.longitude);
+                localStorage.setItem("newLat", position.coords.latitude);
+                localStorage.setItem("newLon", position.coords.longitude);
                 
                 console.log("Updated background location:", position.coords.latitude, position.coords.longitude);
                 if (isTooOld){
@@ -203,7 +227,7 @@ export function getWatchPositionPromise() {
                 }
             },
             (error) => {
-            console.error("GPS error:", error);
+            console.error("Fejl GPS watch:", error);
                 if (!lastLat || !lastLon) reject(error); // Reject only if no fallback exists
             },
             {
@@ -216,7 +240,7 @@ export function getWatchPositionPromise() {
         setTimeout(() => {
             navigator.geolocation.clearWatch(watchId);
             console.log("Stopped watching position to save battery.");
-            }, 300000); // 5 min
+            }, 5 * 60 * 1000); // 5 min
     });
 }
 

@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (response.ok) {
-            window.location.href = `./`;
+            window.location.href = localStorage.getItem("currentPage");
         } else {
             const errorText = await response.text();
             errorMessage.textContent = errorText;

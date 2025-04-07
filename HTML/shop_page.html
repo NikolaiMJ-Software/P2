@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,21 +9,32 @@
 <body>
   <a href="#" onclick="history.back()" class="back-button">Back</a>
 
-  <div class="productHeader">
-    <h1 id="h1store_page"></h1>
-    <form id="form"> 
-      <input type="search" id="inputProductSearch" placeholder="Søg efter et produkt...">
-      <button type="submit">
-        <svg width="16" height="16" viewBox="0 0 24 24">
-          <path d="M21 21l-6-6m4-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" 
-          stroke="black" stroke-width="2" fill="none" stroke-linecap="round"/>
-        </svg>
-      </button>
-    </form>
-    <div id="average-rating-display" class="average-stars" style="cursor: pointer;"></div>
-  </div>
 
-  <!-- Put this AFTER the header and products so it floats above -->
+  <div style="text-align: right;">
+    <button id="cart" style="font-family: Arial;" onclick="window.location.href='./cart'">Din kurv</button>
+    <button id="signup" style="font-family: Arial;" onclick="window.location.href='./signup'">Signup</button>
+    <button id="login" style="font-family: Arial;" onclick="window.location.href='./login'">Login</button>
+    <button id="logout" style="display: none;">Logout</button>
+    <button id="shop" style="display: none;">shop</button>
+  </div>
+  <button id="back" style="text-align: left; translate: 0px -53px;" onclick="window.location.href=`./searchpage?city=${localStorage.city}`">Back</button>
+
+    <!--Class for title + input to make them align perfectly and be over/under-->
+    <div class="productHeader">
+        <h1 id="h1store_page"></h1>
+        <form id="form"> 
+            <input type="search" id="inputProductSearch" placeholder="Søg efter et produkt...">
+            <!--Add magnifying glass on the right side-->
+            <button type="submit">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M21 21l-6-6m4-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" 
+                stroke="black" stroke-width="2" fill="none" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </form>
+          <div id="average-rating-display" class="average-stars" style="cursor: pointer;"></div>
+    </div>
+  <!-- rating -->
   <div id="rating-modal" style="display: none;">
     <div class="modal-content">
       <button id="close-rating-modal" style="float: right;">&times;</button>
@@ -41,12 +52,20 @@
         <h3>All Comments</h3>
         <ul id="comments-list"></ul>
       </div>
-    </div>
+  </div>
+
+  <div class="theme-switcher">
+    <button id="theme-switcher" ></button>
   </div>
 
   <main class="products" id="productList"></main>
 
   <script src="./Javascript/shop_page.js"></script>
   <script src="./Javascript/comments.js"></script>
+  <script src="./Javascript/theme.js"></script>
+
+    <script>
+      localStorage.currentPage = `./searchpage?city=${new URLSearchParams(window.location.search).get("city")}&shop_id=${new URLSearchParams(window.location.search).get("shop_id")}`;
+    </script>
 </body>
 </html>

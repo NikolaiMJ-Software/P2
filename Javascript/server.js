@@ -187,7 +187,7 @@ app.get('/shop', (req, res) => {
         });
     } else {
         // Fetch all shops
-        db.all(`SELECT id, shop_name, latitude, longitude FROM shops`, (err, rows) => {
+        db.all(`SELECT * FROM shops`, (err, rows) => {
             if (err) {
                 return res.status(500).json({ error: err.message });
             }
