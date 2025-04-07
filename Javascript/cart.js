@@ -78,42 +78,50 @@ function fill_table() {
     //Gets the location of the element that new rows will go into
     const tableBody = document.querySelector("#cart tbody");
     //forEach function that fills each row with product data and button
+    let past_product = null;
     data.forEach(product => {
-        //creates row
-        let row = document.createElement("tr");
+        if(product === past_product) {
+            document.getElementById(product).textContent += 1;
+        } else {
+            //create new row
+            let row = document.createElement("tr");
 
-        //creates and fills product name element
-        let name_element = document.createElement("td");
-        name_element.textContent = products[product-1].product_name;
+            //creates and fills product name element
+            let name_element = document.createElement("td");
+            name_element.textContent = products[product-1].product_name;
 
-        //creates and fills product price element
-        let price_element = document.createElement("td");
-        price_element.textContent = products[product-1].price;
-        total_cost += products[product-1].price;
+            //creates and fills product price element
+            let price_element = document.createElement("td");
+            price_element.textContent = products[product-1].price;
+            total_cost += products[product-1].price;
 
-        //creates preset button to remove product from cart, 
-        let button_element = document.createElement("td")
-        let remove_button = document.createElement("BUTTON");
-        remove_button.textContent = "Remove";
-        remove_button.addEventListener("click", function (event) {
-            const clickX = event.offsetX;
-            const buttonWidth = this.clientWidth;
-            if (clickX < buttonWidth / 3) {
-                adjust_table("-", product);
-            } else if (clickX > (2 * buttonWidth) / 3) {
-                adjust_table("+", product);
-            }
-        });
-        //adds button to a element in the row
-        button_element.appendChild(remove_button);
+            //creates preset button to remove product from cart, 
+            let button_element = document.createElement("td")
+            let remove_button = document.createElement("BUTTON");
+            remove_button.setAttribute("id", product)
+            remove_button.textContent = 1;
+            remove_button.addEventListener("click", function (event) {
+                const clickX = event.offsetX;
+                const buttonWidth = this.clientWidth;
+                if (clickX < buttonWidth / 3) {
+                    adjust_table("-", product);
+                } else if (clickX > (2 * buttonWidth) / 3) {
+                    adjust_table("+", product);
+                }
+            });
+            //adds button to a element in the row
+            button_element.appendChild(remove_button);
 
-        document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
+            document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
 
-        //adds all elements as a child to the row, and the row as a child to the table
-        row.appendChild(name_element);
-        row.appendChild(price_element);
-        row.appendChild(button_element);
-        tableBody.appendChild(row);
+            //adds all elements as a child to the row, and the row as a child to the table
+            row.appendChild(name_element);
+            row.appendChild(price_element);
+            row.appendChild(button_element);
+            tableBody.appendChild(row);
+
+            past_product = product;
+        }
     });
 }
 
