@@ -12,15 +12,15 @@ function add_to_cart(product_id) {
     }
     //Get the cookies
     let products = getCookie("products").split(",");
-    console.log(products)
     //Make a new cookie if this is the first item in the cart, otherwise add to existing cart
-    if(!products || products.length == 0) {
+    if(!products || products[0] === undefined) {
         document.cookie = `products=${product_id}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     } else {
         products.push(product_id);
         products.sort();
         document.cookie = `products=${products.join(",")}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     }
+    console.log(products);
 }
 
 //Function that removes an item from the cart
