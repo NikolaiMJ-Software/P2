@@ -7,11 +7,8 @@
     <link rel="stylesheet" type="text/css" href="./CSS/shop_page.css">
 </head>
 <body>
-  <div class="theme-switcher">
-    <button id="theme-switcher" ></button>
-  </div>
-  
-  
+  <a href="#" onclick="history.back()" class="back-button">Back</a>
+
 
   <div style="text-align: right;">
     <button id="cart" style="font-family: Arial;" onclick="window.location.href='./cart'">Din kurv</button>
@@ -35,13 +32,37 @@
               </svg>
             </button>
           </form>
+          <div id="average-rating-display" class="average-stars" style="cursor: pointer;"></div>
     </div>
+  <!-- rating -->
+  <div id="rating-modal" style="display: none;">
+    <div class="modal-content">
+      <button id="close-rating-modal" style="float: right;">&times;</button>
+      <h2>Rate this store</h2>
+      <div id="star-rating">
+        <span class="star" data-value="1">&#9734;</span>
+        <span class="star" data-value="2">&#9734;</span>
+        <span class="star" data-value="3">&#9734;</span>
+        <span class="star" data-value="4">&#9734;</span>
+        <span class="star" data-value="5">&#9734;</span>
+      </div>
+      <textarea id="user-comment" placeholder="Write your comment..."></textarea>
+      <button id="submit-rating">Submit</button>
+      <div class="comment-preview">
+        <h3>All Comments</h3>
+        <ul id="comments-list"></ul>
+      </div>
+  </div>
 
-    <!--main class "products" to be filled out with lots of smaller products with unique specifics-->
-    <main class="products" id="productList"></main>
+  <div class="theme-switcher">
+    <button id="theme-switcher" ></button>
+  </div>
 
-    <script src="./Javascript/shop_page.js"></script>
-    <script src="./Javascript/theme.js"></script>
+  <main class="products" id="productList"></main>
+
+  <script src="./Javascript/shop_page.js"></script>
+  <script src="./Javascript/comments.js"></script>
+  <script src="./Javascript/theme.js"></script>
 
     <script>
       localStorage.currentPage = `./searchpage?city=${new URLSearchParams(window.location.search).get("city")}&shop_id=${new URLSearchParams(window.location.search).get("shop_id")}`;
