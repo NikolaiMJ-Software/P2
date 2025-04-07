@@ -28,7 +28,7 @@ const db = new sqlite3.Database(db_path, (err) => {
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
 
-        const dir = path.join(process.cwd(), 'images', 'temp');
+        const dir = path.join(process.cwd(), 'Images', 'temp');
 
         fs.mkdirSync(dir, {recursive: true});
         cb(null,dir);
@@ -103,7 +103,7 @@ router.post('/delete_ware', (req, res)=>{
                         return res.status(500).send("Databasefejl");
                     }
 
-                    const folder_path = path.join(process.cwd(), 'images', city.city, shop.shop_name, product.product_name);
+                    const folder_path = path.join(process.cwd(), 'Images', city.city, shop.shop_name, product.product_name);
 
                     db.run(`DELETE FROM products WHERE id = ? AND shop_id = ?`, [id, req.user.shop_id], (err) => {
                         if (err){
@@ -196,7 +196,7 @@ router.post("/add_product", upload.fields([
 
 
 
-
+//route to update already existing products
 router.post("/update_product", upload.fields([
     {name: 'update-img1', maxCount: 1},
     {name: 'update-img2', maxCount: 1},
@@ -205,16 +205,16 @@ router.post("/update_product", upload.fields([
     {name: 'update-img5', maxCount: 1}]), 
     async (req, res)=>{
 
-
+    //if user is not logged in, he or she is unauthorized
     if (!req.user || !req.user.shop_id) {
         return res.status(403).send("Ikke autoriseret");
     }
 
-
+    //defining different variable, which came from the fron end code and user login
     const {id, "update-name": name, "update-stock": stock, "update-price": price, "update-discount": discount, "update-description": description, "update-specifications": specifications} = req.body; 
-
     const shop_id = req.user.shop_id;
 
+    //if values are missing, function cannot proceed
     if(!id || !name || !stock || !price){
         return res.status(400).send("Manglende felter");
     }
@@ -252,55 +252,76 @@ router.post("/update_product", upload.fields([
         const city_name = city.city;
         const image_paths = {};
 
-        
-    //Rename folder if product name has changed
-    if (product.product_name !== name) {
-        const old_folder = path.join(process.cwd(), "images", city_name, shop_name, product.product_name);
-        const new_folder = path.join(process.cwd(), "images", city_name, shop_name, name);
 
-        if (fs.existsSync(old_folder)) {
-            fs.renameSync(old_folder, new_folder);
-        }
+//Save old image paths before renaming folder
+const old_image_paths = {};
+for (let i = 1; i <= 5; i++) {
+    old_image_paths[`img${i}_path`] = product[`img${i}_path`];
+}
 
-        // update image_paths to reflect new folder
-        for (let i = 1; i <= 5; i++) {
-            const old_path = product[`img${i}_path`];
-            if (old_path) {
-                const filename = path.basename(old_path);
-                image_paths[`img${i}_path`] = `/images/${city_name}/${shop_name}/${name}/${filename}`;
+//Delete old images
+for (let i = 1; i <= 5; i++) {
+    //define each new image if there is a new image
+    const image = `update-img${i}`;
+    //if there is a new image, and we have requested files do the following:
+    if (req.files && req.files[image]) {
+        // define the old image path, and if it isnt null do the following:
+        const old_img_path = old_image_paths[`img${i}_path`];
+        if (old_img_path) {
+            //define the full old image path images/[city]/[shop]/[product]/[image]
+            const full_old_path = path.join(process.cwd(), old_img_path);
+            //if it exist, delete image
+            if (fs.existsSync(full_old_path)) {
+                fs.unlinkSync(full_old_path);
+            } else {
+                console.warn("Old image not found (pre-rename):", full_old_path);
             }
         }
     }
+}
 
+// Rename folder if product name has changed
+if (product.product_name !== name) {
+    //define old folder path
+    const old_folder = path.join(process.cwd(), "Images", city_name, shop_name, product.product_name);
+    //define new folder path
+    const new_folder = path.join(process.cwd(), "Images", city_name, shop_name, name);
+    //if old folder exist, rename old folder to new folder
+    if (fs.existsSync(old_folder)) {
+        fs.renameSync(old_folder, new_folder);
+    }
+}
 
-        for (let i = 1; i <= 5; i++){
-            const image = `update-img${i}`;
-            if(req.files && req.files[image]){
-                const file = req.files[image][0];
-                const filename = file.originalname;
-                const image_dir = path.join(process.cwd(), "images", city_name, shop_name, name);
+// Move new uploaded images into final destination and update image paths
+for (let i = 1; i <= 5; i++) {
+    const image = `update-img${i}`;
+    if (req.files && req.files[image]) {
+        const file = req.files[image][0];
+        const filename = file.originalname;
+        const image_dir = path.join(process.cwd(), "Images", city_name, shop_name, name);
 
-                // Ensure the directory exists
-                fs.mkdirSync(image_dir, { recursive: true });
+        // Ensure the renamed directory exists
+        fs.mkdirSync(image_dir, { recursive: true });
 
-                const target_path = path.join(image_dir, filename);
+        const target_path = path.join(image_dir, filename);
 
-                //delete old path
-                const old_path = product[`img${i}_path`];
-                if (old_path) {
-                  const full_old_path = path.join(process.cwd(), old_path);
-                  if (fs.existsSync(full_old_path)) {
-                    fs.unlinkSync(full_old_path);
-                  }
-                }
-
-                // Move file to final destination
-                fs.renameSync(file.path, target_path);
-
-                //save image paths
-                image_paths[`img${i}_path`] = `/images/${city_name}/${shop_name}/${name}/${filename}`;
-            }
+        if (fs.existsSync(file.path)) {
+            fs.renameSync(file.path, target_path);
+        } else {
+            console.warn("Temp file missing:", file.path);
         }
+
+        // Save new image path for DB update
+        image_paths[`img${i}_path`] = `/Images/${city_name}/${shop_name}/${name}/${filename}`;
+    } else {
+        // If image wasn't updated but folder was renamed, keep updated path
+        const old_img_path = old_image_paths[`img${i}_path`];
+        if (old_img_path && product.product_name !== name) {
+            const filename = path.basename(old_img_path);
+            image_paths[`img${i}_path`] = `/Images/${city_name}/${shop_name}/${name}/${filename}`;
+        }
+    }
+}
 
         const fields = [
             `product_name = ?`,
