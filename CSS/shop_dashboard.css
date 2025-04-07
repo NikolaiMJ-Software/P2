@@ -180,14 +180,22 @@ button:hover {
 }
 
 /* Form */
-#product-form {
+form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-#product-form input,
-#product-form textarea {
+form p {
+  margin: 0;
+  margin-top: 4px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #4A7E8F;
+}
+
+form input,
+form textarea {
   padding: 10px;
   font-size: 14px;
   border: 1px solid #ccc;
@@ -195,17 +203,27 @@ button:hover {
   width: 100%;
 }
 
-#product-form label {
+form label {
   margin-top: 10px;
   font-weight: bold;
   color: #4A7E8F;
 }
 
-#product-form button[type="submit"] {
+form button[type="submit"] {
   background-color: #89C7B0;
   color: white;
   margin-top: 10px;
 }
+
+
+.current-img-info {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #5E96A2;
+  font-style: italic;
+}
+
+
 
 .edit-button {
   background-color: #5E96A2;
