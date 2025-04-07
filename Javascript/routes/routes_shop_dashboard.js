@@ -14,7 +14,7 @@ const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
 
 //Makes a new database with data from the current database (which can be interacted with)
 const db = new sqlite3.Database(db_path, (err) => {
-    if (err) return console.error('User DB error:', err.message);
+    if (err) return console.error('Dashboard DB error:', err.message);
     console.log('Connected to SQLite database (dashboard router).');
     db.run("PRAGMA foreign_keys = ON;");
 });
@@ -127,8 +127,9 @@ router.post("/add_product", upload.fields([
     {name: 'img4', maxCount: 1},
     {name: 'img5', maxCount: 1}]), 
     async (req, res)=>{
-    const {name, stock, price, discount, description, specifications} = req.body;
+    const {name, stock, price, discount, description, specifications, parent_id } = req.body;
     const shop_id = req.user?.shop_id;
+    const parent_id_value = parent_id ? parseInt(parent_id) : null;
 
     if (!req.user || !req.user.shop_id) {
         return res.status(403).send("Ikke autoriseret");
@@ -172,9 +173,9 @@ router.post("/add_product", upload.fields([
             });
             db.run(`
                 INSERT INTO products (product_name, stock, price, discount, description, specifications, shop_id, city_id,
-                img1_path, img2_path, img3_path, img4_path, img5_path)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
-                `,[name, stock, price, discount, description, specifications, shop_id, city_id, file_paths[0], file_paths[1], file_paths[2], file_paths[3], file_paths[4]], (err)=>{
+                img1_path, img2_path, img3_path, img4_path, img5_path, parent_id)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                `,[name, stock, price, discount, description, specifications, shop_id, city_id, file_paths[0], file_paths[1], file_paths[2], file_paths[3], file_paths[4], parent_id_value], (err)=>{
                     if(err){
                         return res.status(500).json({error: err.message});
                     }else{
@@ -358,6 +359,18 @@ for (let i = 1; i <= 5; i++) {
         }
 
 
+});
+
+
+router.get('/parent_products', (req, res)=>{
+    const shop_id = req.user.shop_id;
+    db.all('SELECT id, product_name FROM products WHERE shop_id = ? AND parent_id IS NULL', [shop_id], (err, rows)=>{
+        if (err) {
+            console.error("DB error:", err);
+            return res.status(500).json({ error: "Database fejl" });
+          }
+          res.json(rows);
+    })
 });
 
 export default router;

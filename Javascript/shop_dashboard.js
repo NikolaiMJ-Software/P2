@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
     const update_panel = document.getElementById("update-product-modal");
     const update_close_button = document.getElementById("update-modal-close");
     const update_form = document.getElementById("update-form");
+    const parent_select = document.getElementById("parent-product");
 
     const res = await fetch("./shop_products");
     const products = await res.json();
@@ -180,6 +181,19 @@ document.addEventListener("DOMContentLoaded", async () =>{
             }
     });
 
+    try{
+        const parent_res = await fetch("/parent_products");
+        const parent_products = await parent_res.json();
+
+        parent_products.forEach(prod =>{
+            const option = document.createElement("option")
+            option.value = prod.id;
+            option.textContent = prod.product_name;
+            parent_select.appendChild(option);
+        });
+    }catch (err) {
+        console.error("Fejl ved hentning af parent produkter:", err);
+    }
 });
 
 

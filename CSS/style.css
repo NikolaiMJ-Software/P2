@@ -60,6 +60,7 @@ button {
     padding: 15px;
     font-size: 20px;
     border-left: 1px solid #ccc; /* Vertical line */
+    color: var(--primary-text); 
 
 }
 
@@ -186,6 +187,7 @@ progress {
 :root[data-theme="light"] {
     --page-bg:WHITE ;
     --primary-text:Black ;
+    --secoundary-text: lightgrey;
 
 
 
@@ -202,7 +204,8 @@ progress {
 
 :root[data-theme="dark"] {
     --page-bg:#383643;
-    --primary-text: WHITE ;
+    --primary-text: WHITE;
+    --secoundary-text: lightgrey;
 
     --switch-bg: #49494c;
     --switch-circle-bg: #7190FF;
