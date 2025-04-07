@@ -20,11 +20,17 @@
       <span class="close-button" id="modal-close">&times;</span>
       <h2>Tilføj nyt produkt</h2>
       <form id="product-form" enctype="multipart/form-data">
+        <p>Produkt navn:</p>
         <input type="text" id="product-name" name="name" placeholder="Produktnavn" required>
+        <p>Produkt lager:</p>
         <input type="number" id="product-stock" name="stock" placeholder="Lagerbeholdning" required>
+        <p>Produkt pris:</p>
         <input type="number" id="product-price" name="price" placeholder="Pris" required>
+        <p>Produkt rabat (0-100):</p>
         <input type="number" id="product-discount" name="discount" placeholder="Rabat">
+        <p>Produkt deskription:</p>
         <textarea id="product-desc" name="description" placeholder="Beskrivelse"></textarea>
+        <p>Produkt specifikationer:</p>
         <textarea id="product-specs" name="specifications" placeholder="Specifikationer"></textarea>
 
         <label>Hovedbillede (påkrævet):</label>
@@ -41,6 +47,50 @@
     </div>
   </div>
 
+
+  <div id="update-product-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" id="update-modal-close">&times;</span>
+      <h2>Opdater produkt</h2>
+      <form id="update-form" enctype="multipart/form-data">
+        <p>Produkt navn:</p>
+        <input type="text" id="update-product-name" name="update-name" placeholder="Produktnavn" required>
+        <p>Produkt lager:</p>
+        <input type="number" id="update-product-stock" name="update-stock" placeholder="Lagerbeholdning" required>
+        <p>Produkt pris:</p>
+        <input type="number" id="update-product-price" name="update-price" placeholder="Pris" required>
+        <p>Produkt rabat (0-100):</p>
+        <input type="number" id="update-product-discount" name="update-discount" placeholder="Rabat">
+        <p>Produkt deskription:</p>
+        <textarea id="update-product-desc" name="update-description" placeholder="Beskrivelse"></textarea>
+        <p>Produkt specifikationer:</p>
+        <textarea id="update-product-specs" name="update-specifications" placeholder="Specifikationer"></textarea>
+      
+        <label>Hovedbillede:</label>
+        <p id="current-img1-name" class="current-img-info"></p>
+        <input type="file" name="update-img1" accept="image/*">
+      
+        <label>Ekstra billeder:</label>
+        <p id="current-img2-name" class="current-img-info"></p>
+        <input type="file" name="update-img2" accept="image/*">
+        <p id="current-img3-name" class="current-img-info"></p>
+        <input type="file" name="update-img3" accept="image/*">
+        <p id="current-img4-name" class="current-img-info"></p>
+        <input type="file" name="update-img4" accept="image/*">
+        <p id="current-img5-name" class="current-img-info"></p>
+        <input type="file" name="update-img5" accept="image/*">
+      
+        <button type="submit">Opdater</button>
+      </form>
+    </div>
+  </div>
+
   <script type="module" src="./Javascript/shop_dashboard.js"></script>
 </body>
 </html>
+
+
+
+
+
+
