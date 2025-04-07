@@ -162,6 +162,7 @@ function reserve_wares() {
     fetch('./reserve_wares', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ cart: sorted_cart })
     });
 }
