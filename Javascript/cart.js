@@ -182,36 +182,36 @@ if(button != null) {
 //Reserve wares button (for cart page)
 const button_reserve = document.getElementById("Confirm_button");
 if(button_reserve != null) {
+    button_reserve.addEventListener("click", reserve_wares);
+}
+function reserve_wares() {
     if(window.getComputedStyle(document.getElementById("login")).display != "none") {
         alert("du skal være login for at kunne reservere vare");
     }else {
-        button_reserve.addEventListener("click", reserve_wares);
-    }
-}
-function reserve_wares() {
-    let cart = getCookie("products").split(",").map(Number);
-    if (cart.length === 0) {
-        alert("Kurven er tom!");
-        return;
-    }
-    let sorted_cart = {};
-    for (let i = 0; i < cart.length; i++) {
-        let product_id = cart[i];
-        let shop_id = products[product_id].shop_id;
-        if (!sorted_cart[shop_id]) {
-            sorted_cart[shop_id] = [];
+        let cart = getCookie("products").split(",").map(Number);
+        if (cart.length === 0) {
+            alert("Kurven er tom!");
+            return;
         }
-        sorted_cart[shop_id].push(product_id);
+        let sorted_cart = {};
+        for (let i = 0; i < cart.length; i++) {
+            let product_id = cart[i];
+            let shop_id = products[product_id].shop_id;
+            if (!sorted_cart[shop_id]) {
+                sorted_cart[shop_id] = [];
+            }
+            sorted_cart[shop_id].push(product_id);
+        }
+
+        console.log("Sending sorted cart:", sorted_cart);
+
+        fetch('./reserve_wares', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ cart: sorted_cart })
+        });
     }
-
-    console.log("Sending sorted cart:", sorted_cart);
-
-    fetch('./reserve_wares', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ cart: sorted_cart })
-    });
 }
 
 async function check_readiness() {
