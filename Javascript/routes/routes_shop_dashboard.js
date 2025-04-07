@@ -15,7 +15,7 @@ const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
 
 //Makes a new database with data from the current database (which can be interacted with)
 const db = new sqlite3.Database(db_path, (err) => {
-    if (err) return console.error('Reserve DB error:', err.message);
+    if (err) return console.error('User DB error:', err.message);
     console.log('Connected to SQLite database (dashboard router).');
     db.run("PRAGMA foreign_keys = ON;");
 });
@@ -41,7 +41,7 @@ const upload = multer({storage: storage});
 
 
 router.get('/shop_dashboard', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'HTML', 'shop_dashboard.html'));
+    res.sendFile(path.join(process.cwd(), '.', 'HTML', 'shop_dashboard.html'));
 });
 
 
@@ -158,7 +158,7 @@ router.post("/add_product", upload.fields([
 
             const city_name = city_row.city;
             const dir = path.join('.', 'Images', city_name, shop_name, name);
-            const specific_dir = path.join(process.cwd(), dir);
+            const specific_dir = path.join(process.cwd(), '.', dir);
 
             await fse.ensureDir(specific_dir);
 
@@ -267,7 +267,7 @@ for (let i = 1; i <= 5; i++) {
         const old_img_path = old_image_paths[`img${i}_path`];
         if (old_img_path) {
             //define the full old image path images/[city]/[shop]/[product]/[image]
-            const full_old_path = path.join(process.cwd(), old_img_path);
+            const full_old_path = path.join(process.cwd(), '.', old_img_path);
             //if it exist, delete image
             if (fs.existsSync(full_old_path)) {
                 fs.unlinkSync(full_old_path);
@@ -281,9 +281,9 @@ for (let i = 1; i <= 5; i++) {
 // Rename folder if product name has changed
 if (product.product_name !== name) {
     //define old folder path
-    const old_folder = path.join(process.cwd(), "Images", city_name, shop_name, product.product_name);
+    const old_folder = path.join(process.cwd(), '.', "Images", city_name, shop_name, product.product_name);
     //define new folder path
-    const new_folder = path.join(process.cwd(), "Images", city_name, shop_name, name);
+    const new_folder = path.join(process.cwd(), '.', "Images", city_name, shop_name, name);
     //if old folder exist, rename old folder to new folder
     if (fs.existsSync(old_folder)) {
         fs.renameSync(old_folder, new_folder);
@@ -298,7 +298,7 @@ for (let i = 1; i <= 5; i++) {
     if (req.files && req.files[image]) {
         const file = req.files[image][0];
         const filename = file.originalname;
-        const image_dir = path.join(process.cwd(), "Images", city_name, shop_name, name);
+        const image_dir = path.join(process.cwd(), '.', "Images", city_name, shop_name, name);
 
         // Ensure the renamed directory exists
         fs.mkdirSync(image_dir, { recursive: true });
