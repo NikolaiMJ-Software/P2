@@ -22,8 +22,8 @@ button {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 90px;
-    padding: 5px;
+    width: 150px;
+    padding: 10px;
 }
 
 .cart-container {

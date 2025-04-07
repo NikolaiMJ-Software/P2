@@ -106,7 +106,7 @@ function fill_table() {
 
             // "-" element
             let minus = document.createElement("span");
-            minus.textContent = "-";
+            minus.textContent = "- ";
 
             // Quantity value
             let quantity = document.createElement("span");
@@ -115,7 +115,7 @@ function fill_table() {
 
             // "+" element
             let plus = document.createElement("span");
-            plus.textContent = "+";
+            plus.textContent = " +";
 
             // Append to button
             remove_button.appendChild(minus);
