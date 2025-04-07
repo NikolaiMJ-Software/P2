@@ -1,6 +1,7 @@
-import { getTravelTime } from './calculateDistance.js';
+import { getTravelTime, getCurrentPositionPromise } from './calculateDistance.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+    getCurrentPositionPromise(); // Get users location
     try {
         const response = await fetch('./cities'); // Fetch cities from the server
         const cities = await response.json();
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         loader.style.display = "block"; // Start loader
         
         // Get travel times to cities
-        let travelTimes = await getTravelTime(cities);
+        let travelTimes = await getTravelTime('cities');
         loader.style.display = "none"; // Hide loader
         travelTimes = travelTimes.map(item => ({ city: item.name, time: item.time })); // Convert "name" to "city"
        
