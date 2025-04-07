@@ -81,7 +81,10 @@ function fill_table() {
     let past_product = null;
     data.forEach(product => {
         if(product === past_product) {
-            document.getElementById(product).textContent += 1;
+            let amount = parseInt(document.getElementById(product).textContent);
+            amount++;
+            document.getElementById(product).textContent = amount;
+            total_cost += products[product-1].price;
         } else {
             //create new row
             let row = document.createElement("tr");
@@ -98,8 +101,15 @@ function fill_table() {
             //creates preset button to remove product from cart, 
             let button_element = document.createElement("td")
             let remove_button = document.createElement("BUTTON");
-            remove_button.setAttribute("id", product)
-            remove_button.textContent = 1;
+            remove_button.textContent = "-";
+            let quantity = document.createElement("p");
+            quantity.textContent = "1";
+            quantity.setAttribute("id", product);
+            let plus = document.createElement("p");
+            plus.textContent = "+";
+            remove_button.appendChild(quantity);
+            remove_button.appendChild(plus);
+            //remove_button.setAttribute("id", product)
             remove_button.addEventListener("click", function (event) {
                 const clickX = event.offsetX;
                 const buttonWidth = this.clientWidth;
