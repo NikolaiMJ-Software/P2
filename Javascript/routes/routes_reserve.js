@@ -73,8 +73,9 @@ router.post('/reserve_wares', async (req, res) => {
     }
     console.log(cart);
     for(let i = 0; i <= cart.length; i++) {
+        const shop_mail = await db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i][0]]);
         send_mail(
-            db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i][0]])
+            shop_mail,
             `En bruger har reserveret varer hos din butik`,
             `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`
         );
