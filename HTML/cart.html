@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html lang="da">
+<html lang="da" data-theme="light">
     <head>
         <title>Click & Hent</title>
         <meta charset="utf-8" />
       <link rel="stylesheet" type="text/css" href="./CSS/cart.css">
     </head>
     <body>
+      <div class="theme-switcher">
+        <button id="theme-switcher" ></button>
+      </div>
+      
+      
+    
+      <a href="#" onclick="history.back()" style="text-align: left;">Back</a>
       <div style="text-align: right;">
         <button class="top-buttons" id="cart_Button" style="font-family: Arial;" onclick="window.location.href='./cart'">Din kurv</button>
         <button class="top-buttons" id="signup" style="font-family: Arial;" onclick="window.location.href='./signup'">Signup</button>
@@ -23,7 +30,7 @@
             <tr>
               <th>Produkt navn</th>
               <th>Pris</th>
-              <th>Fjern?</th>
+              <th>Antal</th>
             </tr>
           </thead>
           <tbody>
@@ -37,6 +44,8 @@
       </div>
     </body>
     <script type="module" src="./Javascript/cart.js"></script>
+    <script src="./Javascript/theme.js"></script>
+
     <script>
       localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
       localStorage.currentPage = `./cart`

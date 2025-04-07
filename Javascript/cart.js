@@ -11,23 +11,24 @@ function add_to_cart(product_id) {
         console.error("Invalid product id for adding to cart");
     }
     //Get the cookies
-    let products = getCookie("products");
+    let products = getCookie("products").split(",");
     console.log(products)
     //Make a new cookie if this is the first item in the cart, otherwise add to existing cart
-    if(!products) {
+    if(!products || products.length == 0) {
         document.cookie = `products=${product_id}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     } else {
-        products += ',' + product_id;
-        document.cookie = `products=${products}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
+        products.push(product_id);
+        products.sort();
+        document.cookie = `products=${products.join(",")}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     }
 }
 
 //Function that removes an item from the cart
 function remove_from_cart(product_id) {
     //Get the cookies and split them into an array of strings for the product id's
-    let array = getCookie("products").split(",");
+    let products = getCookie("products").split(",");
     //Find the index that makes the function check_number return true
-    let index = array.findIndex(check_number)
+    let index = products.findIndex(check_number)
     //Returns true if number (string) is the same as product_id (integer)
     function check_number(number) {
         return number == product_id;
@@ -37,8 +38,8 @@ function remove_from_cart(product_id) {
         console.error("The product could not be found in the cart");
     } else {
         //remove the element with the correct index and replaces the cookie with the new product list
-        array.splice(index, 1);
-        document.cookie = `products=${array.join(",")};path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
+        products.splice(index, 1);
+        document.cookie = `products=${products.join(",")};path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
     }
 }
 //Function to get a specific cookie (relevant for other functions, taken from internet)
@@ -77,46 +78,67 @@ function fill_table() {
     //Gets the location of the element that new rows will go into
     const tableBody = document.querySelector("#cart tbody");
     //forEach function that fills each row with product data and button
+    let past_product = null;
     data.forEach(product => {
-        //creates row
-        let row = document.createElement("tr");
+        if(product === past_product) {
+            document.getElementById(product).textContent += 1;
+        } else {
+            //create new row
+            let row = document.createElement("tr");
 
-        //creates and fills product name element
-        let name_element = document.createElement("td");
-        name_element.textContent = products[product-1].product_name;
+            //creates and fills product name element
+            let name_element = document.createElement("td");
+            name_element.textContent = products[product-1].product_name;
 
-        //creates and fills product price element
-        let price_element = document.createElement("td");
-        price_element.textContent = products[product-1].price;
-        total_cost += products[product-1].price;
+            //creates and fills product price element
+            let price_element = document.createElement("td");
+            price_element.textContent = products[product-1].price;
+            total_cost += products[product-1].price;
 
-        //creates preset button to remove product from cart, 
-        let button_element = document.createElement("td")
-        let remove_button = document.createElement("BUTTON");
-        remove_button.textContent = "Remove";
-        remove_button.addEventListener("click", () => remove_from_table(product));
-        //adds button to a element in the row
-        button_element.appendChild(remove_button);
+            //creates preset button to remove product from cart, 
+            let button_element = document.createElement("td")
+            let remove_button = document.createElement("BUTTON");
+            remove_button.setAttribute("id", product)
+            remove_button.textContent = 1;
+            remove_button.addEventListener("click", function (event) {
+                const clickX = event.offsetX;
+                const buttonWidth = this.clientWidth;
+                if (clickX < buttonWidth / 3) {
+                    adjust_table("-", product);
+                } else if (clickX > (2 * buttonWidth) / 3) {
+                    adjust_table("+", product);
+                }
+            });
+            //adds button to a element in the row
+            button_element.appendChild(remove_button);
 
-        document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
+            document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
 
-        //adds all elements as a child to the row, and the row as a child to the table
-        row.appendChild(name_element);
-        row.appendChild(price_element);
-        row.appendChild(button_element);
-        tableBody.appendChild(row);
+            //adds all elements as a child to the row, and the row as a child to the table
+            row.appendChild(name_element);
+            row.appendChild(price_element);
+            row.appendChild(button_element);
+            tableBody.appendChild(row);
+
+            past_product = product;
+        }
     });
 }
 
 //function to remove a product from cart, and refresh table
-function remove_from_table(product_id) {
-    console.log("Removed product with id " + product_id)
-    //removes product from cookie cart
-    remove_from_cart(product_id);
+function adjust_table(action, product_id) {
+    if(action === "-") {
+        console.log("Removed product with id " + product_id);
+        remove_from_cart(product_id);
+    } else if(action === "+") {
+        console.log("Added product with id" + product_id);
+        add_to_cart(product_id);
+    } else {
+        console.log("Invalid action");
+    }
     //resets table
     const tableBody = document.querySelector("#cart tbody");
     tableBody.innerHTML = "";
-    //fills table again
     fill_table();
 }
 

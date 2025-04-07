@@ -1,7 +1,6 @@
-import { getTravelTime, getCurrentPositionPromise } from './calculateDistance.js';
+import { getTravelTime } from './calculateDistance.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    getCurrentPositionPromise(); // Get users position
     try {
         const response = await fetch('./cities'); // Fetch cities from the server
         const cities = await response.json();
