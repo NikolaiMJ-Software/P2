@@ -51,7 +51,7 @@ app.get('/user_logged_in', (req, res) => {
     if (!req.user) {
         return res.json({ logged_in: false });
     } else {
-        res.json({logged_in: true, email: req.user.email, shop_id: req.user.shop_id || null});
+        res.json({logged_in: true, email: req.user.email, name: req.user.name, shop_id: req.user.shop_id || null});
     }
 });
 
@@ -229,27 +229,44 @@ app.get('/comments', (req, res) => {
 });
 
 // POST a new comment
-app.post('/comment', (req, res) => {
-    const { product_id, name, comment, rating } = req.body; // <-- ADD `rating`
+app.put('/comment', (req, res) => {
+    const { product_id, name, comment, rating } = req.body;
     const timestamp = Date.now();
 
-    if (!product_id || !comment) {
-        return res.status(400).json({ error: 'Missing product_id or comment' });
+    if (!product_id || !name || !comment) {
+        return res.status(400).json({ error: 'Missing fields' });
     }
 
-    db.run(
-        'INSERT INTO comments (product_id, name, comment, rating, timestamp) VALUES (?, ?, ?, ?, ?)',
-        [product_id, name || 'Anonymous', comment, rating, timestamp],
-        function (err) {
+    db.get(
+        `SELECT id FROM comments WHERE product_id = ? AND name = ?`,
+        [product_id, name],
+        (err, row) => {
             if (err) {
-                res.status(500).json({ error: err.message });
+                return res.status(500).json({ error: err.message });
+            }
+
+            if (!row) {
+                db.run(
+                    `INSERT INTO comments (product_id, name, comment, rating, timestamp) VALUES (?, ?, ?, ?, ?)`,
+                    [product_id, name, comment, rating, timestamp],
+                    function (err) {
+                        if (err) return res.status(500).json({ error: err.message });
+                        res.json({ success: true, updated: false });
+                    }
+                );
             } else {
-                res.json({ success: true, id: this.lastID });
+                db.run(
+                    `UPDATE comments SET comment = ?, rating = ?, timestamp = ? WHERE id = ?`,
+                    [comment, rating, timestamp, row.id],
+                    function (err) {
+                        if (err) return res.status(500).json({ error: err.message });
+                        res.json({ success: true, updated: true });
+                    }
+                );
             }
         }
     );
 });
-
 
 //get average from the rating
 app.get('/rating', (req, res) => {

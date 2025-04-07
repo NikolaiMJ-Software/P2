@@ -4,7 +4,10 @@ import path from 'path';
 import multer from 'multer';
 import fs from 'fs';
 import fse from 'fs-extra';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 //Makes files work together
 const router = express.Router();
@@ -187,6 +190,155 @@ router.post("/add_product", upload.fields([
 
 
     });
+
+
+});
+
+
+
+
+router.post("/update_product", upload.fields([
+    {name: 'update-img1', maxCount: 1},
+    {name: 'update-img2', maxCount: 1},
+    {name: 'update-img3', maxCount: 1},
+    {name: 'update-img4', maxCount: 1},
+    {name: 'update-img5', maxCount: 1}]), 
+    async (req, res)=>{
+
+
+    if (!req.user || !req.user.shop_id) {
+        return res.status(403).send("Ikke autoriseret");
+    }
+
+
+    const {id, "update-name": name, "update-stock": stock, "update-price": price, "update-discount": discount, "update-description": description, "update-specifications": specifications} = req.body; 
+
+    const shop_id = req.user.shop_id;
+
+    if(!id || !name || !stock || !price){
+        return res.status(400).send("Manglende felter");
+    }
+
+    try{
+
+        const product = await new Promise((resolve, reject) => {
+            db.get(`SELECT * FROM products WHERE id = ? AND shop_id = ?`, [id, shop_id], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
+            });
+        });
+
+
+        if (!product) return res.status(404).send("Produkt ikke fundet.");
+
+
+        const shop = await new Promise((resolve, reject) => {
+            db.get(`SELECT shop_name, city_id FROM shops WHERE id = ?`, [shop_id], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
+            });
+        });
+
+
+        const city = await new Promise((resolve, reject) => {
+            db.get(`SELECT city FROM cities WHERE id = ?`, [shop.city_id], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
+            });
+        });
+
+        
+        const shop_name = shop.shop_name;
+        const city_name = city.city;
+        const image_paths = {};
+
+        
+    //Rename folder if product name has changed
+    if (product.product_name !== name) {
+        const old_folder = path.join(process.cwd(), "images", city_name, shop_name, product.product_name);
+        const new_folder = path.join(process.cwd(), "images", city_name, shop_name, name);
+
+        if (fs.existsSync(old_folder)) {
+            fs.renameSync(old_folder, new_folder);
+        }
+
+        // update image_paths to reflect new folder
+        for (let i = 1; i <= 5; i++) {
+            const old_path = product[`img${i}_path`];
+            if (old_path) {
+                const filename = path.basename(old_path);
+                image_paths[`img${i}_path`] = `/images/${city_name}/${shop_name}/${name}/${filename}`;
+            }
+        }
+    }
+
+
+        for (let i = 1; i <= 5; i++){
+            const image = `update-img${i}`;
+            if(req.files && req.files[image]){
+                const file = req.files[image][0];
+                const filename = file.originalname;
+                const image_dir = path.join(process.cwd(), "images", city_name, shop_name, name);
+
+                // Ensure the directory exists
+                fs.mkdirSync(image_dir, { recursive: true });
+
+                const target_path = path.join(image_dir, filename);
+
+                //delete old path
+                const old_path = product[`img${i}_path`];
+                if (old_path) {
+                  const full_old_path = path.join(process.cwd(), old_path);
+                  if (fs.existsSync(full_old_path)) {
+                    fs.unlinkSync(full_old_path);
+                  }
+                }
+
+                // Move file to final destination
+                fs.renameSync(file.path, target_path);
+
+                //save image paths
+                image_paths[`img${i}_path`] = `/images/${city_name}/${shop_name}/${name}/${filename}`;
+            }
+        }
+
+        const fields = [
+            `product_name = ?`,
+            `stock = ?`,
+            `price = ?`,
+            `discount = ?`,
+            `description = ?`,
+            `specifications = ?`
+          ];
+
+          const values = [name, stock, price, discount, description, specifications];
+
+          for (const [image, value] of Object.entries(image_paths)) {
+            fields.push(`${image} = ?`);
+            values.push(value);
+          }
+
+          values.push(id, shop_id);
+
+
+          const sql = `
+          UPDATE products
+          SET ${fields.join(", ")}
+          WHERE id = ? AND shop_id = ?
+        `;
+
+        db.run(sql, values, function (err) {
+            if (err) {
+              console.error("DB update error:", err);
+              return res.status(500).send("Fejl under opdatering af produkt.");
+            }
+    
+            res.send("Produkt opdateret.");
+          });
+        } catch (err) {
+          console.error("Server error:", err);
+          res.status(500).send("Intern serverfejl.");
+        }
 
 
 });

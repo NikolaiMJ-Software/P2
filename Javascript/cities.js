@@ -1,4 +1,4 @@
-import { getTravelTime, getCurrentPositionPromise } from './calculateDistance.js';
+import { getTravelTime, getCurrentPositionPromise, getWatchPositionPromise } from './calculateDistance.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     getCurrentPositionPromise();
@@ -14,7 +14,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const email = urlParams.get('email');
 
         const cityButtons = [];
-        let travelTimes = await getTravelTime(cities); // Array for holding cities and travel time
+
+        // Get travel times to cities
+        let travelTimes = await getTravelTime(cities);
         travelTimes = travelTimes.map(item => ({ city: item.name, time: item.time })); // Convert "name" to "city"
         /*Debugging - Check sorted array
             console.log("Sorted travel times:", travelTimes);
