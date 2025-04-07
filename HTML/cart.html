@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="da">
     <head>
-        <title>Click [&] Hent</title>
+        <title>Click & Hent</title>
         <meta charset="utf-8" />
       <link rel="stylesheet" type="text/css" href="./CSS/cart.css">
     </head>
@@ -37,5 +37,8 @@
       </div>
     </body>
     <script type="module" src="./Javascript/cart.js"></script>
-    <script>localStorage.setItem("currentPage", `./cart`)</script>
+    <script>
+      localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
+      localStorage.currentPage = `./cart`
+    </script>
 </html>

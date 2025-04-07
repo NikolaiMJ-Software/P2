@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da" data-theme="light">
     <head>
-        <title>Click [&] Hent</title>
+        <title>Click & Hent</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" type="text/css" href="./CSS/style.css">
 
@@ -37,7 +37,7 @@
       </div>
       
         <div class="container">
-          <h1 id="demo">Click [&] Hent</h1>
+          <h1 id="demo">Click & Hent</h1>
           <!--Creat a search bar-->
           <form id="form"> 
             <input type="search" id="query" name="q" placeholder="Søg efter en by...">
@@ -56,6 +56,9 @@
         <script src="./Javascript/theme.js"></script>
 
         <script type="module" src="./Javascript/logout.js"></script>
-        <script>localStorage.setItem("currentPage", `./`)</script>
+        <script>
+          localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
+          localStorage.currentPage = `./`;
+        </script>
     </body>
 </html>
