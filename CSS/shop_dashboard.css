@@ -263,6 +263,18 @@ form button[type="submit"] {
   background-size: 12px 8px;
 }
 
+.child-product {
+  margin-left: 30px;
+  margin-top: 8px;
+  background-color: #f5fdfa;
+  border-left: 4px solid #89C7B0;
+  box-shadow: none;
+  border-radius: 10px;
+  padding-left: 10px;
+  opacity: 0.98;
+}
+
+
 
 :root[data-theme="light"] {
   --page-bg:WHITE ;
