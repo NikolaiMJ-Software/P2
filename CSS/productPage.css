@@ -13,6 +13,7 @@ button {
   padding: 15px;
   font-size: 20px;
   border-left: 1px solid #ccc; /* Vertical line */
+  color: var(--primary-text);
 }
 
 /* Body Styling */
@@ -20,6 +21,8 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    background: var(--page-bg);
+    color: var(--primary-text);
   }
 
 /* Main Row Layout */
@@ -110,6 +113,7 @@ body {
     font-size: 14px;
     color: #444;
     margin-bottom: 10px;
+    color: var(--secoundary-text);
 }
 
 /* Specifications */
@@ -299,3 +303,37 @@ dialog {
     margin: 8px 0 12px;
     text-align: left;
   }
+
+  :root[data-theme="light"] {
+    --page-bg:WHITE ;
+    --primary-text:Black ;
+    --secoundary-text: lightgrey;
+
+
+
+    --switch-bg: #c1c1c1;
+    --switch-circle-bg: #FFD371;
+    --switch-circle-position: 5px;
+    --icon-sun: #dfb041;
+    --icon-moon: #B1B0B5;
+    --form-bg: #eeeeee;
+    --form-ph: grey;
+
+}
+
+
+:root[data-theme="dark"] {
+    --page-bg:#383643;
+    --primary-text: WHITE ;
+    --secoundary-text: lightgrey;
+
+    --switch-bg: #49494c;
+    --switch-circle-bg: #7190FF;
+    --switch-circle-position: 55px;
+    --icon-sun: #545457;
+    --icon-moon: #DCE3FF;
+    --form-bg: #2B2A35;
+    --form-ph: grey;
+
+} 
+

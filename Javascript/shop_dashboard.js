@@ -7,20 +7,55 @@ document.addEventListener("DOMContentLoaded", async () =>{
     const update_panel = document.getElementById("update-product-modal");
     const update_close_button = document.getElementById("update-modal-close");
     const update_form = document.getElementById("update-form");
+    const parent_select = document.getElementById("parent-product");
 
     const res = await fetch("./shop_products");
     const products = await res.json();
 
-    products.forEach(product =>{
-        const add_product = document.createElement("div");
-        add_product.classList.add("product-card")
+    //make a list of products which does and does not have a parent ID
+    const product_map = {};
+    //append all products without a parent ID
+    products.forEach(product => {
+        if (!product.parent_id) {
+            product_map[product.id] = { ...product, children: [] };
+        }
+    });
+    
+    //append all products with parent id to the designated parent product
+    products.forEach(product => {
+        if (product.parent_id && product_map[product.parent_id]) {
+            product_map[product.parent_id].children.push(product);
+        }
+    });
 
+    //call the product_list_create function for each parent and child in the list
+    Object.values(product_map).forEach(parent_product => {
+        const parent_card = product_list_create(parent_product);
+        product_list.appendChild(parent_card);
+    
+        parent_product.children.forEach(child => {
+            const child_card = product_list_create(child, true);
+            product_list.appendChild(child_card);
+        });
+    });
 
+    //creates the product list, both parents and children
+    function product_list_create(product, is_child = false) {
+        //creates html variable for designated product
+        const list = document.createElement("div");
+        list.classList.add("product-card");
+        //if product is a child, then add a child to the list
+        if (is_child) list.classList.add("child-product");
+    
+        //checks if product has discount, and if its over 0
         const has_discount = product.discount && product.discount > 0;
+        //defines how much discount a product has in % 
         const discounted_price = has_discount ? product.price - (product.price * product.discount) / 100 : product.price;
-
-        add_product.innerHTML=`
+    
+        //inserts the product, and checks if there is discount, and if the product is a child or not
+        list.innerHTML = `
             <div class="product-left">
+                ${is_child ? '<span style="margin-left: 15px;"></span>' : ''}
                 <button class="edit-button" data-id="${product.id}">✎</button>
                 <img class="product-image" src="${product.img1_path}" alt="${product.product_name}">
                 <div class="product-info">
@@ -34,21 +69,20 @@ document.addEventListener("DOMContentLoaded", async () =>{
                 <span class="stock-count" id="stock-${product.id}">${product.stock}</span>
                 <button class="stock-button stock-plus" data-id="${product.id}">+</button>
                 <div class="product-price">
-                ${
-                    has_discount
-                    ? `<span class="price-discounted">${discounted_price.toFixed(2)} kr.</span>
-                       <span class="price-original">${product.price} kr.</span>
-                       <span class="price-tag">-${product.discount}%</span>`
-                    : `${product.price} kr.`
-                }
+                    ${
+                        has_discount
+                        ? `<span class="price-discounted">${discounted_price.toFixed(2)} kr.</span>
+                           <span class="price-original">${product.price} kr.</span>
+                           <span class="price-tag">-${product.discount}%</span>`
+                        : `${product.price} kr.`
+                    }
                 </div>
                 <button class="delete-button" data-id="${product.id}">X</button>
             </div>
         `;
-
-        product_list.appendChild(add_product);
-    });
-
+    
+        return list;
+    }
 
     product_list.addEventListener("click", async (e) => {
         if (e.target.classList.contains("stock-plus") || e.target.classList.contains("stock-minus")) {
@@ -180,6 +214,19 @@ document.addEventListener("DOMContentLoaded", async () =>{
             }
     });
 
+    try{
+        const parent_res = await fetch("/parent_products");
+        const parent_products = await parent_res.json();
+
+        parent_products.forEach(prod =>{
+            const option = document.createElement("option")
+            option.value = prod.id;
+            option.textContent = prod.product_name;
+            parent_select.appendChild(option);
+        });
+    }catch (err) {
+        console.error("Fejl ved hentning af parent produkter:", err);
+    }
 });
 
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="da">
+<html lang="da" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="./CSS/productPage.css">
 </head>
 <body>
+    <div class="theme-switcher">
+        <button id="theme-switcher" ></button>
+      </div>
+      
+      
+
+      
     
   <div style="text-align: right;">
     <button id="cart" style="font-family: Arial;" onclick="window.location.href='./cart'">Din kurv</button>
@@ -15,7 +22,7 @@
     <button id="logout" style="display: none;">Logout</button>
     <button id="shop" style="display: none;">shop</button>
   </div>
-  <button id="back" style="text-align: left; translate: 0px -53px;" onclick="history.back()">Back</button>
+  <button id="back" style="text-align: left; translate: 0px -53px;" onclick="window.location.href = `./searchpage?city=${localStorage.city}`">Back</button>
     
     <div class="row">
         <!-- Product Image -->
@@ -93,8 +100,9 @@
 <script type="module" src="./Javascript/cart.js" defer></script>
 <script src="./Javascript/comments.js" defer></script>
 <script src="./Javascript/logout.js"></script>
+<script src="./Javascript/theme.js"></script>
+
 <script> 
-    localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
     localStorage.currentPage = `./productpage?id=${new URLSearchParams(window.location.search).get("id")}`
 </script>
 

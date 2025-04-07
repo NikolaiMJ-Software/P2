@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,13 @@
     <link rel="stylesheet" type="text/css" href="./CSS/shop_dashboard.css">
 </head>
 <body>
+  <div class="theme-switcher">
+    <button id="theme-switcher" ></button>
+  </div>
+  
+  
+           
+  
   <a href="#" onclick="history.back()">← Tilbage</a>
 
   <button class="add-button" id="add-button">Tilføj Produkt</button>
@@ -32,6 +39,10 @@
         <textarea id="product-desc" name="description" placeholder="Beskrivelse"></textarea>
         <p>Produkt specifikationer:</p>
         <textarea id="product-specs" name="specifications" placeholder="Specifikationer"></textarea>
+        <p>Vælg overordnet produkt (valgfrit):</p>
+        <select id="parent-product" name="parent_id">
+          <option value="">Ingen</option>
+        </select>
 
         <label>Hovedbillede (påkrævet):</label>
         <input type="file" name="img1" required accept="image/*">
@@ -86,8 +97,9 @@
   </div>
 
   <script type="module" src="./Javascript/shop_dashboard.js"></script>
+  <script src="./Javascript/theme.js"></script>
+
   <script>
-    if(localStorage.currentPage) localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
     localStorage.currentPage = `./shop_dashboard`
   </script>
 </body>

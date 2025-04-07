@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <title>Click & Hent</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="./CSS/searchPage.css">
 </head>
 <body>
+
+  <div class="theme-switcher">
+    <button id="theme-switcher" ></button>
+  </div>
+  
   
   <div style="text-align: right;">
     <button id="cart" style="font-family: Arial;" onclick="window.location.href='./cart'">Din kurv</button>
@@ -14,7 +19,7 @@
     <button id="logout" style="display: none;">Logout</button>
     <button id="shop" style="display: none;">shop</button>
   </div>
-  <button id="back" style="text-align: left; translate: 0px -53px;" onclick="history.back()">Back</button>
+  <button id="back" style="text-align: left; translate: 0px -53px;" onclick="window.location.href='./'">Back</button>
   
     <!--Class for title + input to make them align perfectly and be over/under-->
     <div class="productHeader">
@@ -62,6 +67,23 @@
     <script type="module" src="./Javascript/searchPage.js"></script>
     <script type="module" src="./Javascript/filter.js"></script>
     <script type="module" src="./Javascript/logout.js"></script>
+    <script src="./Javascript/theme.js"></script>
+
+    <script>
+      // Kør når siden loader
+      document.addEventListener("DOMContentLoaded", function () {
+        const isDark = localStorage.getItem("darkMode") === "true";
+        document.body.classList.toggle("dark", isDark);
+      });
+    
+      // Toggle dark mode når der klikkes
+      document.getElementById("toggleDarkMode").addEventListener("click", function () {
+        const isDark = document.body.classList.toggle("dark");
+        localStorage.setItem("darkMode", isDark);
+      });
+    </script>
+    
+
 
     <!--barrel roll when "½" is clicked-->
     <script>
@@ -77,8 +99,9 @@
       });
     </script>
     <script>
-    localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
-    localStorage.currentPage = `./searchpage?city=${new URLSearchParams(window.location.search).get("city")}`;
+      let city = new URLSearchParams(window.location.search).get("city")
+      localStorage.city = city
+      localStorage.currentPage = `./searchpage?city=${city}`;
     </script>
     
 </body>
