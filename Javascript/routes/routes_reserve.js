@@ -85,6 +85,7 @@ router.post('/reserve_wares', async (req, res) => {
         `Du har reserveret varer på Click&hent`,
         `Du har reserveret følgende varer på Click&hent: ${named_cart}`
     )
+    res.json({ success: true });
 });
 
 /*
