@@ -7,9 +7,10 @@
     <link rel="stylesheet" type="text/css" href="./CSS/shop_page.css">
 </head>
 <body>
-  <a href="#" onclick="history.back()" class="back-button">Back</a>
-
-
+  <div class="theme-switcher">
+    <button id="theme-switcher" ></button>
+  </div>
+  
   <div style="text-align: right;">
     <button id="cart" style="font-family: Arial;" onclick="window.location.href='./cart'">Din kurv</button>
     <button id="signup" style="font-family: Arial;" onclick="window.location.href='./signup'">Signup</button>
@@ -53,11 +54,7 @@
         <ul id="comments-list"></ul>
       </div>
   </div>
-
-  <div class="theme-switcher">
-    <button id="theme-switcher" ></button>
-  </div>
-
+</div>
   <main class="products" id="productList"></main>
 
   <script src="./Javascript/shop_page.js"></script>
