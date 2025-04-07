@@ -19,7 +19,7 @@
     <button id="logout" style="display: none;">Logout</button>
     <button id="shop" style="display: none;">shop</button>
   </div>
-  <button id="back" style="text-align: left; translate: 0px -53px;" onclick="history.back()">Back</button>
+  <button id="back" style="text-align: left; translate: 0px -53px;" onclick="window.localStorage.href='./'">Back</button>
   
     <!--Class for title + input to make them align perfectly and be over/under-->
     <div class="productHeader">
@@ -99,8 +99,9 @@
       });
     </script>
     <script>
-    localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
-    localStorage.currentPage = `./searchpage?city=${new URLSearchParams(window.location.search).get("city")}`;
+      let city = new URLSearchParams(window.location.search).get("city")
+      localStorage.city = city
+      localStorage.currentPage = `./searchpage?city=${city}`;
     </script>
     
 </body>
