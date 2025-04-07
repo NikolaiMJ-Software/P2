@@ -93,5 +93,6 @@
 <script type="module" src="./Javascript/cart.js" defer></script>
 <script src="./Javascript/comments.js" defer></script>
 <script src="./Javascript/logout.js"></script>
+<script>localStorage.setItem("currentPage", `./productpage?id=${new URLSearchParams(window.location.search).get("id")}`)</script>
 
 </html>
