@@ -123,7 +123,18 @@ app.use('/', user_router);
 
 //API to get all the cities, pictures and coordinates 
 app.get('/cities', (req, res) => {
-    db.all(`SELECT id, city, image_path, latitude, longitude FROM cities ORDER BY id ASC`, (err, rows) => {
+    db.all(`SELECT * FROM cities ORDER BY id ASC`, (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json(rows);
+    });
+});
+
+// API to get API_key from server
+app.get('/api_key', (req, res) => {
+    db.all(`SELECT * FROM private ORDER BY id ASC`, (err, rows) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
