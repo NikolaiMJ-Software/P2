@@ -32,5 +32,10 @@
         </div>
     </section>
     <script src="./Javascript/login.js" defer></script>
+    <script>
+        
+        if(localStorage.currentPage) localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
+        localStorage.currentPage = `./login`
+    </script>
 </body>
 </html>

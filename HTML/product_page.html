@@ -20,7 +20,7 @@
     <div class="row">
         <!-- Product Image -->
         <div class="product-image">
-            <img id="img1" src="" alt="Product Image">
+            <img id="img1" alt="Product Image">
             <div class="product-var" id="image-variants"></div>
         </div>
 
@@ -89,9 +89,13 @@
         </div>
     </div>
 </body>
-<script src="./Javascript/productPage.js" defer></script>
+<script type="module" src="./Javascript/productPage.js" defer></script>
 <script type="module" src="./Javascript/cart.js" defer></script>
 <script src="./Javascript/comments.js" defer></script>
 <script src="./Javascript/logout.js"></script>
+<script> 
+    localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
+    localStorage.currentPage = `./productpage?id=${new URLSearchParams(window.location.search).get("id")}`
+</script>
 
 </html>

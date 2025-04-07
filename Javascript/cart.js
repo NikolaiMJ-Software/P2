@@ -42,7 +42,6 @@ function remove_from_cart(product_id) {
         document.cookie = `products=${products.join(",")};path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
     }
 }
-
 //Function to get a specific cookie (relevant for other functions, taken from internet)
 function getCookie(cname) {
     let name = cname + "=";

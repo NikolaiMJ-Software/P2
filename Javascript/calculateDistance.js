@@ -8,16 +8,18 @@ export async function getTravelTime(destination) {
         // Get user's position 
         let position;
         if (checkLastVisit()){
-            console.log('The position was to old, calc new travel time');
+            console.log("More than 1 minutes have passed, resetting coordinates.");
+            console.log('The position was to old, calc new travel time.');
             position = await Promise.race([
                 getWatchPositionPromise(),
                 getCurrentPositionPromise()
             ]);
         } else {
-            console.log('still time:')
+            console.log('Still time:')
             position = await getWatchPositionPromise();
         }
         updateLastVisit();
+        
         // Check if the user's position has change
         if(checkPosition(position)){
             // Calc new travel times
@@ -149,29 +151,27 @@ export function getCurrentPositionPromise() {
     });
 }
 
-// Function to check if more than 1 minutes have passed
+// Function to check if more than 5 minutes have passed
 function checkLastVisit() {
     const lastVisit = localStorage.getItem("lastVisit");
     const now = Date.now();
 
-    // If the last visit timestamp exists and the difference is more than 1 minutes
-    if (lastVisit && (now - lastVisit > 1 * 60 * 1000)) {
-        // More than 1 minutes have passed, reset coordinates
+    // If the last visit timestamp exists and the difference is more than 5 minutes
+    if (lastVisit && (now - lastVisit > 5 * 60 * 1000)) {
+        // More than 5 minutes have passed, reset coordinates
         localStorage.removeItem("lastLat");
         localStorage.removeItem("lastLon");
-        console.log("More than 1 minutes have passed, resetting coordinates.");
         return true; // Indicating that the values have been reset
     }
 
-    // If 1 minutes have not passed, return false
+    // If 5 minutes have not passed, return false
     return false;
 }
 
 // Function to update the last visit timestamp
-function updateLastVisit() {
-    const now = Date.now();
-    console.log('Last visit: ', now);
-    localStorage.setItem("lastVisit", now);
+export function updateLastVisit() {
+    console.log('Last visit: ', Date.now());
+    localStorage.setItem("lastVisit", Date.now());
 }
 
 // Help function to update users location
@@ -216,7 +216,7 @@ export function getWatchPositionPromise() {
         setTimeout(() => {
             navigator.geolocation.clearWatch(watchId);
             console.log("Stopped watching position to save battery.");
-            }, 300000); // 5 min
+            }, 5 * 60 * 1000); // 5 min
     });
 }
 
