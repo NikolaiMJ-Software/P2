@@ -13,7 +13,15 @@
   
   
 
-  <a href="#" onclick="history.back()" class="back-button">Back</a>
+  <div style="text-align: right;">
+    <button id="cart" style="font-family: Arial;" onclick="window.location.href='./cart'">Din kurv</button>
+    <button id="signup" style="font-family: Arial;" onclick="window.location.href='./signup'">Signup</button>
+    <button id="login" style="font-family: Arial;" onclick="window.location.href='./login'">Login</button>
+    <button id="logout" style="display: none;">Logout</button>
+    <button id="shop" style="display: none;">shop</button>
+  </div>
+  <button id="back" style="text-align: left; translate: 0px -53px;" onclick="window.location.href=`./searchpage?city=${localStorage.city}`">Back</button>
+
     <!--Class for title + input to make them align perfectly and be over/under-->
     <div class="productHeader">
         <h1 id="h1store_page"></h1>
