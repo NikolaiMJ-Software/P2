@@ -15,12 +15,21 @@ table {
 
 button {
     position: relative;
+    color: var(--primary-text);
 }
 .cart-container {
     display: flex;
     align-items: flex-start; /* Aligns items at the top */
     gap: 20px; /* Space between table and summary box */
+
 }
+
+#Confirm_button {
+color: black;
+
+}
+
+
 #cart-summary {
     width: 300px;
     padding: 15px;
