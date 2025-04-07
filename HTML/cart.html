@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="da">
+<html lang="da" data-theme="light">
     <head>
         <title>Click & Hent</title>
         <meta charset="utf-8" />
       <link rel="stylesheet" type="text/css" href="./CSS/cart.css">
     </head>
     <body>
+      <div class="theme-switcher">
+        <button id="theme-switcher" ></button>
+      </div>
+      
+      
+    
       <a href="#" onclick="history.back()" style="text-align: left;">Back</a>
       <div class="cart-container">
         <table id="cart">
@@ -30,4 +36,6 @@
       </div>
     </body>
     <script type="module" src="./Javascript/cart.js"></script>
+    <script src="./Javascript/theme.js"></script>
+
 </html>

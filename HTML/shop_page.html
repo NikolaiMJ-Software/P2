@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,12 @@
     <link rel="stylesheet" type="text/css" href="./CSS/shop_page.css">
 </head>
 <body>
+  <div class="theme-switcher">
+    <button id="theme-switcher" ></button>
+  </div>
+  
+  
+
   <a href="#" onclick="history.back()" class="back-button">Back</a>
     <!--Class for title + input to make them align perfectly and be over/under-->
     <div class="productHeader">
@@ -27,5 +33,7 @@
     <main class="products" id="productList"></main>
 
     <script src="./Javascript/shop_page.js"></script>
+    <script src="./Javascript/theme.js"></script>
+
 </body>
 </html>
