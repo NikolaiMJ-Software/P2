@@ -4,10 +4,7 @@ import path from 'path';
 import multer from 'multer';
 import fs from 'fs';
 import fse from 'fs-extra';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 //Makes files work together
 const router = express.Router();
@@ -17,7 +14,7 @@ const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
 
 //Makes a new database with data from the current database (which can be interacted with)
 const db = new sqlite3.Database(db_path, (err) => {
-    if (err) return console.error('Reserve DB error:', err.message);
+    if (err) return console.error('Dashboard DB error:', err.message);
     console.log('Connected to SQLite database (dashboard router).');
     db.run("PRAGMA foreign_keys = ON;");
 });
@@ -28,7 +25,7 @@ const db = new sqlite3.Database(db_path, (err) => {
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
 
-        const dir = path.join(process.cwd(), 'Images', 'temp');
+        const dir = path.join(process.cwd(), '.', 'Images', 'temp');
 
         fs.mkdirSync(dir, {recursive: true});
         cb(null,dir);
@@ -43,7 +40,7 @@ const upload = multer({storage: storage});
 
 
 router.get('/shop_dashboard', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'HTML', 'shop_dashboard.html'));
+    res.sendFile(path.join(process.cwd(), '.', 'HTML', 'shop_dashboard.html'));
 });
 
 
@@ -103,7 +100,7 @@ router.post('/delete_ware', (req, res)=>{
                         return res.status(500).send("Databasefejl");
                     }
 
-                    const folder_path = path.join(process.cwd(), 'Images', city.city, shop.shop_name, product.product_name);
+                    const folder_path = path.join(process.cwd(), '.', 'Images', city.city, shop.shop_name, product.product_name);
 
                     db.run(`DELETE FROM products WHERE id = ? AND shop_id = ?`, [id, req.user.shop_id], (err) => {
                         if (err){
@@ -130,8 +127,9 @@ router.post("/add_product", upload.fields([
     {name: 'img4', maxCount: 1},
     {name: 'img5', maxCount: 1}]), 
     async (req, res)=>{
-    const {name, stock, price, discount, description, specifications} = req.body;
+    const {name, stock, price, discount, description, specifications, parent_id } = req.body;
     const shop_id = req.user?.shop_id;
+    const parent_id_value = parent_id ? parseInt(parent_id) : null;
 
     if (!req.user || !req.user.shop_id) {
         return res.status(403).send("Ikke autoriseret");
@@ -159,8 +157,8 @@ router.post("/add_product", upload.fields([
             }
 
             const city_name = city_row.city;
-            const dir = path.join('Images', city_name, shop_name, name);
-            const specific_dir = path.join(process.cwd(), dir);
+            const dir = path.join('.', 'Images', city_name, shop_name, name);
+            const specific_dir = path.join(process.cwd(), '.', dir);
 
             await fse.ensureDir(specific_dir);
 
@@ -175,9 +173,9 @@ router.post("/add_product", upload.fields([
             });
             db.run(`
                 INSERT INTO products (product_name, stock, price, discount, description, specifications, shop_id, city_id,
-                img1_path, img2_path, img3_path, img4_path, img5_path)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
-                `,[name, stock, price, discount, description, specifications, shop_id, city_id, file_paths[0], file_paths[1], file_paths[2], file_paths[3], file_paths[4]], (err)=>{
+                img1_path, img2_path, img3_path, img4_path, img5_path, parent_id)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                `,[name, stock, price, discount, description, specifications, shop_id, city_id, file_paths[0], file_paths[1], file_paths[2], file_paths[3], file_paths[4], parent_id_value], (err)=>{
                     if(err){
                         return res.status(500).json({error: err.message});
                     }else{
@@ -269,7 +267,7 @@ for (let i = 1; i <= 5; i++) {
         const old_img_path = old_image_paths[`img${i}_path`];
         if (old_img_path) {
             //define the full old image path images/[city]/[shop]/[product]/[image]
-            const full_old_path = path.join(process.cwd(), old_img_path);
+            const full_old_path = path.join(process.cwd(), '.', old_img_path);
             //if it exist, delete image
             if (fs.existsSync(full_old_path)) {
                 fs.unlinkSync(full_old_path);
@@ -283,9 +281,9 @@ for (let i = 1; i <= 5; i++) {
 // Rename folder if product name has changed
 if (product.product_name !== name) {
     //define old folder path
-    const old_folder = path.join(process.cwd(), "Images", city_name, shop_name, product.product_name);
+    const old_folder = path.join(process.cwd(), '.', "Images", city_name, shop_name, product.product_name);
     //define new folder path
-    const new_folder = path.join(process.cwd(), "Images", city_name, shop_name, name);
+    const new_folder = path.join(process.cwd(), '.', "Images", city_name, shop_name, name);
     //if old folder exist, rename old folder to new folder
     if (fs.existsSync(old_folder)) {
         fs.renameSync(old_folder, new_folder);
@@ -294,11 +292,13 @@ if (product.product_name !== name) {
 
 // Move new uploaded images into final destination and update image paths
 for (let i = 1; i <= 5; i++) {
+    //define new image
     const image = `update-img${i}`;
+    //if image and files from 1-5 exist do the following:
     if (req.files && req.files[image]) {
         const file = req.files[image][0];
         const filename = file.originalname;
-        const image_dir = path.join(process.cwd(), "Images", city_name, shop_name, name);
+        const image_dir = path.join(process.cwd(), '.', "Images", city_name, shop_name, name);
 
         // Ensure the renamed directory exists
         fs.mkdirSync(image_dir, { recursive: true });
@@ -312,13 +312,13 @@ for (let i = 1; i <= 5; i++) {
         }
 
         // Save new image path for DB update
-        image_paths[`img${i}_path`] = `/Images/${city_name}/${shop_name}/${name}/${filename}`;
+        image_paths[`img${i}_path`] = `./Images/${city_name}/${shop_name}/${name}/${filename}`;
     } else {
         // If image wasn't updated but folder was renamed, keep updated path
         const old_img_path = old_image_paths[`img${i}_path`];
         if (old_img_path && product.product_name !== name) {
             const filename = path.basename(old_img_path);
-            image_paths[`img${i}_path`] = `/Images/${city_name}/${shop_name}/${name}/${filename}`;
+            image_paths[`img${i}_path`] = `./Images/${city_name}/${shop_name}/${name}/${filename}`;
         }
     }
 }
@@ -343,10 +343,7 @@ for (let i = 1; i <= 5; i++) {
 
 
           const sql = `
-          UPDATE products
-          SET ${fields.join(", ")}
-          WHERE id = ? AND shop_id = ?
-        `;
+          UPDATE products SET ${fields.join(", ")} WHERE id = ? AND shop_id = ?`;
 
         db.run(sql, values, function (err) {
             if (err) {
@@ -362,6 +359,18 @@ for (let i = 1; i <= 5; i++) {
         }
 
 
+});
+
+
+router.get('/parent_products', (req, res)=>{
+    const shop_id = req.user.shop_id;
+    db.all('SELECT id, product_name FROM products WHERE shop_id = ? AND parent_id IS NULL', [shop_id], (err, rows)=>{
+        if (err) {
+            console.error("DB error:", err);
+            return res.status(500).json({ error: "Database fejl" });
+          }
+          res.json(rows);
+    })
 });
 
 export default router;
