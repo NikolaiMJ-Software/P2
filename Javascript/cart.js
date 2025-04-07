@@ -102,7 +102,7 @@ function fill_table() {
             //creates and fills quantity toggle
             let button_element = document.createElement("td");
             let remove_button = document.createElement("BUTTON");
-            remove_button.style.display = 'flex';
+            remove_button.setAttribute("class", button_reserve);
 
             // "-" element
             let minus = document.createElement("span");
