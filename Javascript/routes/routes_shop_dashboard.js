@@ -4,7 +4,6 @@ import path from 'path';
 import multer from 'multer';
 import fs from 'fs';
 import fse from 'fs-extra';
-import { fileURLToPath } from 'url';
 
 
 //Makes files work together
@@ -312,13 +311,13 @@ for (let i = 1; i <= 5; i++) {
         }
 
         // Save new image path for DB update
-        image_paths[`img${i}_path`] = `/Images/${city_name}/${shop_name}/${name}/${filename}`;
+        image_paths[`img${i}_path`] = `./Images/${city_name}/${shop_name}/${name}/${filename}`;
     } else {
         // If image wasn't updated but folder was renamed, keep updated path
         const old_img_path = old_image_paths[`img${i}_path`];
         if (old_img_path && product.product_name !== name) {
             const filename = path.basename(old_img_path);
-            image_paths[`img${i}_path`] = `/Images/${city_name}/${shop_name}/${name}/${filename}`;
+            image_paths[`img${i}_path`] = `./Images/${city_name}/${shop_name}/${name}/${filename}`;
         }
     }
 }
@@ -343,10 +342,7 @@ for (let i = 1; i <= 5; i++) {
 
 
           const sql = `
-          UPDATE products
-          SET ${fields.join(", ")}
-          WHERE id = ? AND shop_id = ?
-        `;
+          UPDATE products SET ${fields.join(", ")} WHERE id = ? AND shop_id = ?`;
 
         db.run(sql, values, function (err) {
             if (err) {
