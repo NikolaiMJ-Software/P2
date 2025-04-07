@@ -177,7 +177,7 @@ function checkLastVisit() {
     const now = Date.now();
 
     // If the last visit timestamp exists and the difference is more than 5 minutes
-    if (lastVisit && (now - lastVisit > 1 * 60 * 1000)) {
+    if (lastVisit && (now - lastVisit > 5 * 60 * 1000)) {
         // More than 5 minutes have passed, reset coordinates and arraies
         localStorage.removeItem("lastLat");
         localStorage.removeItem("lastLon");
