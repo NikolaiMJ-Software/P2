@@ -6,8 +6,6 @@ import fs from 'fs';
 import fse from 'fs-extra';
 import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 //Makes files work together
 const router = express.Router();
@@ -28,7 +26,7 @@ const db = new sqlite3.Database(db_path, (err) => {
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
 
-        const dir = path.join(process.cwd(), 'Images', 'temp');
+        const dir = path.join(process.cwd(), '.', 'Images', 'temp');
 
         fs.mkdirSync(dir, {recursive: true});
         cb(null,dir);
@@ -103,7 +101,7 @@ router.post('/delete_ware', (req, res)=>{
                         return res.status(500).send("Databasefejl");
                     }
 
-                    const folder_path = path.join(process.cwd(), 'Images', city.city, shop.shop_name, product.product_name);
+                    const folder_path = path.join(process.cwd(), '.', 'Images', city.city, shop.shop_name, product.product_name);
 
                     db.run(`DELETE FROM products WHERE id = ? AND shop_id = ?`, [id, req.user.shop_id], (err) => {
                         if (err){
@@ -159,7 +157,7 @@ router.post("/add_product", upload.fields([
             }
 
             const city_name = city_row.city;
-            const dir = path.join('Images', city_name, shop_name, name);
+            const dir = path.join('.', 'Images', city_name, shop_name, name);
             const specific_dir = path.join(process.cwd(), dir);
 
             await fse.ensureDir(specific_dir);
@@ -294,7 +292,9 @@ if (product.product_name !== name) {
 
 // Move new uploaded images into final destination and update image paths
 for (let i = 1; i <= 5; i++) {
+    //define new image
     const image = `update-img${i}`;
+    //if image and files from 1-5 exist do the following:
     if (req.files && req.files[image]) {
         const file = req.files[image][0];
         const filename = file.originalname;
