@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click [&] Hent</title>
+    <title>Click & Hent</title>
     <link rel="stylesheet" type="text/css" href="./CSS/shop_page.css">
 </head>
 <body>
@@ -27,5 +27,9 @@
     <main class="products" id="productList"></main>
 
     <script src="./Javascript/shop_page.js"></script>
+    <script>
+      if(localStorage.currentPage) localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
+      localStorage.currentPage = `./searchpage?city=${new URLSearchParams(window.location.search).get("city")}&shop_id=${new URLSearchParams(window.location.search).get("shop_id")}`;
+    </script>
 </body>
 </html>
