@@ -77,8 +77,9 @@
       });
     </script>
     <script>
-    localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
-    localStorage.currentPage = `./searchpage?city=${new URLSearchParams(window.location.search).get("city")}`;
+      let city = new URLSearchParams(window.location.search).get("city")
+      localStorage.city = city
+      localStorage.currentPage = `./searchpage?city=${city}`;
     </script>
     
 </body>
