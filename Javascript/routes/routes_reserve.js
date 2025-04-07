@@ -51,12 +51,11 @@ function send_mail(receiver, subject, text) {
 
 router.post('/reserve_wares', async (req, res) => {
     const { cart } = req.body;
-    if(req.user) {
-        user_email=req.user.email;
-    } else {
+    if(!req.user) {
         console.log("Log in to reserve a ware")
         return res.status(401).json({ error: "Log in to reserve a ware" });;
     }
+    let user_email = req.user.email;
     let named_cart = [];
     for(let i = 0; i < cart.length; i++) {
         named_cart[i] = []
@@ -74,8 +73,9 @@ router.post('/reserve_wares', async (req, res) => {
     }
     console.log(cart);
     for(let i = 0; i <= cart.length; i++) {
+        const shop_mail = await db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i][0]]);
         send_mail(
-            db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i][0]])
+            shop_mail,
             `En bruger har reserveret varer hos din butik`,
             `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`
         );
@@ -85,6 +85,7 @@ router.post('/reserve_wares', async (req, res) => {
         `Du har reserveret varer på Click&hent`,
         `Du har reserveret følgende varer på Click&hent: ${named_cart}`
     )
+    return res.json({ success: true });
 });
 
 /*

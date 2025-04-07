@@ -131,12 +131,6 @@ button {
     translate: 650px 0px;
   }
 
-@media (max-width: 1800px) {
-    .advert {
-        display: none;
-    }
-}
-
 .advertButton{
     position: relative;
     width: 300px;

@@ -35,5 +35,9 @@
     <script src="./Javascript/shop_page.js"></script>
     <script src="./Javascript/theme.js"></script>
 
+    <script>
+      if(localStorage.currentPage) localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
+      localStorage.currentPage = `./searchpage?city=${new URLSearchParams(window.location.search).get("city")}&shop_id=${new URLSearchParams(window.location.search).get("shop_id")}`;
+    </script>
 </body>
 </html>

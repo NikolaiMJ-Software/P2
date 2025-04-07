@@ -12,7 +12,7 @@
   </div>
   
   
-  <div style="text-align: right; justify-self: right; max-width: 500px;">
+  <div style="text-align: right;">
     <button id="cart" style="font-family: Arial;" onclick="window.location.href='./cart'">Din kurv</button>
     <button id="signup" style="font-family: Arial;" onclick="window.location.href='./signup'">Signup</button>
     <button id="login" style="font-family: Arial;" onclick="window.location.href='./login'">Login</button>
@@ -85,7 +85,7 @@
     
 
 
-    <!--barrel roll when "b" is clicked-->
+    <!--barrel roll when "½" is clicked-->
     <script>
       document.addEventListener("keydown", function (event) {
        if (event.key.toLowerCase() === "½") { 
@@ -97,6 +97,10 @@
         }, 500);
        }
       });
+    </script>
+    <script>
+    localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
+    localStorage.currentPage = `./searchpage?city=${new URLSearchParams(window.location.search).get("city")}`;
     </script>
     
 </body>

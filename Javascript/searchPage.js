@@ -1,10 +1,12 @@
 import { filters } from './filter.js';
+import { updateLastVisit } from './calculateDistance.js';
 let currentCity = new URLSearchParams(window.location.search).get(`city`);
 document.getElementById("h1ProductPage").textContent = currentCity; //changes title of page to city
 const productButtons = [], productContainer = document.getElementById('productList');
 let productList = [], advertContainer = document.getElementById('advertList'); //list to contain all items of current chosen city, and container to place advert in.
 
 function updateImage(products){
+    updateLastVisit(); // Update users last visit
     productContainer.innerHTML = '';// Remove old products
     //go through products
     products.forEach(product => {
@@ -75,7 +77,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         let currentCityId = cities.filter(city => city.city === currentCity)[0].id;
         if (currentCityId == undefined) throw "city ID not found"
-        console.log(currentCityId);
 
         const response = await fetch('./products'); // Fetch products from the server
         let products = await response.json();
