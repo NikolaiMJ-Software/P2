@@ -149,7 +149,7 @@ if (hasCommented) {
       });
   });
 
-  fetch('/user_logged_in')
+  fetch('./user_logged_in')
     .then(res => res.json())
     .then(data => {
       isLoggedIn = data.logged_in;
