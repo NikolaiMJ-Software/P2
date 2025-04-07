@@ -88,11 +88,14 @@ db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS comments (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         product_id INTEGER,
+        shop_id INTEGER,
         name TEXT,
         comment TEXT,
         rating INTEGER,
         timestamp INTEGER,
-        FOREIGN KEY(product_id) REFERENCES products(id)
+        FOREIGN KEY(product_id) REFERENCES products(id),
+        FOREIGN KEY(shop_id) REFERENCES shops(id)
+
         )`, (err) => {
         if (err) console.error("Error creating table 'comments':", err.message);
         else console.log("Table 'comments' created.");

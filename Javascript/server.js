@@ -134,13 +134,13 @@ app.get('/cities', (req, res) => {
 
 //api to identify the product
 app.get('/product', (req, res) => {
-    const productId = req.query.id;
-    if (!productId) {
+    const product_id = req.query.id;
+    if (!product_id) {
         res.status(400).json({ error: "Product ID is required" });
         return;
     }
 
-    db.all(`SELECT * FROM Products WHERE id = ?`, [productId], (err, rows) => {
+    db.all(`SELECT * FROM Products WHERE id = ?`, [product_id], (err, rows) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
@@ -209,37 +209,47 @@ app.get('/products', (req, res) => {
 
 // GET all comments for a product
 app.get('/comments', (req, res) => {
-    const productId = req.query.product_id;
+    const product_id = req.query.product_id;
+    const shop_id = req.query.shop_id;
 
-    if (!productId) {
-        return res.status(400).json({ error: 'Missing product_id' });
+    let query = '';
+    let param = '';
+
+    if (product_id) {
+        query = 'SELECT name, comment, rating, timestamp FROM comments WHERE product_id = ? ORDER BY timestamp DESC';
+        param = product_id;
+    } else if (shop_id) {
+        query = 'SELECT name, comment, rating, timestamp FROM comments WHERE shop_id = ? ORDER BY timestamp DESC';
+        param = shop_id;
+    } else {
+        return res.status(400).json({ error: 'Missing product_id or shop_id' });
     }
 
-    db.all(
-        'SELECT name, comment, rating, timestamp FROM comments WHERE product_id = ? ORDER BY timestamp DESC',
-        [productId],
-        (err, rows) => {
-            if (err) {
-                res.status(500).json({ error: err.message });
-            } else {
-                res.json(rows);
-            }
+    db.all(query, [param], (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+        } else {
+            res.json(rows);
         }
-    );
+    });
 });
+
 
 // POST a new comment
 app.put('/comment', (req, res) => {
-    const { product_id, name, comment, rating } = req.body;
+    const { product_id, shop_id, name, comment, rating } = req.body;
     const timestamp = Date.now();
 
-    if (!product_id || !name || !comment) {
-        return res.status(400).json({ error: 'Missing fields' });
+    if ((!product_id && !shop_id) || !name || !comment) {
+        return res.status(400).json({ error: 'Missing product_id or shop_id, name, or comment' });
     }
 
+    let queryField = product_id ? 'product_id' : 'shop_id';
+    let queryValue = product_id || shop_id;
+
     db.get(
-        `SELECT id FROM comments WHERE product_id = ? AND name = ?`,
-        [product_id, name],
+        `SELECT id FROM comments WHERE ${queryField} = ? AND name = ?`,
+        [queryValue, name],
         (err, row) => {
             if (err) {
                 return res.status(500).json({ error: err.message });
@@ -247,8 +257,8 @@ app.put('/comment', (req, res) => {
 
             if (!row) {
                 db.run(
-                    `INSERT INTO comments (product_id, name, comment, rating, timestamp) VALUES (?, ?, ?, ?, ?)`,
-                    [product_id, name, comment, rating, timestamp],
+                    `INSERT INTO comments (${queryField}, name, comment, rating, timestamp) VALUES (?, ?, ?, ?, ?)`,
+                    [queryValue, name, comment, rating, timestamp],
                     function (err) {
                         if (err) return res.status(500).json({ error: err.message });
                         res.json({ success: true, updated: false });
@@ -270,22 +280,31 @@ app.put('/comment', (req, res) => {
 
 //get average from the rating
 app.get('/rating', (req, res) => {
-    const productId = req.query.product_id;
+    const product_id = req.query.product_id;
+    const shop_id = req.query.shop_id;
 
-    if (!productId) return res.status(400).json({ error: 'Missing product_id' });
+    if (!product_id && !shop_id) {
+        return res.status(400).json({ error: 'Missing product_id or shop_id' });
+    }
+    let query = '';
+    let param = '';
 
-    db.get(
-        `SELECT AVG(rating) as avg_rating, COUNT(rating) as total
-        FROM comments WHERE product_id = ? AND rating IS NOT NULL`,
-        [productId],
-        (err, row) => {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json({
+
+    if (product_id) {
+        query = `SELECT AVG(rating) as avg_rating, COUNT(rating) as total FROM comments WHERE product_id = ? AND rating IS NOT NULL`;
+        param = product_id;
+    } else {
+        query = `SELECT AVG(rating) as avg_rating, COUNT(rating) as total FROM comments WHERE shop_id = ? AND rating IS NOT NULL`;
+        param = shop_id;
+    }
+
+    db.get(query, [param], (err, row) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({
             average: row.avg_rating ? Number(row.avg_rating).toFixed(1) : null,
             count: row.total
-            });
-        }
-    );
+        });
+    });
 });
 
 

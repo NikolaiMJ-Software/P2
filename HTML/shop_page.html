@@ -8,24 +8,45 @@
 </head>
 <body>
   <a href="#" onclick="history.back()" class="back-button">Back</a>
-    <!--Class for title + input to make them align perfectly and be over/under-->
-    <div class="productHeader">
-        <h1 id="h1store_page"></h1>
-        <form id="form"> 
-            <input type="search" id="inputProductSearch" placeholder="Søg efter et produkt...">
-            <!--Add magnifying glass on the right side-->
-            <button type="submit">
-              <svg width="16" height="16" viewBox="0 0 24 24">
-                <path d="M21 21l-6-6m4-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" 
-                stroke="black" stroke-width="2" fill="none" stroke-linecap="round"/>
-              </svg>
-            </button>
-          </form>
+
+  <div class="productHeader">
+    <h1 id="h1store_page"></h1>
+    <form id="form"> 
+      <input type="search" id="inputProductSearch" placeholder="Søg efter et produkt...">
+      <button type="submit">
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path d="M21 21l-6-6m4-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" 
+          stroke="black" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </form>
+    <div id="average-rating-display" class="average-stars" style="cursor: pointer;"></div>
+  </div>
+
+  <!-- Put this AFTER the header and products so it floats above -->
+  <div id="rating-modal" style="display: none;">
+    <div class="modal-content">
+      <button id="close-rating-modal" style="float: right;">&times;</button>
+      <h2>Rate this store</h2>
+      <div id="star-rating">
+        <span class="star" data-value="1">&#9734;</span>
+        <span class="star" data-value="2">&#9734;</span>
+        <span class="star" data-value="3">&#9734;</span>
+        <span class="star" data-value="4">&#9734;</span>
+        <span class="star" data-value="5">&#9734;</span>
+      </div>
+      <textarea id="user-comment" placeholder="Write your comment..."></textarea>
+      <button id="submit-rating">Submit</button>
+      <div class="comment-preview">
+        <h3>All Comments</h3>
+        <ul id="comments-list"></ul>
+      </div>
     </div>
+  </div>
 
-    <!--main class "products" to be filled out with lots of smaller products with unique specifics-->
-    <main class="products" id="productList"></main>
+  <main class="products" id="productList"></main>
 
-    <script src="./Javascript/shop_page.js"></script>
+  <script src="./Javascript/shop_page.js"></script>
+  <script src="./Javascript/comments.js"></script>
 </body>
 </html>

@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const productId = new URLSearchParams(window.location.search).get('id');
+  console.log("comments.js loaded");
+
+  const params = new URLSearchParams(window.location.search);
+  const product_id = params.get('id');
+  const shop_id = params.get('shop_id');
+  console.log("Product ID:", product_id);
+  console.log("Shop ID:", shop_id);
 
   const commentList = document.getElementById('comments-list');
   const submitBtn = document.getElementById('submit-rating');
@@ -76,7 +82,16 @@ if (hasCommented) {
 
   // Load comments from server
   function loadComments() {
-    fetch(`./comments?product_id=${productId}`)
+    let id = '';
+    if (product_id) {
+      id = `./comments?product_id=${product_id}`;
+    } else if (shop_id) {
+      id = `./comments?shop_id=${shop_id}`;
+    } else {
+      return; // no ID, no fetch
+    }
+  
+    fetch(id)
       .then(res => res.json())
       .then(comments => {
         allComments = comments;
@@ -129,15 +144,26 @@ if (hasCommented) {
       return;
     }
 
+    const payload = {
+      name,
+      comment,
+      rating: selectedRating
+    };
+  
+    if (product_id) {
+      payload.product_id = product_id;
+    } else if (shop_id) {
+      payload.shop_id = shop_id;
+    } else {
+      alert("Missing product or shop ID.");
+      return;
+    }
+  
+
     fetch('./comment', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        product_id: productId,
-        name,
-        comment,
-        rating: selectedRating
-      })
+      body: JSON.stringify(payload)
     })
       .then(res => res.json())
       .then(() => {
@@ -186,7 +212,15 @@ if (hasCommented) {
 
   // Fetch and display average star rating
   function fetchAverageRating() {
-    fetch(`./rating?product_id=${productId}`)
+    let id = '';
+    if (product_id) {
+      id = `./rating?product_id=${product_id}`;
+    } else if (shop_id) {
+      id = `./rating?shop_id=${shop_id}`;
+    } else {
+      return; // no ID, no fetch
+    }
+    fetch(id)
       .then(res => res.json())
       .then(data => {
         displayAverageRating(data.average, data.count);
