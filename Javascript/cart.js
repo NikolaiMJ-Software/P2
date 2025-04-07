@@ -169,9 +169,10 @@ if(button != null) {
 }
 
 //Reserve wares button (for cart page)
-if(document.getElementById("Confirm_button") != null) {
+const button_reserve = document.getElementById("Confirm_button");
+if(button_reserve != null) {
     if(window.getComputedStyle(document.getElementById("login")).display === "none") {
-        alert("du skal være login for at kunne reservere varer");
+        alert("du skal være login for at kunne reservere vare");
     }else {
         button_reserve.addEventListener("click", reserve_wares);
     }
