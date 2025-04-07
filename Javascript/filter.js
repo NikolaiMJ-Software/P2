@@ -59,7 +59,7 @@ export async function filters(products) {
         
         if (distanceFilter) {
             // Sort after closest distance to shop
-            const closestShops = await getTravelTime(shops); // Sort by travel time
+            const closestShops = await getTravelTime('shops'); // Sort by travel time
             if (closestShops.length === 0) {
                 alert("Filteret kræver, at du har aktiveret GPS");
             }
