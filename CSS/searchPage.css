@@ -154,6 +154,7 @@ button {
     border: 1px solid #ccc;
     padding: 10px;
     z-index: 1;
+    background-color: var(--form-bg);
 }
 
 .dropdown-content label {
@@ -193,9 +194,14 @@ progress {
 }
 
 
+#priceUpwardFilter {
+    color: pink;
+}
+
+
 :root[data-theme="light"] {
     --page-bg:WHITE ;
-    --primary-text:Black ;
+    --primary-text:Black;
     --secoundary-text: lightgrey;
 
 
@@ -213,7 +219,7 @@ progress {
 
 :root[data-theme="dark"] {
     --page-bg:#383643;
-    --primary-text: WHITE ;
+    --primary-text: white;
     --secoundary-text: lightgrey;
 
     --switch-bg: #49494c;

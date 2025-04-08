@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
 
     //make a list of products which does and does not have a parent ID
     const product_map = {};
-    //append all products without a parent ID
+    //append all products without a parent ID, and create a children list for each
     products.forEach(product => {
         if (!product.parent_id) {
             product_map[product.id] = { ...product, children: [] };
@@ -39,50 +39,122 @@ document.addEventListener("DOMContentLoaded", async () =>{
         });
     });
 
-    //creates the product list, both parents and children
+    //creates the product list, for both child and parent products
     function product_list_create(product, is_child = false) {
-        //creates html variable for designated product
+        //define the list
         const list = document.createElement("div");
+        //add html class product-card (defines its css)
         list.classList.add("product-card");
-        //if product is a child, then add a child to the list
+        //checks if input is a child, if so add a child-product class (defines its css)
         if (is_child) list.classList.add("child-product");
     
-        //checks if product has discount, and if its over 0
+        //creates the left part of each product element (picture, name, description and specifications)
+        const product_left = document.createElement("div");
+        product_left.className = "product-left";
+        //if its a child space it to the right
+        if (is_child) {
+            const spacer = document.createElement("span");
+            spacer.style.marginLeft = "15px";
+            product_left.appendChild(spacer);
+        }
+    
+        //create edit button
+        const editButton = document.createElement("button");
+        editButton.className = "edit-button";
+        editButton.dataset.id = product.id;
+        editButton.textContent = "✎";
+    
+        //create image
+        const image = document.createElement("img");
+        image.className = "product-image";
+        image.src = product.img1_path;
+        image.alt = product.product_name;
+    
+        //create info element regarding product
+        const info = document.createElement("div");
+        info.className = "product-info";
+    
+        //insert product name
+        const name = document.createElement("div");
+        name.className = "product-name";
+        name.textContent = product.product_name;
+    
+        //insert product description
+        const desc = document.createElement("div");
+        desc.className = "product-desc";
+        desc.textContent = product.description;
+    
+        //insert product specifications
+        const specs = document.createElement("div");
+        specs.className = "product-specs";
+        specs.textContent = product.specifications;
+    
+        //append the elements to the info and product_left to create the first part of the product showcasing
+        info.append(name, desc, specs);
+        product_left.append(editButton, image, info);
+    
+        //create new div stock, with the classname product stock
+        const stock = document.createElement("div");
+        stock.className = "product-stock";
+    
+        //add minus button to the stock div
+        const minus = document.createElement("button");
+        minus.className = "stock-button stock-minus";
+        minus.dataset.id = product.id;
+        minus.textContent = "-";
+    
+        //add count to the stock div
+        const count = document.createElement("span");
+        count.className = "stock-count";
+        count.id = `stock-${product.id}`;
+        count.textContent = product.stock;
+    
+       //add + to the stock div
+        const plus = document.createElement("button");
+        plus.className = "stock-button stock-plus";
+        plus.dataset.id = product.id;
+        plus.textContent = "+";
+    
+        // make new div for the price container
+        const price_container = document.createElement("div");
+        price_container.className = "product-price";
+    
+        //define discount for the product, anc check if discount is over 0
         const has_discount = product.discount && product.discount > 0;
-        //defines how much discount a product has in % 
+        //make the discount to a %
         const discounted_price = has_discount ? product.price - (product.price * product.discount) / 100 : product.price;
     
-        //inserts the product, and checks if there is discount, and if the product is a child or not
-        list.innerHTML = `
-            <div class="product-left">
-                ${is_child ? '<span style="margin-left: 15px;"></span>' : ''}
-                <button class="edit-button" data-id="${product.id}">✎</button>
-                <img class="product-image" src="${product.img1_path}" alt="${product.product_name}">
-                <div class="product-info">
-                    <div class="product-name">${product.product_name}</div>
-                    <div class="product-desc">${product.description}</div>
-                    <div class="product-specs">${product.specifications}</div>
-                </div>
-            </div>
-            <div class="product-stock">
-                <button class="stock-button stock-minus" data-id="${product.id}">-</button>
-                <span class="stock-count" id="stock-${product.id}">${product.stock}</span>
-                <button class="stock-button stock-plus" data-id="${product.id}">+</button>
-                <div class="product-price">
-                    ${
-                        has_discount
-                        ? `<span class="price-discounted">${discounted_price.toFixed(2)} kr.</span>
-                           <span class="price-original">${product.price} kr.</span>
-                           <span class="price-tag">-${product.discount}%</span>`
-                        : `${product.price} kr.`
-                    }
-                </div>
-                <button class="delete-button" data-id="${product.id}">X</button>
-            </div>
-        `;
+        //if product has discount add the discount element
+        if (has_discount) {
+            const discounted = document.createElement("span");
+            discounted.className = "price-discounted";
+            discounted.textContent = `${discounted_price.toFixed(2)} kr.`;
+    
+            const original = document.createElement("span");
+            original.className = "price-original";
+            original.textContent = `${product.price} kr.`;
+    
+            const tag = document.createElement("span");
+            tag.className = "price-tag";
+            tag.textContent = `-${product.discount}%`;
+    
+            price_container.append(discounted, original, tag);
+        } else {
+            price_container.textContent = `${product.price} kr.`;
+        }
+        
+        //set up the delete button for the product with the designated product id
+        const del = document.createElement("button");
+        del.className = "delete-button";
+        del.dataset.id = product.id;
+        del.textContent = "X";
+    
+        //append all the inputs to the stock div, and append product_left and stock to the main div list
+        stock.append(minus, count, plus, price_container, del);
+        list.append(product_left, stock);
     
         return list;
-    }
+    }    
 
     product_list.addEventListener("click", async (e) => {
         if (e.target.classList.contains("stock-plus") || e.target.classList.contains("stock-minus")) {
@@ -215,7 +287,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
     });
 
     try{
-        const parent_res = await fetch("/parent_products");
+        const parent_res = await fetch("./parent_products");
         const parent_products = await parent_res.json();
 
         parent_products.forEach(prod =>{

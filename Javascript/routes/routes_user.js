@@ -50,15 +50,15 @@ router.post('/login', (req, res) => {
 //function to signup users
 router.post('/signup', (req, res)=>{
     //aquire name, email and password from the url
-    const {name, email, password} = req.body;
+    const {name, email, password, shop_id} = req.body;
     //if any are missing, a fail message will be printed
     if (!name || !email || !password){
         return res.status(400).send("Du skal oplyse alle informationer");
     }
     //insert the different values in the db
     db.run(
-        `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`,
-        [name, email, password],
+        `INSERT INTO users (name, email, password, shop_id) VALUES (?, ?, ?, ?)`,
+        [name, email, password, shop_id],
         (err) =>{
             //if any mails are already in the db, the process would be aborted
             if(err){
@@ -86,11 +86,27 @@ router.get('/logout', (req, res)=>{
 });
 
 router.get('/get_cities', (req, res)=>{
-
+    db.all(`SELECT id, city FROM cities`, (err, rows) => {
+        //if there is a server error the following message will be printed
+        if (err) {
+            console.error('signup error error:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        res.json(rows);
+    });
 });
 
 router.get('/get_stores', (req, res)=>{
-    
+    const city_id = req.query.city_id;
+
+    db.all(`SELECT id, shop_name FROM shops WHERE city_id = ?`, [city_id], (err, rows)=>{
+        //if there is a server error the following message will be printed
+        if (err) {
+            console.error('signup error error:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        res.json(rows);
+    })
 });
 
 
