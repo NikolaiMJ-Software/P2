@@ -1,4 +1,4 @@
-const API_KEY = "AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ"; // Replace with yours Google API-key
+//const API_KEY = "AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ"; // Replace with yours Google API-key
 const url = "https://routes.googleapis.com/directions/v2:computeRoutes"; // The URL for using the API
 let travelTimesCities = [];
 let travelTimesShops = [];
@@ -83,9 +83,14 @@ export async function calcTravelTimes(position, destination){
         const userLat = position.coords.latitude;
         const userLon = position.coords.longitude;
 
+        // Get API key from server
+        const rawAPI = await fetch('./api_key');
+        const API = await rawAPI.json();
+        const API_KEY = API[0].API_key;
+
         // Prepare and send requests for multiple destination simultaneously
         const travelTimePromises = destination.map((place) => {
-            return calcDistance(userLat, userLon, place.latitude, place.longitude) // Return promise
+            return calcDistance(userLat, userLon, place.latitude, place.longitude, API_KEY) // Return promise
             .then((time) => {
             if (time) {
                 travelTimes.push({ name: place.city || place.shop_name, ...(place.shop_name && { id: place.id }), time: parseInt(time) });
@@ -115,7 +120,7 @@ export async function calcTravelTimes(position, destination){
     }
 }
 
-export async function calcDistance(userLat, userLon, destLat, destLon){
+export async function calcDistance(userLat, userLon, destLat, destLon, API_KEY){
     // The necessary requestBody for the API
     const requestBody = {
         origin: { location: { latLng: { latitude: userLat, longitude: userLon } } },
@@ -177,7 +182,7 @@ function checkLastVisit() {
     const now = Date.now();
 
     // If the last visit timestamp exists and the difference is more than 5 minutes
-    if (lastVisit && (now - lastVisit > 1 * 60 * 1000)) {
+    if (lastVisit && (now - lastVisit > 5 * 60 * 1000)) {
         // More than 5 minutes have passed, reset coordinates and arraies
         localStorage.removeItem("lastLat");
         localStorage.removeItem("lastLon");

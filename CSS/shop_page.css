@@ -125,6 +125,90 @@ button {
     right: 5%;
 }
 
+/* Modal styling */
+.hidden {
+    display: none;
+  }
+  
+  #rating-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    position: relative;
+    text-align: center;
+  }
+  
+  #close-rating-modal {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+    font-size: 20px;
+  }
+  
+  #star-rating .star {
+    font-size: 28px;
+    cursor: pointer;
+    color: gray;
+    transition: color 0.2s ease;
+  }
+  
+  #star-rating .star.hovered,
+  #star-rating .star.selected {
+    color: goldenrod;
+  }
+  #user-name, #user-comment {
+    width: 100%;
+    margin: 10px 0;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  dialog {
+      border: none;
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 300px;
+    }
+    
+    #submit-rating {
+      margin-bottom: 10px;
+    }
+    
+    .comment-preview {
+      margin-top: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      text-align: left;
+    }
+    
+    .comment-preview h3 {
+      margin-bottom: 5px;
+    }  
+    
+    .average-stars {
+      font-size: 20px;
+      color: goldenrod;
+      margin: 8px 0 12px;
+      text-align: left;
+    }
+
+    /*theme switch*/
+    
 :root[data-theme="light"] {
     --page-bg:WHITE ;
     --primary-text:Black ;

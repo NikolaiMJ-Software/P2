@@ -85,6 +85,7 @@ function fill_table() {
             amount++;
             document.getElementById(product).textContent = amount;
             total_cost += products[product-1].price;
+            document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
         } else {
             //create new row
             let row = document.createElement("tr");
@@ -98,18 +99,29 @@ function fill_table() {
             price_element.textContent = products[product-1].price;
             total_cost += products[product-1].price;
 
-            //creates preset button to remove product from cart, 
-            let button_element = document.createElement("td")
+            //creates and fills quantity toggle
+            let button_element = document.createElement("td");
             let remove_button = document.createElement("BUTTON");
-            remove_button.style.display = 'flex';
-            remove_button.textContent = "- ";
-            let quantity = document.createElement("p");
+            remove_button.setAttribute("class", button_reserve);
+
+            // "-" element
+            let minus = document.createElement("span");
+            minus.textContent = "- ";
+
+            // Quantity value
+            let quantity = document.createElement("span");
             quantity.textContent = "1";
             quantity.setAttribute("id", product);
-            let plus = document.createElement("p");
+
+            // "+" element
+            let plus = document.createElement("span");
             plus.textContent = " +";
+
+            // Append to button
+            remove_button.appendChild(minus);
             remove_button.appendChild(quantity);
             remove_button.appendChild(plus);
+
             //remove_button.setAttribute("id", product)
             remove_button.addEventListener("click", function (event) {
                 const clickX = event.offsetX;
@@ -123,14 +135,13 @@ function fill_table() {
             //adds button to a element in the row
             button_element.appendChild(remove_button);
 
-            document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
-
             //adds all elements as a child to the row, and the row as a child to the table
             row.appendChild(name_element);
             row.appendChild(price_element);
             row.appendChild(button_element);
             tableBody.appendChild(row);
 
+            document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
             past_product = product;
         }
     });
@@ -142,7 +153,7 @@ function adjust_table(action, product_id) {
         console.log("Removed product with id " + product_id);
         remove_from_cart(product_id);
     } else if(action === "+") {
-        console.log("Added product with id" + product_id);
+        console.log("Added product with id " + product_id);
         add_to_cart(product_id);
     } else {
         console.log("Invalid action");
@@ -171,36 +182,36 @@ if(button != null) {
 //Reserve wares button (for cart page)
 const button_reserve = document.getElementById("Confirm_button");
 if(button_reserve != null) {
-    if(window.getComputedStyle(document.getElementById("login")).display === "none") {
-        alert("du skal være login for at kunne reservere vare");
-    }else {
-        button_reserve.addEventListener("click", reserve_wares);
-    }
+    button_reserve.addEventListener("click", reserve_wares);
 }
 function reserve_wares() {
-    let cart = getCookie("products").split(",").map(Number);
-    if (cart.length === 0) {
-        alert("Kurven er tom!");
-        return;
-    }
-    let sorted_cart = {};
-    for (let i = 0; i < cart.length; i++) {
-        let product_id = cart[i];
-        let shop_id = products[product_id].shop_id;
-        if (!sorted_cart[shop_id]) {
-            sorted_cart[shop_id] = [];
+    if(window.getComputedStyle(document.getElementById("login")).display != "none") {
+        alert("du skal være login for at kunne reservere vare");
+    }else {
+        let cart = getCookie("products").split(",").map(Number);
+        if (cart.length === 0) {
+            alert("Kurven er tom!");
+            return;
         }
-        sorted_cart[shop_id].push(product_id);
+        let sorted_cart = {};
+        for (let i = 0; i < cart.length; i++) {
+            let product_id = cart[i];
+            let shop_id = products[product_id].shop_id;
+            if (!sorted_cart[shop_id]) {
+                sorted_cart[shop_id] = [];
+            }
+            sorted_cart[shop_id].push(product_id);
+        }
+
+        console.log("Sending sorted cart:", sorted_cart);
+
+        fetch('./reserve_wares', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ cart: sorted_cart })
+        });
     }
-
-    console.log("Sending sorted cart:", sorted_cart);
-
-    fetch('./reserve_wares', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ cart: sorted_cart })
-    });
 }
 
 async function check_readiness() {
