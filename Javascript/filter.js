@@ -41,6 +41,18 @@ export async function filters(products) {
         const responseShop = await fetch('./shop'); // Fetch shops from the server
         const shops = await responseShop.json();
         
+        // Sort shops after revenue
+        shops.sort((a, b) => a.revenue - b.revenue);
+        const smallestShop = shops.map(shop => shop.id); // Create a separate shop_id array
+
+        // Sort products by revenue based on shops sorted list
+        products.sort((a, b) => {
+            const indexA = smallestShop.indexOf(a.shop_id);
+            const indexB = smallestShop.indexOf(b.shop_id);
+            return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
+        });
+        sortedProducts = products;
+        
         // Apply filters based on the selected checkboxes
         if(priceUpwardFilter){
             // Sort after upward price
@@ -52,9 +64,6 @@ export async function filters(products) {
             products.sort((a, b) => { return b.price - a.price; });
             sortedProducts = products;
 
-        } else {
-            const responseProducts = await fetch('./products'); // Fetch products from the server
-            sortedProducts = await responseProducts.json();
         }
         
         if (distanceFilter) {

@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const check_box = document.getElementById('shop_user');
 const city_select = document.getElementById('city');
 const store_select = document.getElementById('store');
+const city_id = '';
 
 city_select.parentElement.style.display = 'none';
 store_select.parentElement.style.display = 'none';
