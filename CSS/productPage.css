@@ -49,8 +49,8 @@ body {
     max-width: 400px;
     height: 300px; 
     object-fit: contain;
-    background-color: #f8f8f8;
-    border: 1px solid #ccc; 
+    background-color: transparent;
+    border: 1px solid transparent; 
 }
 
 .fixed-shop-button {
@@ -75,7 +75,7 @@ body {
 .product-var img {
     width: 60px;
     height: 60px;
-    border: 2px solid black;
+    /*border: 2px solid transparent;*/
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
 }
@@ -275,7 +275,7 @@ body {
 
 #star-rating .star.hovered,
 #star-rating .star.selected {
-  color: gold;
+  color: goldenrod;
 }
 #user-name, #user-comment {
   width: 100%;
@@ -308,7 +308,7 @@ dialog {
   
   .average-stars {
     font-size: 18px;
-    color: gold;
+    color: goldenrod;
     margin: 8px 0 12px;
     text-align: left;
   }

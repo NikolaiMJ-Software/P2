@@ -38,9 +38,6 @@ export async function filters(products) {
     const priceDownwardFilter = document.getElementById('priceDownwardFilter')?.checked ?? false;
     let sortedProducts = [];
     try {
-        const responseShop = await fetch('./shop'); // Fetch shops from the server
-        const shops = await responseShop.json();
-        
         // Apply filters based on the selected checkboxes
         if(priceUpwardFilter){
             // Sort after upward price
@@ -53,13 +50,13 @@ export async function filters(products) {
             sortedProducts = products;
 
         } else {
-            const responseProducts = await fetch('./products'); // Fetch products from the server
-            sortedProducts = await responseProducts.json();
+            // As standart sort by smalles shop (by revenue)
+            sortedProducts = await sortStandart();
         }
         
         if (distanceFilter) {
             // Sort after closest distance to shop
-            const closestShops = await getTravelTime(shops); // Sort by travel time
+            const closestShops = await getTravelTime('shops'); // Sort by travel time
             if (closestShops.length === 0) {
                 alert("Filteret kræver, at du har aktiveret GPS");
             }
@@ -80,3 +77,24 @@ export async function filters(products) {
     // Return the sortet products
     return sortedProducts;
 };
+
+// Sorts after smallest shops (define by revenue)
+export async function sortStandart(){
+    const responseShop = await fetch('./shop'); // Fetch shops from the server
+    const responseProducts = await fetch('./products'); // Fetch products from the server
+    const shops = await responseShop.json();
+    let products = await responseProducts.json();
+    
+    // Sort shops after revenue
+    shops.sort((a, b) => a.revenue - b.revenue);
+    const smallestShop = shops.map(shop => shop.id); // Create a separate shop_id array
+
+    // Sort products by revenue based on shops sorted list
+    products.sort((a, b) => {
+        const indexA = smallestShop.indexOf(a.shop_id);
+        const indexB = smallestShop.indexOf(b.shop_id);
+        return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
+    });
+
+    return products;
+}

@@ -1,4 +1,4 @@
-import { filters } from './filter.js';
+import { filters, sortStandart } from './filter.js';
 import { updateLastVisit } from './calculateDistance.js';
 let currentCity = new URLSearchParams(window.location.search).get(`city`);
 document.getElementById("h1ProductPage").textContent = currentCity; //changes title of page to city
@@ -80,7 +80,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const response = await fetch('./products'); // Fetch products from the server
         let products = await response.json();
-        products = products.filter(product => product.city_id === currentCityId); // Save only the chosen citys products 
+        products = products.filter(product => product.city_id === currentCityId); // Save only the chosen citys products
+
+        // Sort smallest store as standart filter
+        await sortStandart();
+
         const searchInput = document.getElementById('inputProductSearch');
         const searchForm = document.getElementById('form');
 
@@ -173,6 +177,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         advertButton.onclick = () => {
             window.location.href = `./productpage?id=${encodeURIComponent(advertChosen.id)}`;
         }
+
+        //shop button 
+        //TODO: Create button element for shop button redirect - const advertShop = document.createElement('button');
+        //TODO: Get shop.id from chosen advert product - look how its done in productPage.js
+        //TODO: Get image from selected shop
+        //TODO: Put button source as the image, so the image is the butt
+        //TODO: Create and append child as button to advertButton
+        //TODO: Add button function to
+
 
         // place button in container and add all elements to the button
         advertContainer.appendChild(advertButton);

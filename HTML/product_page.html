@@ -22,7 +22,7 @@
     <button id="logout" style="display: none;">Logout</button>
     <button id="shop" style="display: none;">shop</button>
   </div>
-  <button id="back" style="text-align: left; translate: 0px -53px;" onclick="history.back()">Back</button>
+  <button id="back" style="text-align: left; translate: 0px -53px;" onclick="window.location.href = `./searchpage?city=${localStorage.city}`">Back</button>
     
     <div class="row">
         <!-- Product Image -->
@@ -103,7 +103,6 @@
 <script src="./Javascript/theme.js"></script>
 
 <script> 
-    localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
     localStorage.currentPage = `./productpage?id=${new URLSearchParams(window.location.search).get("id")}`
 </script>
 

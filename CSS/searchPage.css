@@ -139,6 +139,7 @@ button {
     border-radius: 10px;
     border: 1px solid #ccc;
     text-align: center;
+    color: black;
 }
 
 .filter-menu {

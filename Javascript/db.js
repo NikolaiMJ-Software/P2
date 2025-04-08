@@ -26,6 +26,7 @@ db.serialize(() => {
     db.run(`DROP TABLE IF EXISTS products`);
     db.run(`DROP TABLE IF EXISTS shops`);
     db.run(`DROP TABLE IF EXISTS cities`);
+    db.run(`DROP TABLE IF EXISTS private`);
 
     db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,6 +49,7 @@ db.serialize(() => {
         email TEXT,
         latitude REAL,
         longitude REAL,
+        revenue,
         FOREIGN KEY(city_id) REFERENCES cities(id)
     )`);
 
@@ -72,6 +74,14 @@ db.serialize(() => {
     FOREIGN KEY(parent_id) REFERENCES products(id)
     )`);
         
+    db.run(`CREATE TABLE private (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        API_key TEXT
+    )`, (err) => {
+        if (err) console.error("Error creating table:", err.message);
+        else console.log("Table 'private' created with UNIQUE constraint.");
+    });
 
     db.run(`CREATE TABLE users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -88,11 +98,14 @@ db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS comments (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         product_id INTEGER,
+        shop_id INTEGER,
         name TEXT,
         comment TEXT,
         rating INTEGER,
         timestamp INTEGER,
-        FOREIGN KEY(product_id) REFERENCES products(id)
+        FOREIGN KEY(product_id) REFERENCES products(id),
+        FOREIGN KEY(shop_id) REFERENCES shops(id)
+
         )`, (err) => {
         if (err) console.error("Error creating table 'comments':", err.message);
         else console.log("Table 'comments' created.");
@@ -112,19 +125,26 @@ db.serialize(() => {
             else console.log('Cities with image paths inserted.');
         });
 
-
-
-        db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude) VALUES
-            ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com', 57.048939, 9.921764),
-            ('jerrys vare', '1', 'Images/Aalborg/jerrys_vare/jerry_logo.png', 'nikolai456654@gmail.com', 57.070059, 9.946330)`, (err) => {
+        db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude, revenue) VALUES
+            ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com', 57.048939, 9.921764, 150000),
+            ('jerrys vare', '1', 'Images/Aalborg/jerrys_vare/jerry_logo.png', 'nikolai456654@gmail.com', 57.070059, 9.946330, 10)`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Shop inserted.');
-            });
-            db.run(`INSERT INTO users (email, name, password, shop_id) VALUES
-                ('sspg.dk@gmail.com', 'Sebastian', '123', 2)`, (err) => {
-                    if (err) console.error('Error inserting data:', err.message);
-                    else console.log('Users inserted.');
-                });
+        });
+
+        db.run(`INSERT INTO private (name, API_key) VALUES
+            ('Google maps', 'AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ')`, (err) => {
+                if (err) console.error('Error inserting data:', err.message);
+                else console.log('private inserted.');
+        });
+
+        db.run(`INSERT INTO users (email, name, password, shop_id) VALUES
+            ('sspg.dk@gmail.com', 'Sebastian', '123', 2),
+            ('mormorogmorfar123456789@gmail.com', 'ikke mormor & morfar', '123', 1)`, (err) => {
+                if (err) console.error('Error inserting data:', err.message);
+                else console.log('Users inserted.');
+        });
+
         db.run(`INSERT INTO products (city_id, shop_id, product_name, stock, price, description, img1_path, img2_path, img3_path, img4_path, specifications, discount, parent_id) 
             VALUES
             (1, 1, 'den grimme maskine (hvid)', 10, 25, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png',
@@ -153,7 +173,7 @@ db.serialize(() => {
                 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4)`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('product inserted.');
-            });
+        });
         db.run(`CREATE INDEX idx_shops_city ON shops(city_id);`);
         db.run(`CREATE INDEX idx_products_shop ON products(shop_id);`);
 });

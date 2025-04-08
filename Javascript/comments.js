@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const productId = new URLSearchParams(window.location.search).get('id');
+  console.log("comments.js loaded");
+
+  const params = new URLSearchParams(window.location.search);
+  const product_id = params.get('id');
+  const shop_id = params.get('shop_id');
+  console.log("Product ID:", product_id);
+  console.log("Shop ID:", shop_id);
 
   const commentList = document.getElementById('comments-list');
   const submitBtn = document.getElementById('submit-rating');
@@ -18,11 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Open popup
   openBtn?.addEventListener('click', () => {
     if (!isLoggedIn) {
-      alert("You must be logged in to rate or comment.");
+      alert("Du skal være logget ind for at kunne anmelde eller kommentere");
       return;
     }
 if (hasCommented) {
-  if (confirm("You have already commented on this product. Do you want to update your comment?")) {
+  if (confirm("Du har allerede skrevet en kommentar til dette produkt. Vil du opdatere den?")) {
     // Pre-fill comment box and stars
     const previousComment = allComments.find(c => c.name === userName);
     if (previousComment) {
@@ -44,11 +50,11 @@ if (hasCommented) {
   });
   avgStars?.addEventListener('click', () => {
     if (!isLoggedIn) {
-      alert("You must be logged in to rate or comment.");
+      alert("Du skal være logget ind for at kunne anmelde eller kommentere");
       return;
     }
     if (hasCommented) {
-      if (confirm("You have already commented on this product. Do you want to update your comment?")) {
+      if (confirm("Du har allerede skrevet en kommentar til dette produkt. Vil du opdatere den?")) {
         // Pre-fill comment box and stars
         const previousComment = allComments.find(c => c.name === userName);
         if (previousComment) {
@@ -76,7 +82,16 @@ if (hasCommented) {
 
   // Load comments from server
   function loadComments() {
-    fetch(`./comments?product_id=${productId}`)
+    let id = '';
+    if (product_id) {
+      id = `./comments?product_id=${product_id}`;
+    } else if (shop_id) {
+      id = `./comments?shop_id=${shop_id}`;
+    } else {
+      return; // no ID, no fetch
+    }
+  
+    fetch(id)
       .then(res => res.json())
       .then(comments => {
         allComments = comments;
@@ -114,30 +129,52 @@ if (hasCommented) {
       });
   }
 
+
+  // "sanitize" user input
+  function sanitizeInput(input) {
+    // Create a temporary DOM element
+    const doc = new DOMParser().parseFromString('<!doctype html><body>' + input, 'text/html');
+    const sanitizedInput = doc.body.textContent || doc.body.innerText;  // Get the text content, stripping out any HTML tags
+
+    //allow only specific characters
+    return sanitizedInput.replace(/[^a-zA-Z0-9\s.,!?-]/g, ''); // Removes anything other than letters, numbers, and a few punctuation marks
+}
   // Handle submission
   submitBtn.addEventListener('click', () => {
     if (!isLoggedIn) {
-      alert("You must be logged in to rate or comment.");
+      alert("Du skal være logget ind for at kunne anmelde eller kommentere");
       return;
     }
 
-    const name = userName;
-    const comment = commentInput.value.trim();
+    const name = sanitizeInput(userName); // sanitize the name
+    const comment = sanitizeInput(commentInput.value.trim()); // sanitize the comment
 
     if (!comment) {
-      alert("Please enter a comment.");
+      alert("Indtast venligst en kommentar");
       return;
     }
+
+
+    const payload = {
+      name,
+      comment,
+      rating: selectedRating
+    };
+  
+    if (product_id) {
+      payload.product_id = product_id;
+    } else if (shop_id) {
+      payload.shop_id = shop_id;
+    } else {
+      alert("Der mangler et produkt- eller butik-ID");
+      return;
+    }
+  
 
     fetch('./comment', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        product_id: productId,
-        name,
-        comment,
-        rating: selectedRating
-      })
+      body: JSON.stringify(payload)
     })
       .then(res => res.json())
       .then(() => {
@@ -186,7 +223,15 @@ if (hasCommented) {
 
   // Fetch and display average star rating
   function fetchAverageRating() {
-    fetch(`./rating?product_id=${productId}`)
+    let id = '';
+    if (product_id) {
+      id = `./rating?product_id=${product_id}`;
+    } else if (shop_id) {
+      id = `./rating?shop_id=${shop_id}`;
+    } else {
+      return; // no ID, no fetch
+    }
+    fetch(id)
       .then(res => res.json())
       .then(data => {
         displayAverageRating(data.average, data.count);
@@ -199,7 +244,8 @@ if (hasCommented) {
     container.innerHTML = '';
 
     if (!average) {
-      container.innerHTML = 'No ratings yet';
+//      container.innerHTML = 'Der er endnu ingen bedømmelser';
+      container.innerHTML = '☆☆☆☆☆';
       return;
     }
   // Calculate the number of full stars (meaning whole number part of the average)

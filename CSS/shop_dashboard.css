@@ -241,6 +241,41 @@ form button[type="submit"] {
   background-color: #4A7E8F;
 }
 
+
+#parent-product {
+  width: 100%;
+  padding: 10px 14px;
+  font-family: Arial, 'Lucida Sans', sans-serif;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 1em;
+  background-color: #fff;
+
+  /* This removes native appearance (better compatibility) */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.41 0L6 4.58 10.59 0 12 1.41 6 7.41 0 1.41z' fill='%234A7E8F'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 12px 8px;
+}
+
+.child-product {
+  margin-left: 30px;
+  margin-top: 8px;
+  background-color: #f5fdfa;
+  border-left: 4px solid #89C7B0;
+  box-shadow: none;
+  border-radius: 10px;
+  padding-left: 10px;
+  opacity: 0.98;
+}
+
+
+
 :root[data-theme="light"] {
   --page-bg:WHITE ;
   --primary-text:Black ;

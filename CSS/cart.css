@@ -17,6 +17,15 @@ button {
     position: relative;
     color: var(--primary-text);
 }
+
+.button_reserve {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 150px;
+    padding: 10px;
+}
+
 .cart-container {
     display: flex;
     align-items: flex-start; /* Aligns items at the top */

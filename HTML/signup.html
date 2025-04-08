@@ -32,6 +32,20 @@
                             <input type="password" name="password" placeholder="Password"/>
                         </div>
                         <div class="input__box">
+                            <label for="shop_user">Butiks bruger:</label>
+                            <input type="checkbox" id="shop_user" name="shop_user" value="1">
+                        </div>
+                        <div class="input__box">
+                            <select id="city" name="city_name">
+                                <option value="">Ingen</option>
+                            </select>
+                        </div>
+                        <div class="input__box">
+                            <select id="store" name="store_name">
+                                <option value="">Ingen</option>
+                            </select>
+                        </div>
+                        <div class="input__box">
                             <input type="submit" value="Opret" />
                         </div>
                         <p id="error-message" style="color: red;"></p>
@@ -43,9 +57,4 @@
 </body>
 <script src="./Javascript/signup.js" defer></script>
 <script src="./Javascript/theme.js"></script>
-
-<script>
-    if(localStorage.currentPage) localStorage.history = JSON.stringify(JSON.parse(localStorage.history).push(localStorage.currentPage));
-    localStorage.currentPage = `./signup`
-</script>
 </html>
