@@ -128,7 +128,7 @@ function fill_table() {
                 const buttonWidth = this.clientWidth;
                 if (clickX < buttonWidth / 3) {
                     adjust_table("-", product);
-                } else if (clickX > (2 * buttonWidth) / 3) {
+                } else if (clickX > (2 * buttonWidth) / 3 && parseInt(quantity.textContent) < products[product].stock) {
                     adjust_table("+", product);
                 }
             });
