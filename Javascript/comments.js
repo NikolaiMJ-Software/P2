@@ -129,6 +129,16 @@ if (hasCommented) {
       });
   }
 
+
+  // "sanitize" user input
+  function sanitizeInput(input) {
+    // Create a temporary DOM element
+    const doc = new DOMParser().parseFromString('<!doctype html><body>' + input, 'text/html');
+    const sanitizedInput = doc.body.textContent || doc.body.innerText;  // Get the text content, stripping out any HTML tags
+
+    //allow only specific characters
+    return sanitizedInput.replace(/[^a-zA-Z0-9\s.,!?-]/g, ''); // Removes anything other than letters, numbers, and a few punctuation marks
+}
   // Handle submission
   submitBtn.addEventListener('click', () => {
     if (!isLoggedIn) {
@@ -136,13 +146,14 @@ if (hasCommented) {
       return;
     }
 
-    const name = userName;
-    const comment = commentInput.value.trim();
+    const name = sanitizeInput(userName); // sanitize the name
+    const comment = sanitizeInput(commentInput.value.trim()); // sanitize the comment
 
     if (!comment) {
       alert("Indtast venligst en kommentar");
       return;
     }
+
 
     const payload = {
       name,
