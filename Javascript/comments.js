@@ -24,11 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Open popup
   openBtn?.addEventListener('click', () => {
     if (!isLoggedIn) {
-      alert("You must be logged in to rate or comment.");
+      alert("Du skal være logget ind for at kunne anmelde eller kommentere");
       return;
     }
 if (hasCommented) {
-  if (confirm("You have already commented on this product. Do you want to update your comment?")) {
+  if (confirm("Du har allerede skrevet en kommentar til dette produkt. Vil du opdatere den?")) {
     // Pre-fill comment box and stars
     const previousComment = allComments.find(c => c.name === userName);
     if (previousComment) {
@@ -50,11 +50,11 @@ if (hasCommented) {
   });
   avgStars?.addEventListener('click', () => {
     if (!isLoggedIn) {
-      alert("You must be logged in to rate or comment.");
+      alert("Du skal være logget ind for at kunne anmelde eller kommentere");
       return;
     }
     if (hasCommented) {
-      if (confirm("You have already commented on this product. Do you want to update your comment?")) {
+      if (confirm("Du har allerede skrevet en kommentar til dette produkt. Vil du opdatere den?")) {
         // Pre-fill comment box and stars
         const previousComment = allComments.find(c => c.name === userName);
         if (previousComment) {
@@ -132,7 +132,7 @@ if (hasCommented) {
   // Handle submission
   submitBtn.addEventListener('click', () => {
     if (!isLoggedIn) {
-      alert("You must be logged in to rate or comment.");
+      alert("Du skal være logget ind for at kunne anmelde eller kommentere");
       return;
     }
 
@@ -140,7 +140,7 @@ if (hasCommented) {
     const comment = commentInput.value.trim();
 
     if (!comment) {
-      alert("Please enter a comment.");
+      alert("Indtast venligst en kommentar");
       return;
     }
 
@@ -155,7 +155,7 @@ if (hasCommented) {
     } else if (shop_id) {
       payload.shop_id = shop_id;
     } else {
-      alert("Missing product or shop ID.");
+      alert("Der mangler et produkt- eller butik-ID");
       return;
     }
   
@@ -233,7 +233,7 @@ if (hasCommented) {
     container.innerHTML = '';
 
     if (!average) {
-      container.innerHTML = 'No ratings yet';
+      container.innerHTML = 'Der er endnu ingen bedømmelser';
       return;
     }
   // Calculate the number of full stars (meaning whole number part of the average)
