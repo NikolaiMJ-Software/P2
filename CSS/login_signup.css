@@ -159,3 +159,38 @@ section {
 
 } 
 
+.form .input__box input {
+    width: 100%;
+    color: black;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    padding: 10px 20px;
+    letter-spacing: 1px;
+    border-radius: 35px;
+    background: white;
+    border: 2px solid #4A7E8F;
+  }
+
+  .form .input__box select {
+    width: 100%;
+    color: black;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    padding: 10px 20px;
+    letter-spacing: 1px;
+    border-radius: 35px;
+    background: white;
+    border: 2px solid #4A7E8F;
+    appearance: none; /* removes default arrow on some browsers */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg fill="%234A7E8F" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    background-size: 16px;
+  }
+
+  .form .input__box select:focus {
+    border-color: #5E96A2;
+    box-shadow: 0 0 3px #5E96A2;
+  }
