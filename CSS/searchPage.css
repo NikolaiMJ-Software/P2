@@ -153,6 +153,7 @@ button {
     border: 1px solid #ccc;
     padding: 10px;
     z-index: 1;
+    background-color: var(--form-bg);
 }
 
 .dropdown-content label {
@@ -189,6 +190,11 @@ progress {
 
 .hidden {
     display: none; /* Completely hide the progress bar */
+}
+
+
+#priceUpwardFilter {
+    color: pink;
 }
 
 
