@@ -1,3 +1,7 @@
+const check_box = document.getElementById('shop_user');
+const city_select = document.getElementById('city');
+const store_select = document.getElementById('store');
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('signup-form');
     const errorMessage = document.getElementById('error-message');
@@ -8,11 +12,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = form.fornavn.value + " " + form.efternavn.value;
         const email = form.email.value;
         const password = form.password.value;
+        const shop_id = store_select.value || null;
+
 
         const response = await fetch('./signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
+            body: JSON.stringify({ name, email, password, shop_id })
         });
 
         if (response.ok) {
@@ -23,12 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-
-const check_box = document.getElementById('shop_user');
-const city_select = document.getElementById('city');
-const store_select = document.getElementById('store');
-const city_id = '';
 
 city_select.parentElement.style.display = 'none';
 store_select.parentElement.style.display = 'none';
@@ -46,7 +46,7 @@ check_box.addEventListener('change', async () =>{
 city_select.addEventListener('change', async () => {
     if(city_select.value){
         store_select.parentElement.style.display = 'block';
-        await load_stores();
+        await load_stores(city_select.value);
     }else{
         store_select.parentElement.style.display = 'none';
     }
@@ -59,19 +59,21 @@ async function load_cities(){
     city_select.innerHTML = `<option value="">Ingen</option>`;
     cities.forEach(city => {
         const option = document.createElement('option');
-        option.value = city.name;
+        option.value = city.id;
+        option.textContent = city.city;
         city_select.appendChild(option);
     });
 }
 
-async function load_stores(){
-    const res = await fetch('./get_stores');
+async function load_stores(city_id){
+    const res = await fetch(`./get_stores?city_id=${encodeURIComponent(city_id)}`);
     const stores = await res.json();
 
     store_select.innerHTML = `<option value="">Ingen</option>`;
     stores.forEach(store => {
         const option = document.createElement('option');
-        option.value = store.name;
+        option.value = store.id;
+        option.textContent = store.shop_name;
         store_select.appendChild(option);
     });
 }
