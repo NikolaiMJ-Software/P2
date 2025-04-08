@@ -169,7 +169,7 @@ button {
   
   #star-rating .star.hovered,
   #star-rating .star.selected {
-    color: gold;
+    color: goldenrod;
   }
   #user-name, #user-comment {
     width: 100%;
