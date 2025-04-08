@@ -316,7 +316,7 @@ dialog {
   :root[data-theme="light"] {
     --page-bg:WHITE ;
     --primary-text:Black ;
-    --secoundary-text: lightgrey;
+    --secoundary-text: rgb(92, 89, 89);
 
 
 
