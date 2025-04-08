@@ -217,10 +217,19 @@ body {
     border-radius: 25px;
 }
 
-.add-to-cart:hover {
-    background-color: black;
-    color: white;
+
+#cart_button.add-to-cart {
+  background-color: black;
+  color: white;
+  margin-top: 5px;
 }
+
+
+#cart_button.add-to-cart:hover {
+  background-color: white;
+  color: black;
+}
+
 
 /* Modal styling */
 .hidden {
@@ -307,7 +316,7 @@ dialog {
   :root[data-theme="light"] {
     --page-bg:WHITE ;
     --primary-text:Black ;
-    --secoundary-text: lightgrey;
+    --secoundary-text: rgb(92, 89, 89);
 
 
 
