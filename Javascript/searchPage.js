@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         products = products.filter(product => product.city_id === currentCityId); // Save only the chosen citys products
 
         // Sort smallest store as standart filter
-        await sortStandart();
+        products = await sortStandart();
 
         const searchInput = document.getElementById('inputProductSearch');
         const searchForm = document.getElementById('form');
