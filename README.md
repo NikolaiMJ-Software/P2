@@ -8,7 +8,7 @@ and "node.js" https://nodejs.org/en
 
 Open VS Code:
 Press: ctrl+shift+p
-Write: ”gir: clone”, click enter
+Write: ”git: clone”, click enter
 Insert: https://github.com/NikolaiMJ-Software/P2.git
 
 Install packet:

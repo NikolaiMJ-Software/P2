@@ -1,5 +1,7 @@
 //Start of cart functionality
 
+import { response } from "express";
+
 let products = [];
 
 let total_cost = 0;
@@ -128,7 +130,7 @@ function fill_table() {
                 const buttonWidth = this.clientWidth;
                 if (clickX < buttonWidth / 3) {
                     adjust_table("-", product);
-                } else if (clickX > (2 * buttonWidth) / 3) {
+                } else if (clickX > (2 * buttonWidth) / 3 && parseInt(quantity.textContent) < products[product].stock) {
                     adjust_table("+", product);
                 }
             });
@@ -184,7 +186,7 @@ const button_reserve = document.getElementById("Confirm_button");
 if(button_reserve != null) {
     button_reserve.addEventListener("click", reserve_wares);
 }
-function reserve_wares() {
+async function reserve_wares() {
     if(window.getComputedStyle(document.getElementById("login")).display != "none") {
         alert("du skal være login for at kunne reservere vare");
     }else {
@@ -205,12 +207,14 @@ function reserve_wares() {
 
         console.log("Sending sorted cart:", sorted_cart);
 
-        fetch('./reserve_wares', {
+        const response = await fetch('./reserve_wares', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
             body: JSON.stringify({ cart: sorted_cart })
         });
+        const final_response = await response;
+        console.log(final_response.json());
     }
 }
 
