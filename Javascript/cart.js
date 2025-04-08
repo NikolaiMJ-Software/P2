@@ -1,5 +1,7 @@
 //Start of cart functionality
 
+import { response } from "express";
+
 let products = [];
 
 let total_cost = 0;
@@ -205,12 +207,13 @@ function reserve_wares() {
 
         console.log("Sending sorted cart:", sorted_cart);
 
-        fetch('./reserve_wares', {
+        const response = fetch('./reserve_wares', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
             body: JSON.stringify({ cart: sorted_cart })
         });
+        console.log(response.json());
     }
 }
 
