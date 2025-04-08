@@ -31,21 +31,25 @@ const transporter = nodemailer.createTransport({
 
 // Function to send emails
 function send_mail(receiver, subject, text) {
-    //struct for email data
-    const mailOptions = {
-        from: 'clickoghent@gmail.com',
-        to: receiver,
-        subject: subject,
-        text: text,
-    };
+    return new Promise((resolve, reject) => {
+        //struct for email data
+        const mailOptions = {
+            from: 'clickoghent@gmail.com',
+            to: receiver,
+            subject: subject,
+            text: text,
+        };
 
-    //Sends email and verifies if it goes through
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error:', error);
-        } else {
-            console.log('Email sent:', info.response);
-        }
+        //Sends email and verifies if it goes through
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log('Error:', error);
+                reject(error);
+            } else {
+                console.log('Email sent:', info.response);
+                resolve(info);
+            }
+        });
     });
 }
 
@@ -59,7 +63,7 @@ router.post('/reserve_wares', async (req, res) => {
     let named_cart = [];
     for(let i = 0; i < cart.length; i++) {
         named_cart[i] = []
-        for(let x = 0; x <= cart[i].length; x++) {
+        for(let x = 0; x < cart[i].length; x++) {
             try {
                 const product = await db.get("SELECT products.product_name FROM products WHERE products.id = ?",[cart[i][x]]);
                 if (product) {
@@ -72,15 +76,20 @@ router.post('/reserve_wares', async (req, res) => {
         }
     }
     console.log(cart);
-    for(let i = 0; i <= cart.length; i++) {
-        const shop_mail = await db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i][0]]);
-        send_mail(
-            shop_mail,
-            `En bruger har reserveret varer hos din butik`,
-            `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`
-        );
+    for(let i = 0; i < cart.length; i++) {
+        try{
+            const shop_mail = await db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i][0]]);
+            await send_mail(
+                shop_mail.email,
+                `En bruger har reserveret varer hos din butik`,
+                `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`
+            );
+        }
+        catch (error) {
+            console.error("Failed to send seller email:", error);
+        }
     }
-    send_mail(
+    await send_mail(
         user_email,
         `Du har reserveret varer på Click&hent`,
         `Du har reserveret følgende varer på Click&hent: ${named_cart}`
