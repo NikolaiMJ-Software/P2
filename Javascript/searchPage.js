@@ -178,6 +178,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         //TODO: Create button element for shop button redirect - const advertShop = document.createElement('button');
         //TODO: Get shop.id from chosen advert product - look how its done in productPage.js
         //TODO: Get image from selected shop
+        //TODO: Put button source as the image, so the image is the butt
         //TODO: Create and append child as button to advertButton
         //TODO: Add button function to
 
