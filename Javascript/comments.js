@@ -233,7 +233,8 @@ if (hasCommented) {
     container.innerHTML = '';
 
     if (!average) {
-      container.innerHTML = 'Der er endnu ingen bedømmelser';
+//      container.innerHTML = 'Der er endnu ingen bedømmelser';
+      container.innerHTML = '☆☆☆☆☆';
       return;
     }
   // Calculate the number of full stars (meaning whole number part of the average)
