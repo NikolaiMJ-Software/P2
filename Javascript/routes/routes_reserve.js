@@ -56,8 +56,8 @@ function send_mail(receiver, subject, text) {
 router.post('/reserve_wares', async (req, res) => {
     const { cart } = req.body;
     if(!req.user) {
-        console.log("Log in to reserve a ware")
-        return res.status(401).json({ error: "Log in to reserve a ware" });;
+        console.log("Log in to reserve a ware");
+        return res.status(401).json({ error: "Log in to reserve a ware" });
     }
     let user_email = req.user.email;
     let named_cart = [];
@@ -96,46 +96,6 @@ router.post('/reserve_wares', async (req, res) => {
     )
     return res.json({ success: true });
 });
-
-/*
-//Reciever function that sends reservations mails for buyer and seller
-router.post('/reserve', (req, res) => {
-    //checks if buyer_email and product_id is available
-    const { buyer_email, product_id } = req.body;
-    if (!buyer_email || !product_id) {
-        return res.status(400).json({ error: 'Missing Email or Product ID' });
-    }
-
-    //Fetches the sellers email based on the product id
-    db.get(
-        `SELECT products.product_name, shops.email AS seller_email FROM products 
-         JOIN shops ON products.shop_id = shops.id WHERE products.id = ?`, [product_id],
-        (err, row) => {
-            if (err) {
-                console.error('Error fetching product:', err.message);
-                return res.status(500).json({ error: 'Database error' });
-            }
-            if (!row) {
-                return res.status(404).json({ error: 'Product not found' });
-            }
-
-            // Send reservation emails
-            send_mail(
-                buyer_email,
-                'Reservation af vare på Click&Hent',
-                `Du har reserveret varen: ${row.product_name}`
-            );
-            send_mail(
-                row.seller_email,
-                'En af dine varer er reserveret på Click&Hent',
-                `Din vare er reserveret: ${row.product_name}`
-            );
-
-            return res.json({ message: 'Reservation successful' });
-        }
-    );
-});
-*/
 
 //This is important, for god who knows what (do not remove)
 export default router;
