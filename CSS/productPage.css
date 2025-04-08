@@ -266,7 +266,7 @@ body {
 
 #star-rating .star.hovered,
 #star-rating .star.selected {
-  color: gold;
+  color: goldenrod;
 }
 #user-name, #user-comment {
   width: 100%;
@@ -299,7 +299,7 @@ dialog {
   
   .average-stars {
     font-size: 18px;
-    color: gold;
+    color: goldenrod;
     margin: 8px 0 12px;
     text-align: left;
   }
