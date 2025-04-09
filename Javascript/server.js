@@ -88,7 +88,7 @@ app.get('/searchpage', (req, res) => {
             res.status(404).json({ error: 'City not found' });
             return;
         }
-        console.log(`City requested: ${city}`); 
+        console.log(`\nCity requested: ${city}`); 
         console.log("User:", req.user?.email);
         res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
     })
@@ -96,8 +96,9 @@ app.get('/searchpage', (req, res) => {
 
 //path to productpage
 app.get('/productpage', (req, res) => {
-    const product = req.query.id; // Get product id from query
-    console.log(`Product requested: ${product}`); 
+    const product = req.query.id; // Get product id from query    
+    console.log(`\nProduct requested: ${product}`); 
+    console.log("User:", req.user?.email);
     res.sendFile(path.join(__dirname, '../HTML/product_page.html'));
 });
 
@@ -107,6 +108,9 @@ app.get('/cart', (req, res) => {
 
 // path to the shop page
 app.get('/productlist', (req, res) => {
+    const shop = req.query.shop_id; // Get product id from query    
+    console.log(`\nShop requested: ${shop}`); 
+    console.log("User:", req.user?.email);
     res.sendFile(path.join(__dirname, '../HTML/shop_page.html'));
 });
 
@@ -117,6 +121,9 @@ app.get('/login', (req, res) => {
 });
 app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/signup.html'));
+});
+app.get('/new_store', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/new_shop.html'));
 });
 //signup/login userability
 app.use('/', user_router);

@@ -4,7 +4,7 @@ const store_select = document.getElementById('store');
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('signup-form');
-    const errorMessage = document.getElementById('error-message');
+    const error_message = document.getElementById('error-message');
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -24,8 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (response.ok) {
             window.location.href = './login';
         } else {
-            const errorText = await response.text();
-            errorMessage.textContent = errorText;
+            const error_text = await response.text();
+            error_message.textContent = error_text;
         }
     });
 });
@@ -56,7 +56,7 @@ async function load_cities(){
     const res = await fetch('./get_cities');
     const cities = await res.json();
 
-    city_select.innerHTML = `<option value="">Ingen</option>`;
+
     cities.forEach(city => {
         const option = document.createElement('option');
         option.value = city.id;
@@ -69,7 +69,7 @@ async function load_stores(city_id){
     const res = await fetch(`./get_stores?city_id=${encodeURIComponent(city_id)}`);
     const stores = await res.json();
 
-    store_select.innerHTML = `<option value="">Ingen</option>`;
+
     stores.forEach(store => {
         const option = document.createElement('option');
         option.value = store.id;

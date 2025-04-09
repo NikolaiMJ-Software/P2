@@ -128,7 +128,7 @@ function fill_table() {
                 const buttonWidth = this.clientWidth;
                 if (clickX < buttonWidth / 3) {
                     adjust_table("-", product);
-                } else if (clickX > (2 * buttonWidth) / 3 && parseInt(quantity.textContent) < products[product].stock) {
+                } else if (clickX > (2 * buttonWidth) / 3 && parseInt(quantity.textContent) < products[product-1].stock) {
                     adjust_table("+", product);
                 }
             });
@@ -186,7 +186,7 @@ if(button_reserve != null) {
 }
 async function reserve_wares() {
     if(window.getComputedStyle(document.getElementById("login")).display != "none") {
-        alert("du skal være login for at kunne reservere vare");
+        alert("du skal være logget ind for at kunne reservere");
     }else {
         let cart = getCookie("products").split(",").map(Number);
         if (cart.length === 0) {
@@ -196,7 +196,7 @@ async function reserve_wares() {
         let sorted_cart = {};
         for (let i = 0; i < cart.length; i++) {
             let product_id = cart[i];
-            let shop_id = products[product_id].shop_id;
+            let shop_id = products[product_id-1].shop_id;
             if (!sorted_cart[shop_id]) {
                 sorted_cart[shop_id] = [];
             }
