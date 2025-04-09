@@ -49,14 +49,17 @@ function updateImage(products){
         productPrice.textContent = product.price + ",-";
         //discount
         productDiscount.classList.add('productDiscount');
-        if(product.discount != 0 && product.discount != null)
+        if(product.discount > 0)
         {productDiscount.textContent = "spar: " + product.discount + ",-"};
         
         productStore.classList.add('productStore');
         productStore.href = `./productlist?city=${currentCity}&shop_id=${product.shop_id}`
+        let productStoreImage = document.createElement("img");
         const shopResponse = await fetch(`./shop?id=${product.shop_id}`);
         const shopData = await shopResponse.json();
-        productStore.textContent = `${shopData.shop_name}`
+        productStoreImage.src = `./${shopData.img_path}`
+        productStoreImage.style = "max-width: 125px; max-height: 75px;"
+        productStore.appendChild(productStoreImage);
 
         //add onclick function to bring you to the specific products page
         productButton.onclick = () => {
