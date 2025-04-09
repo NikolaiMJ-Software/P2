@@ -54,6 +54,13 @@ button {
     color: black;
 }
 
+
+.theme-switcher {
+    display: none;
+
+}
+
+
 :root[data-theme="light"] {
     --page-bg:WHITE ;
     --primary-text:Black ;
