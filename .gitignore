@@ -1,4 +1,2 @@
 #Ignore changes to node modules (install them yourself)
-*.env
-
 node_modules/
