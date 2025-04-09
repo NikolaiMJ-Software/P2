@@ -9,10 +9,22 @@
     left: 0;
 }
 
-#user-table{
+
+td {
+    border: 1px solid black;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#user-table-body{
     text-align: left;
 }
 
-#shop-table{
+#shop-table-body{
     text-align: left;
+}
+
+#editBtn{
+    float: right;
+    
 }

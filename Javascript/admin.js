@@ -27,7 +27,7 @@ const users = await userResponse.json()
 
 function userTable(){
     //Table of Users
-    const userTable = document.getElementById("user-table")
+    const userTable = document.getElementById("user-table-body")
 
     //Reset the table to originial status
     userTable.innerHTML = `<tr>
@@ -35,6 +35,7 @@ function userTable(){
     <th>Username</th>
     <th>Email</th>
     <th>Shop ID</th>
+    <th><button id="shopUpdate">Update shops</button></th>
     <th>Delete</th>
     </tr>`
 
@@ -46,6 +47,8 @@ function userTable(){
         let username = document.createElement("td")
         let email = document.createElement("td")
         let shopId = document.createElement("td")
+        let shopName = document.createElement("td")
+        let shopSlct = document.createElement("select")
         let deleteTd = document.createElement("td")
         let deleteBtn = document.createElement("button")
 
@@ -68,6 +71,24 @@ function userTable(){
             }
         }
 
+        //Alter shop status
+        shopSlct.name = "stores"
+
+        let nullShop = document.createElement("option")
+        nullShop.value = null
+        nullShop.textContent = null
+        shopSlct.appendChild(nullShop)
+
+        shops.forEach(shop => {
+            let shopChoice = document.createElement("option")
+            shopChoice.value = shop.id
+            if(shopChoice.value == user.shop_id) shopChoice.selected="selected"
+            shopChoice.textContent = shop.id + " " + shop.shop_name
+            shopSlct.appendChild(shopChoice)
+        })
+
+
+
         //Initialize table contents
         userId.textContent = user.id
         username.textContent = user.name
@@ -79,10 +100,17 @@ function userTable(){
         tableRow.appendChild(username)
         tableRow.appendChild(email)
         tableRow.appendChild(shopId)
+        tableRow.appendChild(shopName)
+        shopName.appendChild(shopSlct)
         tableRow.appendChild(deleteTd)
         deleteTd.appendChild(deleteBtn)
         userTable.appendChild(tableRow)
     });
+
+    let updateBtn = document.getElementById("shopUpdate")
+    updateBtn.onclick = () => {
+        alert("Functionality not added yet")
+    }
 }
 
 //Fetch shop data
@@ -91,7 +119,7 @@ const shops = await shopsResponse.json()
 
 function shopTable(){
     //Table of shops
-    const shopTable = document.getElementById("shop-table")
+    const shopTable = document.getElementById("shop-table-body")
 
     //Reset the table to originial status
     shopTable.innerHTML = `<tr>
@@ -143,34 +171,37 @@ function shopTable(){
 
         //Edit email functionality
         emailEdit.textContent = "edit"
+        emailEdit.id="editBtn"
         emailEdit.onclick = async () =>{
-            let email = prompt("Indtast ny email")
             let id = shop.id
-
-            const updateRes = await fetch("./edit_email", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id, email })
-            });
-            if (updateRes.ok) {
-                alert("Email er blevet ændret.");
-                location.reload();
-            } else {
-                alert("Kunne ikke opdatere lagerbeholdning.");
+            let email = prompt("Indtast ny email")
+            if (email){
+                const updateRes = await fetch("./edit_email", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id, email })
+                });
+                if (updateRes.ok) {
+                    alert("Email er blevet ændret.");
+                    location.reload();
+                } else {
+                    alert("Kunne ikke opdatere lagerbeholdning.");
+                }
             }
         }
 
         //Go to dashboard functionality
-        
+        dashboardBtn.textContent = "dashboard"
 
 
+        //Initialize table contents
         shopId.textContent = shop.id
         cityId.textContent = shop.city_id
         shopName.textContent = shop.shop_name
         emailTd.textContent = shop.email
         revenue.textContent = shop.revenue
-        dashboardBtn.textContent = "dashboard"
-    
+        
+        //Initialize table
         tableRow.appendChild(shopId)
         tableRow.appendChild(cityId)
         tableRow.appendChild(shopName)
