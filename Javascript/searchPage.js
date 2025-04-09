@@ -59,7 +59,11 @@ function updateImage(products){
         {productDiscount.textContent = "spar: " + product.discount + ",-"};
         
         productStore.classList.add('productStore');
-        productStore.href = `./productlist?city=${currentCity}&shop_id=${product.shop_id}`
+        if(email){
+            productStore.href = `./productlist?email=$${encodeURIComponent(email)}&city=${currentCity}&shop_id=${product.shop_id}`
+        } else {
+            productStore.href = `./productlist?city=${currentCity}&shop_id=${product.shop_id}`
+        }
         let productStoreImage = document.createElement("img");
         const shopResponse = await fetch(`./shop?id=${product.shop_id}`);
         const shopData = await shopResponse.json();
@@ -142,8 +146,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             const matchingProduct = products.find(product => product.product_name.toLowerCase() === searchValue);
 
             if (matchingProduct) {
-                // Redirect if city is found
-                window.location.href = `./productpage?id=${encodeURIComponent(matchingProduct.product.id)}`;
+                if(email){
+                    window.location.href = `./productpage?email=${encodeURIComponent(email)}&id=${encodeURIComponent(product.id)}`;
+                } else {
+                    window.location.href = `./productpage?id=${encodeURIComponent(product.id)}`;
+                }
             }
         });
 

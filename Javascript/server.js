@@ -108,6 +108,9 @@ app.get('/cart', (req, res) => {
 
 // path to the shop page
 app.get('/productlist', (req, res) => {
+    const shop = req.query.shop_id; // Get product id from query    
+    console.log(`\nShop requested: ${shop}`); 
+    console.log("User:", req.user?.email);
     res.sendFile(path.join(__dirname, '../HTML/shop_page.html'));
 });
 
