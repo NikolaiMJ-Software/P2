@@ -4,7 +4,7 @@ const store_select = document.getElementById('store');
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('signup-form');
-    const errorMessage = document.getElementById('error-message');
+    const error_message = document.getElementById('error-message');
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -24,8 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (response.ok) {
             window.location.href = './login';
         } else {
-            const errorText = await response.text();
-            errorMessage.textContent = errorText;
+            const error_text = await response.text();
+            error_message.textContent = error_text;
         }
     });
 });

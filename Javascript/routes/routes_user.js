@@ -1,7 +1,12 @@
 import express from 'express';
 import sqlite3 from 'sqlite3';
 import path from 'path';
+import multer from 'multer';
+import fs from 'fs';
+import fse from 'fs-extra';
 
+// Set up Multer
+const upload = multer({ dest: 'uploads/' }); // or configure custom storage
 
 const router = express.Router();
 
@@ -107,6 +112,74 @@ router.get('/get_stores', (req, res)=>{
         }
         res.json(rows);
     })
+});
+
+
+router.post("/new_shop", upload.fields([{ name: 'logo', maxCount: 1 }]), async (req, res) => {
+    try {
+        const { butik: name, email, city_name: city_id, longitude: long, latitude: lat } = req.body;
+        // check if any inputs are missing
+        if (!name || !email || !city_id || !long || !lat) {
+            return res.status(400).send("Alle felter skal udfyldes.");
+        }
+        //check if logo is missing
+        const logo_file = req.files?.logo?.[0];
+        if (!logo_file) {
+            return res.status(400).send("Butikslogo mangler.");
+        }
+
+        // Get city name from DB
+        const city_name = await new Promise((resolve, reject) => {
+            db.get(`SELECT city FROM cities WHERE id = ?`, [city_id], (err, row) => {
+                if (err) return reject(err);
+                if (!row) return reject(new Error("By ikke fundet"));
+                resolve(row.city);
+            });
+        });
+
+        // Image path
+        const shop_folder = path.join('.', 'images', city_name, name);
+        const logo_file_name = 'logo' + path.extname(logo_file.originalname); // e.g. logo.png
+        const image_path = path.join(shop_folder, logo_file_name);
+
+        // Path saved in DB (client uses /images/...)
+        const logo_path = `./images/${city_name}/${name}/${logo_file_name}`;
+
+        // Create folder and move file
+        await fse.ensureDir(shop_folder);
+        await fse.move(logo_file.path, image_path, { overwrite: true });
+
+        // Insert into DB
+        db.run(
+            `INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude, revenue) VALUES (?, ?, ?, ?, ?, ?, 0)`,
+            [name, city_id, logo_path, email, lat, long],
+            async function (err) {
+                if (err) {
+                    console.error("Fejl i DB:", err);
+
+                    // Delete image if DB insert fails
+                    try {
+                        await fse.remove(image_path);
+                        console.log("Slettede billede pga. DB-fejl.");
+                    } catch (deleteErr) {
+                        console.error("Kunne ikke slette billede:", deleteErr);
+                    }
+
+                    return res.status(500).send("Databasefejl ved oprettelse.");
+                }
+
+                return res.status(200).json({
+                    message: "Butik oprettet",
+                    shop_id: this.lastID,
+                    image_path: logo_path
+                });
+            }
+        );
+
+    } catch (err) {
+        console.error("Fejl:", err);
+        return res.status(500).send(err.message || "Intern serverfejl");
+    }
 });
 
 

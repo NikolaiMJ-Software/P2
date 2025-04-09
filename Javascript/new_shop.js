@@ -21,9 +21,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const name = form.butik.value;
-        const email = form.email.value;
-        const city_id = city_select.value || null;
         const lat = form.latitude.value;
         const long = form.longitude.value;
 
@@ -33,18 +30,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        const response = await fetch('./create_shop', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, city_id, lat, long })
-        });
 
-        if (response.ok) {
-            window.location.href = './login';
-        } else {
-            const errorText = await response.text();
-            error_message.textContent = errorText;
-        }
+        const form_data = new FormData(form);
+
+        const update_res = await fetch("./new_shop",{
+            method: "POST",
+            body: form_data,
+        });
+        
+            if (update_res.ok) {
+                alert("Butikken er blevet tilføjet.");
+                window.location.href = './signup';
+            } else {
+                const error_text = await update_res.text();
+                error_message.textContent = error_text;
+            }
     });
 });
 
