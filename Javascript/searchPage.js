@@ -57,7 +57,10 @@ function updateImage(products){
         let productStoreImage = document.createElement("img");
         const shopResponse = await fetch(`./shop?id=${product.shop_id}`);
         const shopData = await shopResponse.json();
-        productStoreImage.src = `./${shopData.img_path}`
+        if(shopData.img_path){
+            productStoreImage.src = `./${shopData.img_path}`
+        }
+        productStoreImage.alt = `${shopData.shop_name}`
         productStoreImage.style = "max-width: 125px; max-height: 75px;"
         productStore.appendChild(productStoreImage);
 
