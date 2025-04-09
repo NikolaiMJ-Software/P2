@@ -186,7 +186,7 @@ if(button_reserve != null) {
 }
 async function reserve_wares() {
     if(window.getComputedStyle(document.getElementById("login")).display != "none") {
-        alert("du skal være login for at kunne reservere vare");
+        alert("du skal være logget ind for at kunne reservere");
     }else {
         let cart = getCookie("products").split(",").map(Number);
         if (cart.length === 0) {
@@ -194,7 +194,7 @@ async function reserve_wares() {
             return;
         }
         let sorted_cart = {};
-        for (let i = 0; i < cart.length; i++) {
+        for (let i = 1; i < cart.length; i++) {
             let product_id = cart[i];
             let shop_id = products[product_id].shop_id;
             if (!sorted_cart[shop_id]) {

@@ -56,7 +56,7 @@ async function load_cities(){
     const res = await fetch('./get_cities');
     const cities = await res.json();
 
-    city_select.innerHTML = `<option value="">Ingen</option>`;
+
     cities.forEach(city => {
         const option = document.createElement('option');
         option.value = city.id;
@@ -69,7 +69,7 @@ async function load_stores(city_id){
     const res = await fetch(`./get_stores?city_id=${encodeURIComponent(city_id)}`);
     const stores = await res.json();
 
-    store_select.innerHTML = `<option value="">Ingen</option>`;
+
     stores.forEach(store => {
         const option = document.createElement('option');
         option.value = store.id;
