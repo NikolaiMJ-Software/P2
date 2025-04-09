@@ -118,6 +118,9 @@ app.get('/login', (req, res) => {
 app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/signup.html'));
 });
+app.get('/new_store', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/new_shop.html'));
+});
 //signup/login userability
 app.use('/', user_router);
 

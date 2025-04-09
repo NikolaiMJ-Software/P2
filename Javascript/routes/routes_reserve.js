@@ -39,7 +39,6 @@ function send_mail(receiver, subject, text) {
         console.error('Error sending email:', error.response.body);
         throw error;
     });
-    
 }
 
 function db_get(query, params) {
@@ -73,6 +72,7 @@ router.post('/reserve_wares', async (req, res) => {
             }
         }
     }
+    /*
     console.log(cart);
     for(let i = 0; i < cart.length; i++) {
         try{
@@ -92,7 +92,8 @@ router.post('/reserve_wares', async (req, res) => {
         `Du har reserveret varer på Click&hent`,
         `Du har reserveret følgende varer på Click&hent: ${named_cart}`
     )
-    return res.json({ success: true });
+        */
+    return res.json({ success: cart });
 });
 
 //This is important, for god who knows what (do not remove)
