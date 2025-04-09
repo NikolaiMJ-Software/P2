@@ -13,11 +13,12 @@ body {
 form {
     display: flex;
     align-items: center;
-    border: 1px solid #ccc;
+    border: 1px solid #A8D5BA;
     border-radius: 10px;
     overflow: hidden;
     width: 400px; /* Adjust width */
     background-color: white;
+    caret-color: #A8D5BA;
 }
 
 /* Style the input field */
@@ -65,7 +66,7 @@ button {
     height: 450px;
     background: white;
     border-radius: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #A8D5BA;
     text-align: center;
     color: black;
 }
@@ -130,6 +131,18 @@ button {
     right: 5%;
 }
 
+.productText{
+    color: var(--primary-text);
+    position: absolute;
+    translate: 0px -300px;
+    font-size: 32px;
+    text-shadow: 
+    -1px -1px 0 #A8D5BA,  
+     1px -1px 0 #A8D5BA,
+    -1px  1px 0 #A8D5BA,
+     1px  1px 0 #A8D5BA;
+}
+
 .advert {
     position: absolute;
     top: 503px;
@@ -146,7 +159,7 @@ button {
     height: 450px;
     background: white;
     border-radius: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #A8D5BA;
     text-align: center;
     color: black;
 }

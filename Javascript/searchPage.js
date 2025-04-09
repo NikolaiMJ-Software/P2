@@ -28,6 +28,7 @@ function updateImage(products){
         const productPrice = document.createElement('p');
         const productDiscount = document.createElement('p');
         const productStore = document.createElement('a');
+        const productText = document.createElement('p');
         productButton.dataset.product = product.product_name.toLowerCase();
 
         //initialize all attributes.
@@ -87,6 +88,7 @@ function updateImage(products){
         productButton.appendChild(productPrice);
         productButton.appendChild(productDiscount);
         productButton.appendChild(productStore);
+        productButton.appendChild(productText);
     });
 }
 
@@ -166,6 +168,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const advertDesc = document.createElement('p');
         const advertPrice = document.createElement('p');
         const advertDiscount = document.createElement('p');
+        const advertStore = document.createElement('a');
+        const advertText = document.createElement('p');
 
         advertButton.classList.add('advertButton');
         //image
@@ -203,12 +207,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         //shop button 
-        //TODO: Create button element for shop button redirect - const advertShop = document.createElement('button');
-        //TODO: Get shop.id from chosen advert product - look how its done in productPage.js
-        //TODO: Get image from selected shop
-        //TODO: Put button source as the image, so the image is the butt
-        //TODO: Create and append child as button to advertButton
-        //TODO: Add button function to
+        advertStore.classList.add('productStore');
+        advertStore.href = `./productlist?city=${currentCity}&shop_id=${advertChosen.shop_id}`
+        let advertStoreImage = document.createElement("img");
+        const shopResponse = await fetch(`./shop?id=${advertChosen.shop_id}`);
+        const shopData = await shopResponse.json();
+        if(shopData.img_path){
+            advertStoreImage.src = `./${shopData.img_path}`
+        }
+        advertStoreImage.alt = `${shopData.shop_name}`
+        advertStoreImage.style = "max-width: 125px; max-height: 75px;"
+        advertStore.appendChild(advertStoreImage);
+
+        //AD text
+        advertText.classList.add('productText');
+        advertText.textContent = "Nuværende Tilbud";
 
 
         // place button in container and add all elements to the button
@@ -218,6 +231,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         advertButton.appendChild(advertDesc);
         advertButton.appendChild(advertPrice);
         advertButton.appendChild(advertDiscount);
+        advertButton.appendChild(advertStore);
+        advertButton.appendChild(advertText);
     }
     catch(err){
         console.log(err);
