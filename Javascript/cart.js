@@ -1,7 +1,5 @@
 //Start of cart functionality
 
-import { response } from "express";
-
 let products = [];
 
 let total_cost = 0;

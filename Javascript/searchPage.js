@@ -9,9 +9,11 @@ function updateImage(products){
     updateLastVisit(); // Update users last visit
     productContainer.innerHTML = '';// Remove old products
     //go through products
-    products.forEach(product => {
+    products.forEach(async product => {
         console.log(product.product_name + " " + product.price);
-        productList += product.id;
+        if(product.discount > 0){
+            productList += product.id;
+        }
 
         //initialize all products.
         const productButton = document.createElement('button');
@@ -20,6 +22,7 @@ function updateImage(products){
         const productDesc = document.createElement('p');
         const productPrice = document.createElement('p');
         const productDiscount = document.createElement('p');
+        const productStore = document.createElement('a');
         productButton.dataset.product = product.product_name.toLowerCase();
 
         //initialize all attributes.
@@ -46,8 +49,20 @@ function updateImage(products){
         productPrice.textContent = product.price + ",-";
         //discount
         productDiscount.classList.add('productDiscount');
-        if(product.discount != 0 && product.discount != null)
+        if(product.discount > 0)
         {productDiscount.textContent = "spar: " + product.discount + ",-"};
+        
+        productStore.classList.add('productStore');
+        productStore.href = `./productlist?city=${currentCity}&shop_id=${product.shop_id}`
+        let productStoreImage = document.createElement("img");
+        const shopResponse = await fetch(`./shop?id=${product.shop_id}`);
+        const shopData = await shopResponse.json();
+        if(shopData.img_path){
+            productStoreImage.src = `./${shopData.img_path}`
+        }
+        productStoreImage.alt = `${shopData.shop_name}`
+        productStoreImage.style = "max-width: 125px; max-height: 75px;"
+        productStore.appendChild(productStoreImage);
 
         //add onclick function to bring you to the specific products page
         productButton.onclick = () => {
@@ -62,6 +77,7 @@ function updateImage(products){
         productButton.appendChild(productDesc);
         productButton.appendChild(productPrice);
         productButton.appendChild(productDiscount);
+        productButton.appendChild(productStore);
     });
 }
 
@@ -70,17 +86,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         //we have city name. we need city id
         const response_city = await fetch('./cities'); // Fetch cities from the server
         const cities = await response_city.json();
+        let currentCityId = cities.filter(city => city.city === currentCity)[0].id;
+        if (currentCityId == undefined) throw "city ID not found"
 
         //Get the email from url
         const urlParams = new URLSearchParams(window.location.search);
         const email = urlParams.get('email');
-        
-        let currentCityId = cities.filter(city => city.city === currentCity)[0].id;
-        if (currentCityId == undefined) throw "city ID not found"
 
         const response = await fetch('./products'); // Fetch products from the server
-        let products = await response.json();
-        products = products.filter(product => product.city_id === currentCityId); // Save only the chosen citys products
+        let orderedProducts = await response.json();
+        let products = orderedProducts.filter(product => product.city_id === currentCityId); // Save only the chosen citys products
 
         // Sort smallest store as standart filter
         products = await sortStandart();
@@ -136,7 +151,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let advertProduct = productList[Math.floor(Math.random() * productList.length)];
 
         // Get the chosen product
-        let advertChosen = products[advertProduct-1];
+        let advertChosen = orderedProducts[advertProduct-1];
         console.log(advertChosen.product_name);
 
         // create classes so it can be modified in css and add elements

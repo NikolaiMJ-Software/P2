@@ -190,7 +190,7 @@ app.get('/shop', (req, res) => {
 
     if (shopId) {
         // Fetch a specific shop by ID
-        db.get(`SELECT id, shop_name, latitude, longitude FROM shops WHERE id = ?`, [shopId], (err, row) => {
+        db.get(`SELECT id, shop_name, latitude, longitude, img_path FROM shops WHERE id = ?`, [shopId], (err, row) => {
             if (err) {
                 return res.status(500).json({ error: err.message });
             }
