@@ -96,8 +96,9 @@ app.get('/searchpage', (req, res) => {
 
 //path to productpage
 app.get('/productpage', (req, res) => {
-    const product = req.query.id; // Get product id from query
+    const product = req.query.id; // Get product id from query    
     console.log(`Product requested: ${product}`); 
+    console.log("User:", req.user?.email);
     res.sendFile(path.join(__dirname, '../HTML/product_page.html'));
 });
 

@@ -1,9 +1,14 @@
 import { filters, sortStandart } from './filter.js';
 import { updateLastVisit } from './calculateDistance.js';
+
 let currentCity = new URLSearchParams(window.location.search).get(`city`);
 document.getElementById("h1ProductPage").textContent = currentCity; //changes title of page to city
 const productButtons = [], productContainer = document.getElementById('productList');
 let productList = [], advertContainer = document.getElementById('advertList'); //list to contain all items of current chosen city, and container to place advert in.
+
+//Get the email from url
+const urlParams = new URLSearchParams(window.location.search);
+const email = urlParams.get('email');
 
 function updateImage(products){
     updateLastVisit(); // Update users last visit
@@ -66,7 +71,11 @@ function updateImage(products){
 
         //add onclick function to bring you to the specific products page
         productButton.onclick = () => {
-            window.location.href = `./productpage?id=${encodeURIComponent(product.id)}`;
+            if(email){
+                window.location.href = `./productpage?email=${encodeURIComponent(email)}&id=${encodeURIComponent(product.id)}`;
+            } else {
+                window.location.href = `./productpage?id=${encodeURIComponent(product.id)}`;
+            }
         }
 
         //add new product to "products" class
@@ -88,10 +97,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const cities = await response_city.json();
         let currentCityId = cities.filter(city => city.city === currentCity)[0].id;
         if (currentCityId == undefined) throw "city ID not found"
-
-        //Get the email from url
-        const urlParams = new URLSearchParams(window.location.search);
-        const email = urlParams.get('email');
 
         const response = await fetch('./products'); // Fetch products from the server
         let orderedProducts = await response.json();
@@ -190,7 +195,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // button function redirecting to product page
         advertButton.onclick = () => {
-            window.location.href = `./productpage?id=${encodeURIComponent(advertChosen.id)}`;
+            if(email){
+                window.location.href = `./productpage?email=${encodeURIComponent(email)}&id=${encodeURIComponent(product.id)}`;
+            } else {
+                window.location.href = `./productpage?id=${encodeURIComponent(product.id)}`;
+            }
         }
 
         //shop button 
