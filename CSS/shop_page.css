@@ -1,5 +1,6 @@
 body {
-    background: whitesmoke;
+    background: var(--page-bg);
+    color: var(--primary-text);
 }
 
 .productHeader{
@@ -36,6 +37,7 @@ button {
     padding: 15px;
     font-size: 20px;
     border-left: 1px solid #ccc; /* Vertical line */
+    color: var(--primary-text);
 
 }
 
@@ -79,6 +81,7 @@ button {
     border-radius: 10px;
     border: 1px solid #ccc;
     text-align: center;
+    color: black;
 }
 
 .productImage{
