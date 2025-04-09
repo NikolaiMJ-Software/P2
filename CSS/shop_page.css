@@ -1,5 +1,6 @@
 body {
     background: var(--page-bg);
+    color: var(--primary-text);
 }
 
 .productHeader{
