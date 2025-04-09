@@ -11,7 +11,9 @@ function updateImage(products){
     //go through products
     products.forEach(async product => {
         console.log(product.product_name + " " + product.price);
-        productList += product.id;
+        if(product.discount > 0){
+            productList += product.id;
+        }
 
         //initialize all products.
         const productButton = document.createElement('button');
@@ -86,8 +88,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const email = urlParams.get('email');
 
         const response = await fetch('./products'); // Fetch products from the server
-        let products = await response.json();
-        products = products.filter(product => product.city_id === currentCityId); // Save only the chosen citys products
+        let orderedProducts = await response.json();
+        let products = orderedProducts.filter(product => product.city_id === currentCityId); // Save only the chosen citys products
 
         // Sort smallest store as standart filter
         products = await sortStandart();
@@ -143,7 +145,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let advertProduct = productList[Math.floor(Math.random() * productList.length)];
 
         // Get the chosen product
-        let advertChosen = products[advertProduct-1];
+        let advertChosen = orderedProducts[advertProduct-1];
         console.log(advertChosen.product_name);
 
         // create classes so it can be modified in css and add elements
