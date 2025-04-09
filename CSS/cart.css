@@ -57,6 +57,7 @@ button {
 
 .theme-switcher {
     display: none;
+    cursor: none;
 
 }
 

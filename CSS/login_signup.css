@@ -126,6 +126,13 @@ section {
     text-decoration: none;
 }
 
+
+.theme-switcher {
+    display: none;
+    cursor: none;
+
+}
+
 :root[data-theme="light"] {
     --page-bg:WHITE ;
     --primary-text:Black ;
