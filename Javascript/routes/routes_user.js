@@ -138,12 +138,12 @@ router.post("/new_shop", upload.fields([{ name: 'logo', maxCount: 1 }]), async (
         });
 
         // Image path
-        const shop_folder = path.join('.', 'images', city_name, name);
+        const shop_folder = path.join('.', 'Images', city_name, name);
         const logo_file_name = 'logo' + path.extname(logo_file.originalname); // e.g. logo.png
         const image_path = path.join(shop_folder, logo_file_name);
 
         // Path saved in DB (client uses /images/...)
-        const logo_path = `./images/${city_name}/${name}/${logo_file_name}`;
+        const logo_path = `./Images/${city_name}/${name}/${logo_file_name}`;
 
         // Create folder and move file
         await fse.ensureDir(shop_folder);
