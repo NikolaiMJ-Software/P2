@@ -2,9 +2,11 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 import sgmail from '@sendgrid/mail';
 import path from 'path';
+import dotenv from 'dotenv';
 const app = express();
+dotenv.config();
 
-sgmail.setApiKey("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");
+sgmail.setApiKey(process.env.SENDGRID_API_KEY);
 app.use(express.json());
 
 //Makes files work together
