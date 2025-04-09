@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
   console.log("comments.js loaded");
 
   const params = new URLSearchParams(window.location.search);

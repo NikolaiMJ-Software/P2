@@ -116,10 +116,12 @@ button {
 
 .productStore{
     position: absolute;
-    top: 91%;
+    top: 85%;
+    align-self: anchor-center;
+    justify-self: top;
     text-align: left;
     left: 5%;
-    font-size: 18px;
+    
 }
 
 .productDiscount{

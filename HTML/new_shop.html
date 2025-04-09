@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="dk" data-theme="light">
 <head>
-    <title>Opret Bruger</title>
+    <title>Opret butik</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="./CSS/login_signup.css">
 </head>
@@ -17,37 +17,32 @@
         <div class="box">
             <div class="container">
                 <div class="form">
-                    <h2>Opret Bruger</h2>
+                    <h2>Opret butik</h2>
                     <form id="signup-form">
                         <div class="input__box">
-                            <input type="text" name="fornavn" placeholder="Fornavn"/>
+                            <input type="text" name="butik" placeholder="Butik navn"/>
                         </div>
                         <div class="input__box">
-                            <input type="text" name="efternavn" placeholder="Efternavn"/>
-                        </div>
-                        <div class="input__box">
-                            <input type="text" name="email" placeholder="Email"/>
-                        </div>
-                        <div class="input__box">
-                            <input type="password" name="password" placeholder="Password"/>
-                        </div>
-                        <div class="input__box">
-                            <label for="shop_user">Butiks bruger:</label>
-                            <input type="checkbox" id="shop_user" name="shop_user" value="1">
+                            <input type="text" name="email" placeholder="Butik email"/>
                         </div>
                         <div class="input__box">
                             <select id="city" name="city_name">
                                 <option value="">By</option>
                             </select>
                         </div>
+
                         <div class="input__box">
-                            <select id="store" name="store_name">
-                                <option value="">Butik</option>
-                            </select>
-                            <p class="forget">
-                                <a href="./new_store">Ny butik?</a>
-                            </p>
+                            <label>Butiks logo:</label>
+                            <input type="file" name="logo" required accept="image/*">
                         </div>
+
+                        <div class="input__box">
+                            <input id="address" placeholder="Adresse" type="text" />
+                        </div>
+                        <input type="hidden" name="latitude" id="latitude" />
+                        <input type="hidden" name="longitude" id="longitude" />
+                        <div id="map" style="height: 200px; width: 100%; margin-top: 10px;"></div>
+
                         <div class="input__box">
                             <input type="submit" value="Opret" />
                         </div>
@@ -58,6 +53,7 @@
         </div>
     </section>
 </body>
-<script src="./Javascript/signup.js" defer></script>
+<script src="./Javascript/new_shop.js" defer></script>
 <script src="./Javascript/theme.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArvRWrGjhnsBAPTGPRjJeBCzKaJI9P7yI&libraries=places&callback=initAutocomplete" async defer></script>
 </html>
