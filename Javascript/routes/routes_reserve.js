@@ -1,9 +1,10 @@
 import express from 'express';
 import sqlite3 from 'sqlite3';
-import nodemailer from 'nodemailer';
+import sgmail from '@sendgrid/mail';
 import path from 'path';
 const app = express();
 
+sgmail.setApiKey("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");
 app.use(express.json());
 
 //Makes files work together
@@ -19,36 +20,33 @@ const db = new sqlite3.Database(db_path, (err) => {
     db.run("PRAGMA foreign_keys = ON;");
 });
 
-
-//Authenticates a email to use
-const transporter = nodemailer.createTransport({
-    service: 'gmail', //the domain for the email (must be gmail to work)
-    auth: {
-        user: 'clickoghent@gmail.com',  // Gmail for sending emails
-        pass: 'cfzv uket bqei kkkw'      // App password
-    }
-});
-
 // Function to send emails
 function send_mail(receiver, subject, text) {
-    return new Promise((resolve, reject) => {
-        //struct for email data
-        const mailOptions = {
-            from: 'clickoghent@gmail.com',
-            to: receiver,
-            subject: subject,
-            text: text,
-        };
+    //struct for email data
+    const mail_data = {
+        to: receiver,
+        from: 'clickoghent@gmail.com',
+        subject: subject,
+        text: text,
+    };
 
-        //Sends email and verifies if it goes through
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log('Error:', error);
-                reject(error);
-            } else {
-                console.log('Email sent:', info.response);
-                resolve(info);
-            }
+    //Sends email and verifies if it goes through
+    return sgmail.send(mail_data)
+    .then(() => {
+        console.log('Email sent successfully');
+    })
+    .catch((error) => {
+        console.error('Error sending email:', error.response.body);
+        throw error;
+    });
+    
+}
+
+function db_get(query, params) {
+    return new Promise((resolve, reject) => {
+        db.get(query, params, (err, row) => {
+            if (err) reject(err);
+            else resolve(row);
         });
     });
 }
@@ -65,7 +63,7 @@ router.post('/reserve_wares', async (req, res) => {
         named_cart[i] = []
         for(let x = 0; x < cart[i].length; x++) {
             try {
-                const product = await db.get("SELECT products.product_name FROM products WHERE products.id = ?",[cart[i][x]]);
+                const product = await db_get("SELECT products.product_name FROM products WHERE products.id = ?",[cart[i][x]]);
                 if (product) {
                     named_cart[i].push(product.product_name);
                 }
@@ -78,7 +76,7 @@ router.post('/reserve_wares', async (req, res) => {
     console.log(cart);
     for(let i = 0; i < cart.length; i++) {
         try{
-            const shop_mail = await db.get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i][0]]);
+            const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i][0]]);
             await send_mail(
                 shop_mail.email,
                 `En bruger har reserveret varer hos din butik`,

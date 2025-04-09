@@ -114,6 +114,14 @@ button {
     top: 85%;
 }
 
+.productStore{
+    position: absolute;
+    top: 91%;
+    text-align: left;
+    left: 5%;
+    font-size: 18px;
+}
+
 .productDiscount{
     position: absolute;
     font-size: 12px;
