@@ -128,7 +128,7 @@ function fill_table() {
                 const buttonWidth = this.clientWidth;
                 if (clickX < buttonWidth / 3) {
                     adjust_table("-", product);
-                } else if (clickX > (2 * buttonWidth) / 3 && parseInt(quantity.textContent) < products[product].stock) {
+                } else if (clickX > (2 * buttonWidth) / 3 && parseInt(quantity.textContent) < products[product-1].stock) {
                     adjust_table("+", product);
                 }
             });
@@ -194,9 +194,9 @@ async function reserve_wares() {
             return;
         }
         let sorted_cart = {};
-        for (let i = 1; i < cart.length; i++) {
+        for (let i = 0; i < cart.length; i++) {
             let product_id = cart[i];
-            let shop_id = products[product_id].shop_id;
+            let shop_id = products[product_id-1].shop_id;
             if (!sorted_cart[shop_id]) {
                 sorted_cart[shop_id] = [];
             }
