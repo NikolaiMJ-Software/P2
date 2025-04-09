@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./CSS/admin.css">
+    <title>Click & Hent</title>
+</head>
+<body>
+    <div id="upper-half">
+        <div id="buttons">
+            <button id="user-button">Users</button>
+            <button id="shop-button">Shops</button>
+        </div>
+    </div>
+    <div id="management-area">
+        <!-- User management -->
+         <div style="display: none;" id="users">
+            <p>Hello World!</p>
+            <table>
+                <tbody id="user-table">
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Shop ID</th>
+                        <th>Delete</th>
+                    </tr>
+                </tbody>
+            </table>
+         </div>
+        
+
+        <!-- Shop management -->
+         <div style="display: none;" id="shops">
+            <p>Goodbye World!</p>
+            <table>
+                <tbody id="shop-table">
+                    <tr>
+                        <th>ID</th>
+                        <th>City ID</th>
+                        <th>Shop name</th>
+                        <th>Email</th>
+                        <th>Revenue</th>
+                        <th>Shop Dashboard</th>
+                        <th>Delete</th>
+                    </tr>
+                </tbody>
+            </table>
+         </div>
+    </div>
+    <script type="module" src="./Javascript/admin.js"></script>
+</body>
+</html>

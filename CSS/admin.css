@@ -1,0 +1,18 @@
+#upper-half{
+    position: relative;
+    max-height: 100px;
+    min-height: 100px;
+}
+#buttons{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+#user-table{
+    text-align: left;
+}
+
+#shop-table{
+    text-align: left;
+}
