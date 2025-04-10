@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
                 const message = await response.text();
                 //if everything works, user is logged out, and page is refreshed
                 console.log("Du logger ud", message);
-                window.location.href = "./";
+                window.location.href = "https://cs-25-sw-2-06.p2datsw.cs.aau.dk/node0/";
             } catch (err){
                 //if user cannot log out, an error happens and user is told its not possible to log out
                 console.error("Kunne ikke logge ud:", err);

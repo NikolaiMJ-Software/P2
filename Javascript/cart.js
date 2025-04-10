@@ -140,6 +140,17 @@ function fill_table() {
             Rydknap.textContent = "X";
             Rydknap.style.color = "black";
 
+            Rydknap.onclick = () => {
+                let amount = parseInt(document.getElementById(product).textContent);
+                for(let i = 0; i < amount; i++) {
+                    remove_from_cart(product);
+                }
+                const tableBody = document.querySelector("#cart tbody");
+                tableBody.innerHTML = ""; // Clear the table body
+                fill_table(); // Refill the table
+                document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr."; 
+             } 
+
 
             // Append to button
             remove_button.appendChild(minus);
@@ -196,13 +207,19 @@ const button = document.getElementById("cart_button");
 if(button != null) {
     button.addEventListener("click", async () => {
         const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id');
+        const productId = parseInt(urlParams.get('id'));
         let amount = parseInt(document.getElementById("quantity-value").textContent)
-        for(let i=0; i<amount; i++) {
-            add_to_cart(productId);
-            console.log(i);
+        let cart = getCookie("products").split(",").map(Number);
+        let currently_in_cart = cart.filter(val => val === productId).length;
+        if(currently_in_cart + amount <= products[productId-1].stock) {
+            for(let i=0; i<amount; i++) {
+                add_to_cart(productId);
+                console.log(i);
+            }
+            alert("Din vare(er) er tilføjet til kurven");
+        } else {
+            alert("Du kan ikke tilføje flere varer til din kurv end der er antal på lager");
         }
-        alert("Din vare(er) er tilføjet til kurven");
     });
 }
 
