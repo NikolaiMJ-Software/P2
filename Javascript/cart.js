@@ -151,8 +151,8 @@ function fill_table() {
             //adds all elements as a child to the row, and the row as a child to the table
             row.appendChild(image_element);
             row.appendChild(name_element);
-            row.appendChild(price_element);
             row.appendChild(button_element);
+            row.appendChild(price_element);
             tableBody.appendChild(row);
             
 
