@@ -71,7 +71,7 @@ router.post('/reserve_wares', async (req, res) => {
         }
     }
 
-    for(let i = 0; i <= cart_items.length; i++) {
+    for(let i = 0; i < cart_items.length; i++) {
         try{
             const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
             await send_mail(
