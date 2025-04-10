@@ -141,7 +141,7 @@ function fill_table() {
             Rydknap.style.color = "black";
 
             Rydknap.onclick = () => {
-                amount = parseInt(document.getElementById(product).textContent);
+                let amount = parseInt(document.getElementById(product).textContent);
                 for(let i = 0; i < amount; i++) {
                     remove_from_cart(product);
                 }
