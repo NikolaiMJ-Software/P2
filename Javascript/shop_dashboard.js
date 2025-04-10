@@ -8,7 +8,40 @@ document.addEventListener("DOMContentLoaded", async () =>{
     const update_close_button = document.getElementById("update-modal-close");
     const update_form = document.getElementById("update-form");
     const parent_select = document.getElementById("parent-product");
+    const header = document.getElementById("header");
 
+
+    //get shop name
+    const shop_name_res = await fetch("./shop_name");
+    const name = await shop_name_res.json();
+    
+    // Create and append the shop name
+    const name_span = document.createElement("span");
+    name_span.textContent = name.shop_name;
+    header.appendChild(name_span);
+    
+    // Create and append the edit button
+    const editButton = document.createElement("button");
+    editButton.className = "edit-button";
+    editButton.dataset.id = name.id; // Optional if you include shop id
+    editButton.textContent = "✎";
+    editButton.style.marginLeft = "10px"; // optional spacing
+    
+    header.appendChild(editButton);
+    
+    header.addEventListener("click", async (e) => {
+        if (e.target.classList.contains("edit-button")) {
+            const id = e.target.dataset.id;
+            const product = products.find(p => String(p.id) === String(id));
+
+            if (!product) {
+                alert("Produkt ikke fundet.");
+                return;
+            }
+        }
+    });
+
+    //get all products
     const res = await fetch("./shop_products");
     const products = await res.json();
 
@@ -93,7 +126,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
         info.append(name, desc, specs);
         product_left.append(editButton, image, info);
     
-        //create new div stock, with the classname product stock
+        //create new div stock, with the className product stock
         const stock = document.createElement("div");
         stock.className = "product-stock";
     
