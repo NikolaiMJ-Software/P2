@@ -384,7 +384,7 @@ router.get('/shop_name', (req, res)=>{
     }
 
 
-    db.get('SELECT id, shop_name FROM shops WHERE id = ?', [shop_id], (err, rows)=>{
+    db.get('SELECT id, shop_name, img_path FROM shops WHERE id = ?', [shop_id], (err, rows)=>{
         if (err) {
             console.error("DB error:", err);
             return res.status(500).json({ error: "Database fejl" });
