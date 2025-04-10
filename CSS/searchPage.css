@@ -14,7 +14,7 @@ body {
 form {
     display: flex;
     align-items: center;
-    border: 1px solid #A8D5BA;
+    border: 2px solid #A8D5BA;
     border-radius: 10px;
     overflow: hidden;
     width: 400px; /* Adjust width */
