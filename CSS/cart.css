@@ -6,11 +6,13 @@ body {
 
 table, td, th {
     border: 1px solid;
+    margin: auto;
 }
   
 table {
     width: 40%;
     border-collapse: collapse;
+
 }
 
 button {
