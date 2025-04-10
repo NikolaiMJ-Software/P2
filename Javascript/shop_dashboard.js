@@ -1,4 +1,6 @@
+//on page load this function is called
 document.addEventListener("DOMContentLoaded", async () =>{
+    //defining list of variables connected to elements in html
     const product_list = document.getElementById("product_list");
     const add_button = document.getElementById("add-button");
     const add_panel = document.getElementById("product-modal");
@@ -9,36 +11,37 @@ document.addEventListener("DOMContentLoaded", async () =>{
     const update_form = document.getElementById("update-form");
     const parent_select = document.getElementById("parent-product");
     const header = document.getElementById("header");
+    const shop_name = document.getElementById("shop-name");
+    const logo_panel = document.getElementById("logo-modal");
+    const logo_form = document.getElementById("logo-form");
+    const logo_close_button = document.getElementById("logo-modal-close");
+
 
 
     //get shop name
     const shop_name_res = await fetch("./shop_name");
-    const name = await shop_name_res.json();
+    const shop_info = await shop_name_res.json();
     
-    // Create and append the shop name
-    const name_span = document.createElement("span");
-    name_span.textContent = name.shop_name;
-    header.appendChild(name_span);
-    
-    // Create and append the edit button
-    const editButton = document.createElement("button");
-    editButton.className = "edit-button";
-    editButton.dataset.id = name.id; // Optional if you include shop id
-    editButton.textContent = "✎";
-    editButton.style.marginLeft = "10px"; // optional spacing
-    
-    header.appendChild(editButton);
-    
+    // setup shop name and logo:
+    // Set shop name
+    shop_name.textContent = shop_info.shop_name;
+    // Set logo
+    const logo = document.getElementById("logo");
+    logo.src = shop_info.img_path;
+    //event listener for all button within the class header
     header.addEventListener("click", async (e) => {
+        //checks if edit button is clicked and opens edit panel
         if (e.target.classList.contains("edit-button")) {
-            const id = e.target.dataset.id;
-            const product = products.find(p => String(p.id) === String(id));
-
-            if (!product) {
-                alert("Produkt ikke fundet.");
-                return;
-            }
+            //set the panel to visible
+            logo_panel.style.display = "block";
         }
+    });
+    //close button for edit panel
+    logo_close_button.addEventListener("click", async (e) => {
+        //make edit panel invisible
+        logo_panel.style.display = "none";
+        //removes any data left in the panel
+        logo_form.reset();
     });
 
     //get all products
@@ -159,20 +162,32 @@ document.addEventListener("DOMContentLoaded", async () =>{
     
         //if product has discount add the discount element
         if (has_discount) {
+            //creates span element for discounted price
             const discounted = document.createElement("span");
+            //defines discounted class to work with css
             discounted.className = "price-discounted";
+            //define discounted price in kr. using former caluclation variable and limiting the discounted price to two decimals
             discounted.textContent = `${discounted_price.toFixed(2)} kr.`;
     
+            //create span element for original price
             const original = document.createElement("span");
+            //define originals class to work with css
             original.className = "price-original";
+            //define the original price as kr
             original.textContent = `${product.price} kr.`;
     
+            //create span element for the procentage discount
             const tag = document.createElement("span");
+            //define class for css
             tag.className = "price-tag";
+            //define discount amount and add - and % in front and end
             tag.textContent = `-${product.discount}%`;
     
+            // append these features
             price_container.append(discounted, original, tag);
-        } else {
+        } 
+        //if not discount only append original price
+        else {
             price_container.textContent = `${product.price} kr.`;
         }
         
@@ -189,36 +204,48 @@ document.addEventListener("DOMContentLoaded", async () =>{
         return list;
     }    
 
+    //event listener when clicked for all buttons within the product list container
     product_list.addEventListener("click", async (e) => {
+        //check if button is plus or minus stock button
         if (e.target.classList.contains("stock-plus") || e.target.classList.contains("stock-minus")) {
+            //defines id for product
             const id = e.target.dataset.id;
+            //get current stock based on id
             const span = document.getElementById(`stock-${id}`);
+            //define current stock as an int
             let current = parseInt(span.textContent);
+            //define change, if stok button was clicked was plus, then change is 1 else -1
             const change = e.target.classList.contains("stock-plus") ? 1 : -1;
+            //define new stock by current stock + change
             const new_stock = current + change;
     
+            //call route, and send id and new_stock to route
             const updateRes = await fetch("./update_stock", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id, stock: new_stock })
             });
-    
+            
+            //if route succes, change stock to new stock or sent an alert because of failure 
             if (updateRes.ok) {
                 span.textContent = new_stock;
             } else {
                 alert("Kunne ikke opdatere lagerbeholdning.");
             }
         }
+        //check if delete button is clicked
         if(e.target.classList.contains("delete-button")){
+            //identify id for specific product to delete
             const id = e.target.dataset.id;
-            const span = document.getElementById(`stock-${id}`);
 
+            //sent id to delete wares route
             const updateRes = await fetch("./delete_ware", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id })
             });
 
+            //if item is deleted then sent alert and reload location, if not sent alert with error
             if (updateRes.ok) {
                 alert("Vare er blevet fjernet.");
                 location.reload();
@@ -226,20 +253,26 @@ document.addEventListener("DOMContentLoaded", async () =>{
                 alert("Kunne ikke opdatere lagerbeholdning.");
             }
         }
-
+        //check if edit button i clicked
         if (e.target.classList.contains("edit-button")) {
+            //define id for specific product wanting edited
             const id = e.target.dataset.id;
+            //searches through all products to check if product actually exists
             const product = products.find(p => String(p.id) === String(id));
 
+            //if product does not exist alert that no product is found
             if (!product) {
                 alert("Produkt ikke fundet.");
                 return;
             }
 
+            //define id for the product to update form (update form being the information for the product panel for the specific product)
             update_form.dataset.product_id = id;
         
+            //make update panel visible
             update_panel.style.display = "block";
 
+            //insert values into update panel/form based on information on the product, so name, stock, price, discount...
             document.getElementById("update-product-name").value = product.product_name || "";
             document.getElementById("update-product-stock").value = product.stock || 0;
             document.getElementById("update-product-price").value = product.price || 0;
@@ -247,7 +280,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
             document.getElementById("update-product-desc").value = product.description || "";
             document.getElementById("update-product-specs").value = product.specifications || "";
 
-
+            //insert picture names for each product, based on each products 5 different image paths
             document.getElementById("current-img1-name").textContent =`Nuværende fil: ${product.img1_path?.split("/").pop() || "Ingen"}`;
             document.getElementById("current-img2-name").textContent =`Nuværende fil: ${product.img2_path?.split("/").pop() || "Ingen"}`;
             document.getElementById("current-img3-name").textContent =`Nuværende fil: ${product.img3_path?.split("/").pop() || "Ingen"}`;
@@ -258,24 +291,29 @@ document.addEventListener("DOMContentLoaded", async () =>{
 
     });
 
+    //add event listener for the update form, loooking after submit button
     update_form.addEventListener("submit", async (e)=>{
         e.preventDefault();
-
+        //takes all data from the form
         const form_data = new FormData(update_form);
+        //defines product id in the form
         const product_id = update_form.dataset.product_id
-
+        //if not product id is found, then it won proceed
         if (!product_id) {
             alert("Ingen produkt-ID fundet.");
             return;
         }
 
+        //append id to the form_data
         form_data.append("id", product_id);
 
+        //sent all the form data to the update_product route and await updates
         const updateRes = await fetch("./update_product",{
             method: "POST",
             body: form_data,
         });
         
+            //if product is update sent approval alert and reload page, if not alert update error
             if (updateRes.ok) {
                 alert("Vare er blevet opdateret.");
                 location.reload();
@@ -285,30 +323,37 @@ document.addEventListener("DOMContentLoaded", async () =>{
 
     });
 
+    //listen after update close button, if close button is pressed, close down update panel and reset form
     update_close_button.addEventListener("click", () => {
         update_panel.style.display = "none";
         update_form.reset();
     });
 
+    // if add button is clicked, show add panel
     add_button.addEventListener("click", async (e) => {
         add_panel.style.display = "block";
     });
 
+    //if close button is clicked, close add panel
     close_button.addEventListener("click", async (e) => {
         add_panel.style.display = "none";
         document.getElementById("product-form").reset();
     });
 
+    //wait for subit button click in the add product form/panel
     form.addEventListener("submit", async (e)=>{
         e.preventDefault();
 
+        //define all data in the form
         const form_data = new FormData(form);
 
+        //sent all data from the form to the route add_product
         const updateRes = await fetch("./add_product",{
             method: "POST",
             body: form_data,
         });
         
+            //if product is added sent succes alert, reload page and reset the form to empty it for data, else sent failed error, and empty form for data
             if (updateRes.ok) {
                 alert("Vare er blevet tilføjet.");
                 location.reload();
@@ -319,17 +364,26 @@ document.addEventListener("DOMContentLoaded", async () =>{
             }
     });
 
+    // feature to make a list of parent products
     try{
+        //call route parent_products, which makes a list of all products without a parent_id
         const parent_res = await fetch("./parent_products");
         const parent_products = await parent_res.json();
 
+        //for each parent product
         parent_products.forEach(prod =>{
+            //in the form add product, add an element for each parent element
             const option = document.createElement("option")
+            //the value for each parent element is defined as the output
             option.value = prod.id;
+            //and the name for each parent element is defined as the content
             option.textContent = prod.product_name;
+            //append each element to the parent selector in the add product form
             parent_select.appendChild(option);
         });
-    }catch (err) {
+    }
+    //if there is an error with any parent product, define error
+    catch (err) {
         console.error("Fejl ved hentning af parent produkter:", err);
     }
 });

@@ -1,3 +1,5 @@
+import { updateLastVisit } from './calculateDistance.js';
+
 //Start of cart functionality
 
 let products = [];
@@ -48,16 +50,16 @@ function getCookie(cname) {
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
     for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
     }
     return "";
-  }
+}
 
 //End of cart functionality
 
@@ -65,6 +67,7 @@ function getCookie(cname) {
 
 //Function for filling data table for cart
 function fill_table() {
+    updateLastVisit(); // Update users last visit
     console.log("Filling table...");
     total_cost = 0;
     //Gets cart data from the cookie, and check if the there even is data
