@@ -247,16 +247,33 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  color: black;
 }
 
 .modal-content {
   background: white;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 2px;
   width: 300px;
   position: relative;
   text-align: center;
+  color: #6FAFB8;
 }
+
+#submit-rating {
+  color: #4A7E8F;
+  border: 2px solid #4A7E8F;
+  border-radius: 25px;
+  width: 42%;
+  line-height: 5px;
+}
+
+#submit-rating:hover {
+  background-color: #4A7E8F;
+  color: var(--tertiary-text);
+
+}
+
 
 #close-rating-modal {
   position: absolute;
@@ -264,6 +281,9 @@ body {
   top: 10px;
   cursor: pointer;
   font-size: 20px;
+  color: black;
+  border-left: none;
+  translate: 10px -15px;
 }
 
 #star-rating .star {
@@ -305,6 +325,8 @@ dialog {
   .comment-preview h3 {
     margin-bottom: 5px;
   }  
+
+  
   
   .average-stars {
     font-size: 18px;
@@ -324,6 +346,7 @@ dialog {
     --page-bg:WHITE ;
     --primary-text:Black ;
     --secoundary-text: rgb(92, 89, 89);
+    --tertiary-text: white;
 
 
 
@@ -342,6 +365,7 @@ dialog {
     --page-bg:#383643;
     --primary-text: WHITE ;
     --secoundary-text: lightgrey;
+    --tertiary-text: white;
 
     --switch-bg: #49494c;
     --switch-circle-bg: #7190FF;

@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const email = form.email.value;
+        const email = form.email.value.toLowerCase();
+        console.log(email)
         const password = form.password.value;
 
         const response = await fetch('./login', {
