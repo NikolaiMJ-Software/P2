@@ -18,7 +18,8 @@ const db = new sqlite3.Database(db_path, (err) => {
     console.log('Connected to SQLite database (reserve router).');
     db.run("PRAGMA foreign_keys = ON;");
 });
-sgmail.setApiKey("Insert key here server-side");
+let key = fs.readFileSync(path.join(process.cwd(), `api.txt`)).toString();
+sgmail.setApiKey(key);
 
 // Function to send emails
 function send_mail(receiver, subject, text) {
