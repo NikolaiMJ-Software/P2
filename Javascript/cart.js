@@ -132,6 +132,12 @@ function fill_table() {
             let plus = document.createElement("span");
             plus.textContent = " +";
 
+
+            const Rydknap = document.createElement("button");
+            Rydknap.textContent = "X";
+            Rydknap.style.color = "black";
+
+
             // Append to button
             remove_button.appendChild(minus);
             remove_button.appendChild(quantity);
@@ -155,6 +161,7 @@ function fill_table() {
             row.appendChild(name_element);
             row.appendChild(button_element);
             row.appendChild(price_element);
+            row.appendChild(Rydknap);
             tableBody.appendChild(row);
             
 
