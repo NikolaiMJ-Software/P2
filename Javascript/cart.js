@@ -140,6 +140,20 @@ function fill_table() {
             Rydknap.textContent = "X";
             Rydknap.style.color = "black";
 
+            Rydknap.onclick = () => {
+                function clear_cart() {
+                    document.cookie = "products=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;";
+                    // Optionally update the UI if needed:
+                    const tableBody = document.querySelector("#cart tbody");
+                    if (tableBody) {
+                        tableBody.innerHTML = "";
+                    }
+                    document.getElementById("total_cost").textContent = "Endelig pris: 0 kr.";
+                    alert("Kurven er blevet tømt!");
+                }
+                
+             } 
+
 
             // Append to button
             remove_button.appendChild(minus);
