@@ -91,6 +91,7 @@ body {
     background-color: #E0F2EF;
   }
   
+  
   /* Remove Button (X) */
   #cart td button {
     background-color: #E74C3C;
@@ -137,6 +138,22 @@ body {
   }
   #Confirm_button:hover {
     background-color: #5E96A2;
+  }
+
+  .cart-remove-button {
+    background-color: transparent;
+    color: #E74C3C;
+    border: 2px solid #E74C3C;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s ease;
+  }
+  
+  .cart-remove-button:hover {
+    background-color: #E74C3C;
+    color: white;
   }
   
   /* Responsive Adjustments */
