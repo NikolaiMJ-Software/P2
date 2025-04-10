@@ -115,6 +115,62 @@ document.addEventListener('DOMContentLoaded', async () => {
                 imageVariants.appendChild(thumb);
             }
         });
+        //Thumbnail popup
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+        const closeBtn = modal.querySelector(".close");
+        const leftBtn = document.getElementById("modalLeft");
+        const rightBtn = document.getElementById("modalRight");
+        
+        let imagePaths = []; 
+        let currentImageIndex = 0;
+        
+        // Fill imagePaths from available images
+        const rawPaths = [img1_path, img2_path, img3_path, img4_path, img5_path];
+        imagePaths = rawPaths.filter(p => p && p.trim() !== '').map(p =>
+            p.startsWith('/') ? p : `./${p}`
+        );
+        
+        // Show image with a given index
+        function showImage(index) {
+            currentImageIndex = index;
+            modalImg.src = imagePaths[currentImageIndex];
+            modal.style.display = "flex";
+        }
+        
+        // When main image is clicked, find its index and show it
+        document.getElementById('img1').addEventListener('click', () => {
+            const currentSrc = document.getElementById('img1').src;
+            const foundIndex = imagePaths.findIndex(p => currentSrc.endsWith(p.replace('./', '')));
+            showImage(foundIndex !== -1 ? foundIndex : 0);
+        });
+        
+        // Close the modal
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = "none";
+        });
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+        
+        // Navigate images
+        leftBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentImageIndex = (currentImageIndex - 1 + imagePaths.length) % imagePaths.length;
+            modalImg.src = imagePaths[currentImageIndex];
+        });
+        
+        rightBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentImageIndex = (currentImageIndex + 1) % imagePaths.length;
+            modalImg.src = imagePaths[currentImageIndex];
+        });
+        
+        
+        
 
         // === Specifications
         // If there are specs, split them by commas and display as li elements

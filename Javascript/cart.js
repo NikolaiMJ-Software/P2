@@ -90,6 +90,19 @@ function fill_table() {
             //create new row
             let row = document.createElement("tr");
 
+            
+            //creates and fills product image element
+            let image_element = document.createElement("td");
+            let image = document.createElement("img");
+            image.style.width = "100px";
+
+            image.src = products[product-1].img1_path;
+
+            image_element.appendChild(image);
+
+
+
+
             //creates and fills product name element
             let name_element = document.createElement("td");
             name_element.textContent = products[product-1].product_name;
@@ -136,10 +149,12 @@ function fill_table() {
             button_element.appendChild(remove_button);
 
             //adds all elements as a child to the row, and the row as a child to the table
+            row.appendChild(image_element);
             row.appendChild(name_element);
             row.appendChild(price_element);
             row.appendChild(button_element);
             tableBody.appendChild(row);
+            
 
             document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
             past_product = product;

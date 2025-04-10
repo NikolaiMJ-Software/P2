@@ -30,6 +30,7 @@
         <div class="product-image">
             <img id="img1" alt="Product Image">
             <div class="product-var" id="image-variants"></div>
+            
         </div>
 
         <!-- Product Details -->
@@ -43,7 +44,7 @@
                 <div id="rating-modal" style="display: none;">
                 <div class="modal-content">
                     <button id="close-rating-modal" style="float: right;">&times;</button>
-                    <h2>Rate this product</h2>
+                    <h2>Bedøm dette produkt</h2>
 
                     <div id="star-rating">
                     <span class="star" data-value="1">&#9734;</span>
@@ -53,11 +54,11 @@
                     <span class="star" data-value="5">&#9734;</span>
                     </div>
 
-                    <textarea id="user-comment" placeholder="Write your comment..."></textarea>
+                    <textarea id="user-comment" placeholder="Skriv din komentar..."></textarea>
 
-                    <button id="submit-rating">Submit</button>
+                    <button id="submit-rating">Indsend</button>
                     <div class="comment-preview">
-                        <h3>All Comments</h3>
+                        <h3>Alle kommentarer</h3>
                         <ul id="comments-list"></ul>
                     </div>
                 </div>
@@ -83,19 +84,28 @@
             
 
             <!-- Pricing -->
-            <p class="save" style="display: none;">Save: <span id="discount"></span> kr.</p>
+            <p class="save" style="display: none;">Spar: <span id="discount"></span> kr.</p>
             <p class="price"><span id="price"></span> kr.</p>
 
             <!-- Add to Cart Button -->
-            <button id="cart_button" class="add-to-cart">Add to cart</button>
+            <button id="cart_button" class="add-to-cart">Tilføj til kurv</button>
 
             <div class="comment-preview" id="product-comments">
-                <h3><br>Comments</h3>
+                <h3><br>Alle kommentarer</h3>
                 <ul id="comments-list-bottom"></ul>
               </div>
 
         </div>
     </div>
+
+                <!-- thumnail popup -->
+    <div id="imageModal">
+        <span class="close">&times;</span>
+        <span id="modalLeft" class="modal-arrow">&#10094;</span> <!-- Left arrow -->
+        <img id="modalImage" alt="Expanded image">
+        <span id="modalRight" class="modal-arrow">&#10095;</span> <!-- Right arrow -->
+      </div>
+    
 </body>
 <script type="module" src="./Javascript/productPage.js" defer></script>
 <script type="module" src="./Javascript/cart.js" defer></script>
