@@ -40,7 +40,7 @@ const upload = multer({storage: storage});
 
 
 router.get('/shop_dashboard', (req, res) => {
-    if(!req.user || !req.user.shop_id){
+    if(!req.user || (!req.user.shop_id && !req.user.admin_user)){
         return res.status(403).json({ error: "Ikke logget ind som butik" });
     }
     res.sendFile(path.join(process.cwd(), '.', 'HTML', 'shop_dashboard.html'));
@@ -48,11 +48,12 @@ router.get('/shop_dashboard', (req, res) => {
 
 
 router.get('/shop_products', (req, res)=>{
-    if(!req.user || !req.user.shop_id){
+    let shop_id = req.user.admin_user ? req.query.shop : req.user.shop_id;
+    if(!req.user || !shop_id){
         return res.status(403).json({ error: "Ikke logget ind som butik" });
     }
 
-    db.all(`SELECT * FROM products WHERE shop_id = ?`, [req.user.shop_id], (err, rows)=>{
+    db.all(`SELECT * FROM products WHERE shop_id = ?`, [shop_id], (err, rows)=>{
         if (err){
             return res.status(500).json({error: err.message});
         }else{
@@ -66,7 +67,7 @@ router.get('/shop_products', (req, res)=>{
 router.post('/update_stock', (req, res) => {
     const { id, stock } = req.body;
 
-    if (!req.user || !req.user.shop_id) {
+    if (!req.user || (!req.user.shop_id && !req.user.admin_user)) {
         return res.status(403).send("Ikke autoriseret");
     }
     if(stock>=0){
@@ -84,7 +85,7 @@ router.post('/update_stock', (req, res) => {
 router.post('/delete_ware', (req, res)=>{
     const { id } = req.body;
 
-    if (!req.user || !req.user.shop_id) {
+    if (!req.user || (!req.user.shop_id && !req.user.admin_user)) {
         return res.status(403).send("Ikke autoriseret");
     }
 
@@ -207,7 +208,7 @@ router.post("/update_product", upload.fields([
     async (req, res)=>{
 
     //if user is not logged in, he or she is unauthorized
-    if (!req.user || !req.user.shop_id) {
+    if (!req.user || (!req.user.shop_id && !req.user.admin_user)) {
         return res.status(403).send("Ikke autoriseret");
     }
 
