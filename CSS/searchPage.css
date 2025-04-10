@@ -66,9 +66,13 @@ button {
     height: 450px;
     background: white;
     border-radius: 10px;
-    border: 1px solid #A8D5BA;
+    border-top: 7px solid #A8D5BA;
+    border-bottom: 7px solid #89C7B0;
+    border-left: 2px solid #A8D5BA ;
+    border-right: 2px solid #A8D5BA ;
     text-align: center;
     color: black;
+    
 }
 
 .productImage{
@@ -132,15 +136,15 @@ button {
 }
 
 .productText{
-    color: var(--primary-text);
+    color: red;
     position: absolute;
     translate: 0px -300px;
     font-size: 32px;
     text-shadow: 
-    -1px -1px 0 #A8D5BA,  
-     1px -1px 0 #A8D5BA,
-    -1px  1px 0 #A8D5BA,
-     1px  1px 0 #A8D5BA;
+    -1px -1px 0 red,  
+     1px -1px 0 red,
+    -1px  1px 0 red,
+     1px  1px 0 red;
 }
 
 .advert {
@@ -159,7 +163,10 @@ button {
     height: 450px;
     background: white;
     border-radius: 10px;
-    border: 1px solid #A8D5BA;
+    border-top: 7px solid red;
+    border-bottom: 7px solid red;
+    border-left: 1px solid red;
+    border-right: 1px solid red;    
     text-align: center;
     color: black;
 }
