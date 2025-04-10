@@ -107,15 +107,15 @@ function fill_table() {
             let name_element = document.createElement("td");
             name_element.textContent = products[product-1].product_name;
 
-            //creates and fills product price element
-            let price_element = document.createElement("td");
-            price_element.textContent = products[product-1].price;
-            total_cost += products[product-1].price;
-
             //creates and fills quantity toggle
             let button_element = document.createElement("td");
             let remove_button = document.createElement("BUTTON");
             remove_button.setAttribute("class", button_reserve);
+
+            //creates and fills product price element
+            let price_element = document.createElement("td");
+            price_element.textContent = products[product-1].price;
+            total_cost += products[product-1].price;
 
             // "-" element
             let minus = document.createElement("span");
