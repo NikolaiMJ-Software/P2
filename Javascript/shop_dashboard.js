@@ -68,11 +68,8 @@ document.addEventListener("DOMContentLoaded", async () =>{
 
     });
 
-const urlParams = new URLSearchParams(window.location.search);
-const tspmo = urlParams.get('shop');
-
     //get all products
-    const res = await fetch("./shop_products?shop=" + tspmo);
+    const res = await fetch("./shop_products");
     const products = await res.json();
 
     //make a list of products which does and does not have a parent ID
