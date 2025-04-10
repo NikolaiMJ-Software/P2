@@ -40,6 +40,9 @@ const upload = multer({storage: storage});
 
 
 router.get('/shop_dashboard', (req, res) => {
+    if(!req.user || !req.user.shop_id){
+        return res.status(403).json({ error: "Ikke logget ind som butik" });
+    }
     res.sendFile(path.join(process.cwd(), '.', 'HTML', 'shop_dashboard.html'));
 });
 
@@ -370,7 +373,24 @@ router.get('/parent_products', (req, res)=>{
             return res.status(500).json({ error: "Database fejl" });
           }
           res.json(rows);
-    })
+    });
+});
+
+router.get('/shop_name', (req, res)=>{
+    const shop_id = req.user.shop_id;
+
+    if (!shop_id) {
+        return res.status(401).json({ error: "Ikke logget ind eller shop_id mangler" });
+    }
+
+
+    db.get('SELECT id, shop_name FROM shops WHERE id = ?', [shop_id], (err, rows)=>{
+        if (err) {
+            console.error("DB error:", err);
+            return res.status(500).json({ error: "Database fejl" });
+          }
+          res.json(rows);
+    });
 });
 
 export default router;

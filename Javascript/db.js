@@ -90,6 +90,7 @@ db.serialize(() => {
         name TEXT,
         password TEXT,
         shop_id INTEGER,
+        admin_user INTEGER DEFAULT 0,
         FOREIGN KEY(shop_id) REFERENCES shops(id)
     )`, (err) => {
         if (err) console.error("Error creating table:", err.message);
@@ -139,9 +140,10 @@ db.serialize(() => {
                 else console.log('private inserted.');
         });
 
-        db.run(`INSERT INTO users (email, name, password, shop_id) VALUES
-            ('sspg.dk@gmail.com', 'Sebastian', '123', 2),
-            ('mormorogmorfar123456789@gmail.com', 'ikke mormor & morfar', '123', 1)`, (err) => {
+        db.run(`INSERT INTO users (email, name, password, shop_id, admin_user) VALUES
+            ('sspg.dk@gmail.com', 'Sebastian', '123', 2, 0),
+            ('mormorogmorfar123456789@gmail.com', 'ikke mormor & morfar', '123', 1, 0),
+            ('admin', 'admin', 'admin', NULL, 1)`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Users inserted.');
         });

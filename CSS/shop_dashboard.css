@@ -6,6 +6,16 @@ body {
   color: #333;
 }
 
+#header {
+  font-size: 30px;
+  font-weight: bold;
+  font-family: 'Arial', 'Lucida Sans', sans-serif;
+  color: var(--tertiary-text); /* This is your #4A7E8F */
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
 /* Link (Back) */
 a {
   display: inline-block;
@@ -319,3 +329,8 @@ form button[type="submit"] {
 
 } 
 
+
+:root[data-theme="dark"] #header {
+  background-color: #2B2A35;
+  border-left: 5px solid #89C7B0;
+}
