@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const name = form.fornavn.value + " " + form.efternavn.value;
-        const email = form.email.value;
+        const email = form.email.value.toLowerCase();
         const password = form.password.value;
         const shop_id = store_select.value || null;
 

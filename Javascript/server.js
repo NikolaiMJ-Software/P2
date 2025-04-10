@@ -10,6 +10,7 @@ import { dirname } from 'path';
 import user_router from './routes/routes_user.js';
 import reserve_router from './routes/routes_reserve.js';
 import shop_dashboard_router from './routes/routes_shop_dashboard.js';
+import admin_router from './routes/routes_admin.js';
 
 // Get the filename and directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
@@ -105,6 +106,10 @@ app.get('/productpage', (req, res) => {
 
 app.get('/cart', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/cart.html'))
+})
+
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/admin.html'));
 })
 
 // path to the shop page
@@ -331,6 +336,8 @@ app.get('/rating', (req, res) => {
 app.use('/', reserve_router);
 
 app.use('/', shop_dashboard_router);
+
+app.use('/', admin_router);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
