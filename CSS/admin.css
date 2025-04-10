@@ -1,0 +1,30 @@
+#upper-half{
+    position: relative;
+    max-height: 100px;
+    min-height: 100px;
+}
+#buttons{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+
+td {
+    border: 1px solid black;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#user-table-body{
+    text-align: left;
+}
+
+#shop-table-body{
+    text-align: left;
+}
+
+#editBtn{
+    float: right;
+    
+}
