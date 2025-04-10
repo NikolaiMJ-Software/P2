@@ -1,16 +1,16 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
     //Page change buttons
-    document.getElementById("user-button").addEventListener("click", () => {
+    document.getElementById("user-button").onclick = () => {
         hidePages()
         document.getElementById("users").style = ""
         userTable()
-    })
-    document.getElementById("shop-button").addEventListener("click", () =>{
+    }
+    document.getElementById("shop-button").onclick = () =>{
         hidePages()
         document.getElementById("shops").style = ""
         shopTable()
-    })   
+    }
 })
 
 function hidePages() {
