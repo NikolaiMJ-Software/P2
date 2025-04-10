@@ -90,19 +90,34 @@ function fill_table() {
             //create new row
             let row = document.createElement("tr");
 
+            
+            //creates and fills product image element
+            let image_element = document.createElement("td");
+            let image = document.createElement("img");
+            image.style.width = "100px";
+            image.style.padding = "10px";
+
+            image.src = products[product-1].img1_path;
+
+            image_element.appendChild(image);
+
+
+
+
             //creates and fills product name element
             let name_element = document.createElement("td");
             name_element.textContent = products[product-1].product_name;
-
-            //creates and fills product price element
-            let price_element = document.createElement("td");
-            price_element.textContent = products[product-1].price;
-            total_cost += products[product-1].price;
 
             //creates and fills quantity toggle
             let button_element = document.createElement("td");
             let remove_button = document.createElement("BUTTON");
             remove_button.setAttribute("class", button_reserve);
+            remove_button.style.color = "black";
+
+            //creates and fills product price element
+            let price_element = document.createElement("td");
+            price_element.textContent = products[product-1].price;
+            total_cost += products[product-1].price;
 
             // "-" element
             let minus = document.createElement("span");
@@ -116,6 +131,12 @@ function fill_table() {
             // "+" element
             let plus = document.createElement("span");
             plus.textContent = " +";
+
+
+            const Rydknap = document.createElement("button");
+            Rydknap.textContent = "X";
+            Rydknap.style.color = "black";
+
 
             // Append to button
             remove_button.appendChild(minus);
@@ -136,10 +157,13 @@ function fill_table() {
             button_element.appendChild(remove_button);
 
             //adds all elements as a child to the row, and the row as a child to the table
+            row.appendChild(image_element);
             row.appendChild(name_element);
-            row.appendChild(price_element);
             row.appendChild(button_element);
+            row.appendChild(price_element);
+            row.appendChild(Rydknap);
             tableBody.appendChild(row);
+            
 
             document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
             past_product = product;

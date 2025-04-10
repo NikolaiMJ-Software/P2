@@ -17,6 +17,15 @@ async function check_login(){
                     window.location.href = './shop_dashboard';
                 });
             }
+            console.log(data.admin_user)
+            if(data.admin_user){
+                const admin = document.getElementById("admin");
+                admin.style.display = 'inline-block';
+
+                admin.addEventListener('click', ()=>{
+                    window.location.href = `./admin`;
+                })
+            }
         }
 
     } catch (error){
