@@ -3,8 +3,6 @@ import sqlite3 from 'sqlite3';
 import sgmail from '@sendgrid/mail';
 import path from 'path';
 const app = express();
-
-sgmail.setApiKey("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");
 app.use(express.json());
 
 //Makes files work together
@@ -19,6 +17,8 @@ const db = new sqlite3.Database(db_path, (err) => {
     console.log('Connected to SQLite database (reserve router).');
     db.run("PRAGMA foreign_keys = ON;");
 });
+let key = await db_get("SELECT private.API_key FROM private WHERE private.id = ?", 2)
+sgmail.setApiKey(key);
 
 // Function to send emails
 function send_mail(receiver, subject, text) {
@@ -52,28 +52,25 @@ function db_get(query, params) {
 
 router.post('/reserve_wares', async (req, res) => {
     const { cart } = req.body;
-    if(!req.user) {
-        console.log("Log in to reserve a ware");
-        return res.status(401).json({ error: "Log in to reserve a ware" });
-    }
+    let cart_items = Object.values(cart);
     let user_email = req.user.email;
     let named_cart = [];
-    for(let i = 0; i < cart.length; i++) {
+
+    for(let i = 0; i < cart_items.length; i++) {
         named_cart[i] = []
-        for(let x = 0; x < cart[i].length; x++) {
+        console.log("loop:" + i);
+        for(let x = 0; x < cart_items[i].length; x++) {
             try {
-                const product = await db_get("SELECT products.product_name FROM products WHERE products.id = ?",[cart[i][x]]);
-                if (product) {
-                    named_cart[i].push(product.product_name);
-                }
+                const product = await db_get("SELECT products.product_name FROM products WHERE products.id = ?",[cart_items[i][x]]);
+                console.log("product object:", product);
+                named_cart[i].push(product.product_name);
             } catch (error) {
                 console.error("Database error:", error);
                 return res.status(500).json({ error: "Database query failed" });
             }
         }
     }
-    /*
-    console.log(cart);
+
     for(let i = 0; i < cart.length; i++) {
         try{
             const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i][0]]);
@@ -92,8 +89,7 @@ router.post('/reserve_wares', async (req, res) => {
         `Du har reserveret varer på Click&hent`,
         `Du har reserveret følgende varer på Click&hent: ${named_cart}`
     )
-        */
-    return res.json({ success: cart });
+    return res.json({ success: cart_items });
 });
 
 //This is important, for god who knows what (do not remove)
