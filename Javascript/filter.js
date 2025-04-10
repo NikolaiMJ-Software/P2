@@ -106,6 +106,7 @@ export async function sortStandart(){
         .slice(0, 3); // Only top 3
     console.log('top product',topProducts);
     
+    // Merge the two sorted arraies
     const sortedProducts = [
         ...topProducts, 
         ...sortedProductsByShop.filter(product => !topProducts.includes(product))];
