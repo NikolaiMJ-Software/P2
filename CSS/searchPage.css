@@ -154,7 +154,7 @@ button {
     transform: translateX(-50%);
     max-width: 946px;
     box-sizing: border-box;
-    translate: 650px 0px;
+    translate: 640px 0px;
   }
 
 .advertButton{
@@ -165,8 +165,8 @@ button {
     border-radius: 10px;
     border-top: 7px solid red;
     border-bottom: 7px solid red;
-    border-left: 1px solid red;
-    border-right: 1px solid red;    
+    border-left: 2px solid red;
+    border-right: 2px solid red;    
     text-align: center;
     color: black;
 }
