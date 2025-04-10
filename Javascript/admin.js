@@ -192,6 +192,9 @@ function shopTable(){
 
         //Go to dashboard functionality
         dashboardBtn.textContent = "dashboard"
+        dashboardBtn.onclick = () => {
+            alert("Functionality not added yet")
+        }
 
 
         //Initialize table contents
