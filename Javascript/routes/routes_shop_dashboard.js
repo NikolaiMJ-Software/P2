@@ -385,7 +385,7 @@ router.get('/shop_name', (req, res)=>{
     }
 
 
-    db.get('SELECT id, shop_name FROM shops WHERE id = ?', [shop_id], (err, rows)=>{
+    db.get('SELECT id, shop_name, img_path FROM shops WHERE id = ?', [shop_id], (err, rows)=>{
         if (err) {
             console.error("DB error:", err);
             return res.status(500).json({ error: "Database fejl" });
@@ -393,5 +393,69 @@ router.get('/shop_name', (req, res)=>{
           res.json(rows);
     });
 });
+
+
+router.post("/update_logo", upload.fields([
+    { name: 'update-logo', maxCount: 1 }
+]), async (req, res) => {
+    const shop_id = req.user.shop_id;
+    const logo_file = req.files['update-logo']?.[0];
+
+    if (!logo_file) {
+        return res.status(400).json({ error: "Ingen logo-fil modtaget" });
+    }
+
+    db.get('SELECT city_id, shop_name FROM shops WHERE id = ?', [shop_id], async (err, row) => {
+        if (err) {
+            console.error("DB error:", err);
+            return res.status(500).json({ error: "Database fejl" });
+        }
+
+        if (!row) {
+            return res.status(404).json({ error: "Shop ikke fundet" });
+        }
+
+        try {
+            const city_name = await new Promise((resolve, reject) => {
+                db.get(`SELECT city FROM cities WHERE id = ?`, [row.city_id], (err, cityRow) => {
+                    if (err) return reject(err);
+                    if (!cityRow) return reject(new Error("By ikke fundet"));
+                    resolve(cityRow.city);
+                });
+            });
+
+            const shop_folder = path.join('.', 'Images', city_name, row.shop_name);
+            const logo_file_name = 'logo' + path.extname(logo_file.originalname);
+            const image_path = path.join(shop_folder, logo_file_name);
+            const logo_path_for_db = `Images/${city_name}/${row.shop_name}/${logo_file_name}`;
+
+            // Remove old logo files in the shop folder
+            const files = await fse.readdir(shop_folder);
+            for (const file of files) {
+            if (file.startsWith("logo.")) {
+                await fse.remove(path.join(shop_folder, file));
+                }
+            }
+
+            await fse.ensureDir(shop_folder);
+            await fse.move(logo_file.path, image_path, { overwrite: true });
+
+            // Update DB with new image path
+            db.run(`UPDATE shops SET img_path = ? WHERE id = ?`, [logo_path_for_db, shop_id], (err) => {
+                if (err) {
+                    console.error("Fejl ved opdatering af logo i DB:", err);
+                    return res.status(500).json({ error: "Kunne ikke opdatere logo i databasen" });
+                }
+
+                return res.status(200).json({ message: "Logo opdateret" });
+            });
+
+        } catch (error) {
+            console.error("Fejl:", error);
+            return res.status(500).json({ error: "Intern serverfejl" });
+        }
+    });
+});
+
 
 export default router;

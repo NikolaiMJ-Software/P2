@@ -1,3 +1,5 @@
+import { updateLastVisit } from './calculateDistance.js';
+
 //Start of cart functionality
 
 let products = [];
@@ -48,16 +50,16 @@ function getCookie(cname) {
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
     for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
     }
     return "";
-  }
+}
 
 //End of cart functionality
 
@@ -65,6 +67,7 @@ function getCookie(cname) {
 
 //Function for filling data table for cart
 function fill_table() {
+    updateLastVisit(); // Update users last visit
     console.log("Filling table...");
     total_cost = 0;
     //Gets cart data from the cookie, and check if the there even is data
@@ -95,6 +98,7 @@ function fill_table() {
             let image_element = document.createElement("td");
             let image = document.createElement("img");
             image.style.width = "100px";
+            image.style.padding = "10px";
 
             image.src = products[product-1].img1_path;
 
@@ -131,6 +135,23 @@ function fill_table() {
             let plus = document.createElement("span");
             plus.textContent = " +";
 
+
+            const Rydknap = document.createElement("button");
+            Rydknap.textContent = "X";
+            Rydknap.style.color = "black";
+
+            Rydknap.onclick = () => {
+                let amount = parseInt(document.getElementById(product).textContent);
+                for(let i = 0; i < amount; i++) {
+                    remove_from_cart(product);
+                }
+                const tableBody = document.querySelector("#cart tbody");
+                tableBody.innerHTML = ""; // Clear the table body
+                fill_table(); // Refill the table
+                document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr."; 
+             } 
+
+
             // Append to button
             remove_button.appendChild(minus);
             remove_button.appendChild(quantity);
@@ -142,8 +163,12 @@ function fill_table() {
                 const buttonWidth = this.clientWidth;
                 if (clickX < buttonWidth / 3) {
                     adjust_table("-", product);
-                } else if (clickX > (2 * buttonWidth) / 3 && parseInt(quantity.textContent) < products[product-1].stock) {
-                    adjust_table("+", product);
+                } else if (clickX > (2 * buttonWidth) / 3) {
+                    if(parseInt(quantity.textContent) < products[product-1].stock) {
+                        adjust_table("+", product);
+                    } else {
+                        alert("Du kan ikke tilføje flerer varer til din kurv end butikken har på lager");
+                    }
                 }
             });
             //adds button to a element in the row
@@ -154,6 +179,7 @@ function fill_table() {
             row.appendChild(name_element);
             row.appendChild(button_element);
             row.appendChild(price_element);
+            row.appendChild(Rydknap);
             tableBody.appendChild(row);
             
 
@@ -185,13 +211,19 @@ const button = document.getElementById("cart_button");
 if(button != null) {
     button.addEventListener("click", async () => {
         const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id');
+        const productId = parseInt(urlParams.get('id'));
         let amount = parseInt(document.getElementById("quantity-value").textContent)
-        for(let i=0; i<amount; i++) {
-            add_to_cart(productId);
-            console.log(i);
+        let cart = getCookie("products").split(",").map(Number);
+        let currently_in_cart = cart.filter(val => val === productId).length;
+        if(currently_in_cart + amount <= products[productId-1].stock) {
+            for(let i=0; i<amount; i++) {
+                add_to_cart(productId);
+                console.log(i);
+            }
+            alert("Din vare(er) er tilføjet til kurven");
+        } else {
+            alert("Du kan ikke tilføje flere varer til din kurv end der er antal på lager");
         }
-        alert("Din vare(er) er tilføjet til kurven");
     });
 }
 

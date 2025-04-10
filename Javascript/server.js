@@ -1,6 +1,5 @@
 import express from 'express';
 import path from 'path';
-import nodemailer from 'nodemailer';
 import sqlite3 from 'sqlite3';
 import session from 'express-session';
 import { fileURLToPath } from 'url';
@@ -10,6 +9,7 @@ import { dirname } from 'path';
 import user_router from './routes/routes_user.js';
 import reserve_router from './routes/routes_reserve.js';
 import shop_dashboard_router from './routes/routes_shop_dashboard.js';
+import mail_update_router from './routes/routes_mail_update.js';
 import admin_router from './routes/routes_admin.js';
 
 // Get the filename and directory name of the current module
@@ -332,6 +332,8 @@ app.get('/rating', (req, res) => {
 app.use('/', reserve_router);
 
 app.use('/', shop_dashboard_router);
+
+app.use('/', mail_update_router);
 
 app.use('/', admin_router);
 

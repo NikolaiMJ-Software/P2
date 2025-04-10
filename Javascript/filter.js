@@ -83,40 +83,28 @@ export async function sortStandart(){
     const responseShop = await fetch('./shop'); // Fetch shops from the server
     const responseProducts = await fetch('./products'); // Fetch products from the server
     const shops = await responseShop.json();
-    let products = await responseProducts.json();
-    let sortedProducts = []; // Empty array for the sortet products
+    const products = await responseProducts.json();
     
     // Sort shops after revenue
     shops.sort((a, b) => a.revenue - b.revenue);
-    const smallestShop = shops.map(shop => shop.id); // Create a separate shop_id array
+
+    // Create a separate shop_id array
+    const smallestShop = shops.map(shop => shop.id); 
+
     // Sort products by revenue based on shops sorted list
-    await products.sort((a, b) => {
-        const indexA = smallestShop.indexOf(a.shop_id);
-        const indexB = smallestShop.indexOf(b.shop_id);
-        return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
+    const sortedProductsByShop = [...products].sort((a, b) => {
+        return smallestShop.indexOf(a.shop_id) - smallestShop.indexOf(b.shop_id);
     });
-    sortedProducts = products; // Save the result i the sorted array
     
     // Add some of the most popular products bought (top: 3)
-    products.sort((a, b) => b.bought - a.bought);
-    const BoughtProducts = products.map(product => product.id); // Create a separate bought array
-    // Only take top 3, and sort it by them
-    const top = 3;
-    const sortedBoughtProducts = BoughtProducts.slice(0, top);
-    products.sort((a, b) => {
-        const indexA = sortedBoughtProducts.indexOf(a.id);
-        const indexB = sortedBoughtProducts.indexOf(b.id);
-        return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
-    });
-    sortedProducts = products;
+    const topProducts = products
+        .sort((a, b) => b.bought - a.bought) // Sort products by 'bought' count
+        .slice(0, 3); // Only top 3
+    
+    // Merge the two sorted arraies
+    const sortedProducts = [
+        ...topProducts, 
+        ...sortedProductsByShop.filter(product => !topProducts.includes(product))];
     
     return sortedProducts;
-}
-
-function changesInProducts(){
-   // Shop owner confirm a product has been pick up (via. mail)
-       // Shuld include: price and amount
-
-   // The database update "revenue" and "bought" based on the confirmation
-
 }

@@ -18,7 +18,13 @@
 
   <button class="add-button" id="add-button">Tilføj Produkt</button>
 
-  <h1 id="header"></h1>
+  <h1 id="header">
+    <div class="header-content">
+      <img id="logo" class="logo" src="" alt="Shop logo">
+      <span id="shop-name"></span>
+      <button class="edit-button">✎</button>
+    </div>
+  </h1>
 
   <main>
     <div id="product_list" class="product-list"></div>
@@ -93,6 +99,19 @@
         <p id="current-img5-name" class="current-img-info"></p>
         <input type="file" name="update-img5" accept="image/*">
       
+        <button type="submit">Opdater</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="logo-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" id="logo-modal-close">&times;</span>
+      <h2>Opdater logo</h2>
+      <form id="logo-form" enctype="multipart/form-data">
+        <label>Logo:</label>
+        <p id="current-img-name" class="current-img-info"></p>
+        <input type="file" name="update-logo" accept="image/*">
         <button type="submit">Opdater</button>
       </form>
     </div>
