@@ -43,7 +43,7 @@ db.serialize(() => {
 
     db.run(`CREATE TABLE IF NOT EXISTS shops (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        shop_name TEXT NOT NULL,
+        shop_name TEXT UNIQUE NOT NULL,
         city_id INTEGER,
         img_path TEXT,
         email TEXT,
@@ -90,6 +90,7 @@ db.serialize(() => {
         name TEXT,
         password TEXT,
         shop_id INTEGER,
+        admin_user INTEGER DEFAULT 0,
         FOREIGN KEY(shop_id) REFERENCES shops(id)
     )`, (err) => {
         if (err) console.error("Error creating table:", err.message);
@@ -128,7 +129,7 @@ db.serialize(() => {
 
         db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude, revenue) VALUES
             ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com', 57.048939, 9.921764, 150000),
-            ('jerrys vare', '1', 'Images/Aalborg/jerrys_vare/jerry_logo.png', 'nikolai456654@gmail.com', 57.070059, 9.946330, 10)`, (err) => {
+            ('jerrys vare', '1', 'Images/Aalborg/jerrys vare/jerry_logo.png', 'nikolai456654@gmail.com', 57.070059, 9.946330, 10)`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Shop inserted.');
         });
@@ -139,9 +140,10 @@ db.serialize(() => {
                 else console.log('private inserted.');
         });
 
-        db.run(`INSERT INTO users (email, name, password, shop_id) VALUES
-            ('sspg.dk@gmail.com', 'Sebastian', '123', 2),
-            ('mormorogmorfar123456789@gmail.com', 'ikke mormor & morfar', '123', 1)`, (err) => {
+        db.run(`INSERT INTO users (email, name, password, shop_id, admin_user) VALUES
+            ('sspg.dk@gmail.com', 'Sebastian', '123', 2, 0),
+            ('mormorogmorfar123456789@gmail.com', 'ikke mormor & morfar', '123', 1, 0),
+            ('admin', 'admin', 'admin', NULL, 1)`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('Users inserted.');
         });

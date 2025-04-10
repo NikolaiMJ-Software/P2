@@ -1,16 +1,26 @@
 body {
-  background: #ffffff;
+  background: var(--page-bg);
   font-family: 'Arial', 'Lucida Sans', sans-serif;
   margin: 0;
   padding: 20px;
   color: #333;
 }
 
+#header {
+  font-size: 30px;
+  font-weight: bold;
+  font-family: 'Arial', 'Lucida Sans', sans-serif;
+  color: var(--tertiary-text); /* This is your #4A7E8F */
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
 /* Link (Back) */
 a {
   display: inline-block;
   margin-bottom: 20px;
-  color: #4A7E8F;
+  color: var(--tertiary-text);
   text-decoration: none;
   font-weight: bold;
 }
@@ -34,6 +44,7 @@ button {
   background-color: #6FAFB8;
   color: white;
   margin-bottom: 20px;
+  margin: 10px;
 }
 
 .stock-button {
@@ -134,6 +145,7 @@ button:hover {
   color: #999;
   font-size: 14px;
 }
+
 
 .price-tag {
   background-color: #E74C3C;
@@ -275,11 +287,18 @@ form button[type="submit"] {
 }
 
 
+.theme-switcher {
+  display: none;
+  cursor: none;
+
+}
+
 
 :root[data-theme="light"] {
   --page-bg:WHITE ;
   --primary-text:Black ;
   --secoundary-text: lightgrey;
+  --tertiary-text: #4A7E8F;
 
 
 
@@ -298,6 +317,7 @@ form button[type="submit"] {
   --page-bg:#383643;
   --primary-text: WHITE ;
   --secoundary-text: lightgrey;
+  --tertiary-text: #ffffff;
 
   --switch-bg: #49494c;
   --switch-circle-bg: #7190FF;
@@ -309,3 +329,8 @@ form button[type="submit"] {
 
 } 
 
+
+:root[data-theme="dark"] #header {
+  background-color: #2B2A35;
+  border-left: 5px solid #89C7B0;
+}

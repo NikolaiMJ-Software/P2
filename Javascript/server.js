@@ -10,7 +10,11 @@ import { dirname } from 'path';
 import user_router from './routes/routes_user.js';
 import reserve_router from './routes/routes_reserve.js';
 import shop_dashboard_router from './routes/routes_shop_dashboard.js';
+<<<<<<< HEAD
 import mail_update_router from './routes/routes_mail_update.js';
+=======
+import admin_router from './routes/routes_admin.js';
+>>>>>>> 27833a8ab150af06d73ea9dbf1247e773b3b62b6
 
 // Get the filename and directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
@@ -52,7 +56,7 @@ app.get('/user_logged_in', (req, res) => {
     if (!req.user) {
         return res.json({ logged_in: false });
     } else {
-        res.json({logged_in: true, email: req.user.email, name: req.user.name, shop_id: req.user.shop_id || null});
+        res.json({logged_in: true, email: req.user.email, name: req.user.name, shop_id: req.user.shop_id || null, admin_user: req.user.admin_user || null});
     }
 });
 
@@ -89,16 +93,18 @@ app.get('/searchpage', (req, res) => {
             res.status(404).json({ error: 'City not found' });
             return;
         }
-        console.log(`City requested: ${city}`); 
+        console.log(`\nCity requested: ${city}`); 
         console.log("User:", req.user?.email);
+        console.log("Admin:", req.user?.admin_user);
         res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
     })
 });
 
 //path to productpage
 app.get('/productpage', (req, res) => {
-    const product = req.query.id; // Get product id from query
-    console.log(`Product requested: ${product}`); 
+    const product = req.query.id; // Get product id from query    
+    console.log(`\nProduct requested: ${product}`); 
+    console.log("User:", req.user?.email);
     res.sendFile(path.join(__dirname, '../HTML/product_page.html'));
 });
 
@@ -108,6 +114,10 @@ app.get('/cart', (req, res) => {
 
 // path to the shop page
 app.get('/productlist', (req, res) => {
+    const shop = req.query.shop_id; // Get product id from query    
+    console.log(`\nShop requested: ${shop}`); 
+    console.log("User:", req.user?.email);
+    console.log("Admin:", req.user?.admin_user);
     res.sendFile(path.join(__dirname, '../HTML/shop_page.html'));
 });
 
@@ -118,6 +128,9 @@ app.get('/login', (req, res) => {
 });
 app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/signup.html'));
+});
+app.get('/new_store', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/new_shop.html'));
 });
 //signup/login userability
 app.use('/', user_router);
@@ -188,7 +201,7 @@ app.get('/shop', (req, res) => {
 
     if (shopId) {
         // Fetch a specific shop by ID
-        db.get(`SELECT id, shop_name, latitude, longitude FROM shops WHERE id = ?`, [shopId], (err, row) => {
+        db.get(`SELECT id, shop_name, latitude, longitude, img_path FROM shops WHERE id = ?`, [shopId], (err, row) => {
             if (err) {
                 return res.status(500).json({ error: err.message });
             }
@@ -324,7 +337,11 @@ app.use('/', reserve_router);
 
 app.use('/', shop_dashboard_router);
 
+<<<<<<< HEAD
 app.use('/', mail_update_router);
+=======
+app.use('/', admin_router);
+>>>>>>> 27833a8ab150af06d73ea9dbf1247e773b3b62b6
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

@@ -17,6 +17,7 @@
     <button id="login" style="font-family: Arial;" onclick="window.location.href='./login'">Login</button>
     <button id="logout" style="display: none;">Logout</button>
     <button id="shop" style="display: none;">shop</button>
+    <button id="admin" style="display: none;">Admin</button>
   </div>
   <button id="back" style="text-align: left; translate: 0px -53px;" onclick="window.location.href=`./searchpage?city=${localStorage.city}`">Back</button>
 
@@ -39,7 +40,7 @@
   <div id="rating-modal" style="display: none;">
     <div class="modal-content">
       <button id="close-rating-modal" style="float: right;">&times;</button>
-      <h2>Rate this store</h2>
+      <h2>Bedøm denne butik</h2>
       <div id="star-rating">
         <span class="star" data-value="1">&#9734;</span>
         <span class="star" data-value="2">&#9734;</span>
@@ -47,10 +48,10 @@
         <span class="star" data-value="4">&#9734;</span>
         <span class="star" data-value="5">&#9734;</span>
       </div>
-      <textarea id="user-comment" placeholder="Write your comment..."></textarea>
-      <button id="submit-rating">Submit</button>
+      <textarea id="user-comment" placeholder="Skriv din komentar..."></textarea>
+      <button id="submit-rating">Indsend</button>
       <div class="comment-preview">
-        <h3>All Comments</h3>
+        <h3>Alle kommentarer</h3>
         <ul id="comments-list"></ul>
       </div>
   </div>
@@ -60,9 +61,10 @@
   <script src="./Javascript/shop_page.js"></script>
   <script src="./Javascript/comments.js"></script>
   <script src="./Javascript/theme.js"></script>
+  <script src="./Javascript/logout.js"></script>
 
     <script>
-      localStorage.currentPage = `./searchpage?city=${new URLSearchParams(window.location.search).get("city")}&shop_id=${new URLSearchParams(window.location.search).get("shop_id")}`;
+      localStorage.currentPage = `./productlist?city=${new URLSearchParams(window.location.search).get("city")}&shop_id=${new URLSearchParams(window.location.search).get("shop_id")}`;
     </script>
 </body>
 </html>

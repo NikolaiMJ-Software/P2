@@ -1,17 +1,24 @@
 import { filters, sortStandart } from './filter.js';
 import { updateLastVisit } from './calculateDistance.js';
+
 let currentCity = new URLSearchParams(window.location.search).get(`city`);
 document.getElementById("h1ProductPage").textContent = currentCity; //changes title of page to city
 const productButtons = [], productContainer = document.getElementById('productList');
 let productList = [], advertContainer = document.getElementById('advertList'); //list to contain all items of current chosen city, and container to place advert in.
 
+//Get the email from url
+const urlParams = new URLSearchParams(window.location.search);
+const email = urlParams.get('email');
+
 function updateImage(products){
     updateLastVisit(); // Update users last visit
     productContainer.innerHTML = '';// Remove old products
     //go through products
-    products.forEach(product => {
+    products.forEach(async product => {
         console.log(product.product_name + " " + product.price);
-        productList += product.id;
+        if(product.discount > 0){
+            productList += product.id;
+        }
 
         //initialize all products.
         const productButton = document.createElement('button');
@@ -20,6 +27,8 @@ function updateImage(products){
         const productDesc = document.createElement('p');
         const productPrice = document.createElement('p');
         const productDiscount = document.createElement('p');
+        const productStore = document.createElement('a');
+        const productText = document.createElement('p');
         productButton.dataset.product = product.product_name.toLowerCase();
 
         //initialize all attributes.
@@ -46,12 +55,32 @@ function updateImage(products){
         productPrice.textContent = product.price + ",-";
         //discount
         productDiscount.classList.add('productDiscount');
-        if(product.discount != 0 && product.discount != null)
+        if(product.discount > 0)
         {productDiscount.textContent = "spar: " + product.discount + ",-"};
+        
+        productStore.classList.add('productStore');
+        if(email){
+            productStore.href = `./productlist?email=$${encodeURIComponent(email)}&city=${currentCity}&shop_id=${product.shop_id}`
+        } else {
+            productStore.href = `./productlist?city=${currentCity}&shop_id=${product.shop_id}`
+        }
+        let productStoreImage = document.createElement("img");
+        const shopResponse = await fetch(`./shop?id=${product.shop_id}`);
+        const shopData = await shopResponse.json();
+        if(shopData.img_path){
+            productStoreImage.src = `./${shopData.img_path}`
+        }
+        productStoreImage.alt = `${shopData.shop_name}`
+        productStoreImage.style = "max-width: 125px; max-height: 75px;"
+        productStore.appendChild(productStoreImage);
 
         //add onclick function to bring you to the specific products page
         productButton.onclick = () => {
-            window.location.href = `./productpage?id=${encodeURIComponent(product.id)}`;
+            if(email){
+                window.location.href = `./productpage?email=${encodeURIComponent(email)}&id=${encodeURIComponent(product.id)}`;
+            } else {
+                window.location.href = `./productpage?id=${encodeURIComponent(product.id)}`;
+            }
         }
 
         //add new product to "products" class
@@ -62,6 +91,8 @@ function updateImage(products){
         productButton.appendChild(productDesc);
         productButton.appendChild(productPrice);
         productButton.appendChild(productDiscount);
+        productButton.appendChild(productStore);
+        productButton.appendChild(productText);
     });
 }
 
@@ -70,17 +101,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         //we have city name. we need city id
         const response_city = await fetch('./cities'); // Fetch cities from the server
         const cities = await response_city.json();
-
-        //Get the email from url
-        const urlParams = new URLSearchParams(window.location.search);
-        const email = urlParams.get('email');
-        
         let currentCityId = cities.filter(city => city.city === currentCity)[0].id;
         if (currentCityId == undefined) throw "city ID not found"
 
         const response = await fetch('./products'); // Fetch products from the server
-        let products = await response.json();
-        products = products.filter(product => product.city_id === currentCityId); // Save only the chosen citys products
+        let orderedProducts = await response.json();
+        let products = orderedProducts.filter(product => product.city_id === currentCityId); // Save only the chosen citys products
 
         // Sort smallest store as standart filter
         products = await sortStandart();
@@ -120,8 +146,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             const matchingProduct = products.find(product => product.product_name.toLowerCase() === searchValue);
 
             if (matchingProduct) {
-                // Redirect if city is found
-                window.location.href = `./productpage?id=${encodeURIComponent(matchingProduct.product.id)}`;
+                if(email){
+                    window.location.href = `./productpage?email=${encodeURIComponent(email)}&id=${encodeURIComponent(product.id)}`;
+                } else {
+                    window.location.href = `./productpage?id=${encodeURIComponent(product.id)}`;
+                }
             }
         });
 
@@ -136,7 +165,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let advertProduct = productList[Math.floor(Math.random() * productList.length)];
 
         // Get the chosen product
-        let advertChosen = products[advertProduct-1];
+        let advertChosen = orderedProducts[advertProduct-1];
         console.log(advertChosen.product_name);
 
         // create classes so it can be modified in css and add elements
@@ -146,6 +175,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const advertDesc = document.createElement('p');
         const advertPrice = document.createElement('p');
         const advertDiscount = document.createElement('p');
+        const advertStore = document.createElement('a');
+        const advertText = document.createElement('p');
 
         advertButton.classList.add('advertButton');
         //image
@@ -175,16 +206,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // button function redirecting to product page
         advertButton.onclick = () => {
-            window.location.href = `./productpage?id=${encodeURIComponent(advertChosen.id)}`;
+            if(email){
+                window.location.href = `./productpage?email=${encodeURIComponent(email)}&id=${encodeURIComponent(product.id)}`;
+            } else {
+                window.location.href = `./productpage?id=${encodeURIComponent(product.id)}`;
+            }
         }
 
         //shop button 
-        //TODO: Create button element for shop button redirect - const advertShop = document.createElement('button');
-        //TODO: Get shop.id from chosen advert product - look how its done in productPage.js
-        //TODO: Get image from selected shop
-        //TODO: Put button source as the image, so the image is the butt
-        //TODO: Create and append child as button to advertButton
-        //TODO: Add button function to
+        advertStore.classList.add('productStore');
+        advertStore.href = `./productlist?city=${currentCity}&shop_id=${advertChosen.shop_id}`
+        let advertStoreImage = document.createElement("img");
+        const shopResponse = await fetch(`./shop?id=${advertChosen.shop_id}`);
+        const shopData = await shopResponse.json();
+        if(shopData.img_path){
+            advertStoreImage.src = `./${shopData.img_path}`
+        }
+        advertStoreImage.alt = `${shopData.shop_name}`
+        advertStoreImage.style = "max-width: 125px; max-height: 75px;"
+        advertStore.appendChild(advertStoreImage);
+
+        //AD text
+        advertText.classList.add('productText');
+        advertText.textContent = "Nuværende Tilbud";
 
 
         // place button in container and add all elements to the button
@@ -194,6 +238,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         advertButton.appendChild(advertDesc);
         advertButton.appendChild(advertPrice);
         advertButton.appendChild(advertDiscount);
+        advertButton.appendChild(advertStore);
+        advertButton.appendChild(advertText);
     }
     catch(err){
         console.log(err);

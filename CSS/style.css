@@ -153,6 +153,7 @@ progress {
 
 }
 
+
 #theme-switcher::before {
     content: '';
     position: absolute;

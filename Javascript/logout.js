@@ -17,6 +17,15 @@ async function check_login(){
                     window.location.href = './shop_dashboard';
                 });
             }
+            console.log(data.admin_user)
+            if(data.admin_user){
+                const admin = document.getElementById("admin");
+                admin.style.display = 'inline-block';
+
+                admin.addEventListener('click', ()=>{
+                    window.location.href = `./admin`;
+                })
+            }
         }
 
     } catch (error){
@@ -38,7 +47,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
                 const message = await response.text();
                 //if everything works, user is logged out, and page is refreshed
                 console.log("Du logger ud", message);
-                window.location.reload();
+                window.location.href = "./";
             } catch (err){
                 //if user cannot log out, an error happens and user is told its not possible to log out
                 console.error("Kunne ikke logge ud:", err);

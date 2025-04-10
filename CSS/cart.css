@@ -11,6 +11,7 @@ table, td, th {
 table {
     width: 40%;
     border-collapse: collapse;
+
 }
 
 button {
@@ -53,6 +54,15 @@ button {
     text-align: center;
     color: black;
 }
+
+
+.theme-switcher {
+    display: none;
+    cursor: none;
+
+}
+
+
 
 :root[data-theme="light"] {
     --page-bg:WHITE ;
