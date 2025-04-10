@@ -94,6 +94,7 @@ function fill_table() {
             //creates and fills product image element
             let image_element = document.createElement("td");
             let image = document.createElement("img");
+            image.style.width = "100px";
 
             image.src = products[product-1].img1_path;
 
