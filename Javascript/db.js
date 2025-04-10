@@ -134,8 +134,7 @@ db.serialize(() => {
         });
 
         db.run(`INSERT INTO private (name, API_key) VALUES
-            ('Google maps', 'AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ'),
-            ('SendGrid', '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')`, (err) => {
+            ('Google maps', 'AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ')`, (err) => {
                 if (err) console.error('Error inserting data:', err.message);
                 else console.log('private inserted.');
         });
