@@ -1,4 +1,7 @@
+import { updateLastVisit } from './calculateDistance.js';
+
 document.addEventListener("DOMContentLoaded", async () => {
+    updateLastVisit(); // Update users last visit
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const currentCity = urlParams.get('city');

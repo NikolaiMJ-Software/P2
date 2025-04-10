@@ -1,3 +1,5 @@
+import { updateLastVisit } from './calculateDistance.js';
+
 //Start of cart functionality
 
 let products = [];
@@ -48,16 +50,16 @@ function getCookie(cname) {
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
     for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
     }
     return "";
-  }
+}
 
 //End of cart functionality
 
@@ -65,6 +67,7 @@ function getCookie(cname) {
 
 //Function for filling data table for cart
 function fill_table() {
+    updateLastVisit(); // Update users last visit
     console.log("Filling table...");
     total_cost = 0;
     //Gets cart data from the cookie, and check if the there even is data
@@ -203,11 +206,17 @@ if(button != null) {
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');
         let amount = parseInt(document.getElementById("quantity-value").textContent)
-        for(let i=0; i<amount; i++) {
-            add_to_cart(productId);
-            console.log(i);
+        let cart = getCookie("products").split(",").map(Number);
+        let currently_in_cart = cart.filter(val => val === productId).length;
+        if(currently_in_cart + amount <= products[productId-1].stock) {
+            for(let i=0; i<amount; i++) {
+                add_to_cart(productId);
+                console.log(i);
+            }
+            alert("Din vare(er) er tilføjet til kurven");
+        } else {
+            alert("Du kan ikke tilføje flere varer til din kurv end der er antal på lager");
         }
-        alert("Din vare(er) er tilføjet til kurven");
     });
 }
 
