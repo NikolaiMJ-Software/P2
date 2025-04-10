@@ -2,6 +2,7 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 import sgmail from '@sendgrid/mail';
 import path from 'path';
+import { stringify } from 'querystring';
 const app = express();
 app.use(express.json());
 
@@ -53,7 +54,7 @@ function db_get(query, params) {
 router.post('/reserve_wares', async (req, res) => {
     const { cart } = req.body;
     let cart_items = Object.values(cart);
-    let user_email = Object.values(req.user.email);
+    let user_email = stringify(req.user.email);
     let named_cart = [];
 
     for(let i = 0; i < cart_items.length; i++) {
@@ -70,12 +71,14 @@ router.post('/reserve_wares', async (req, res) => {
             }
         }
     }
+    
 
     for(let i = 0; i < cart_items.length; i++) {
         try{
             const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
+            const shop_string = stringify(shop_mail.email);
             await send_mail(
-                shop_mail.email,
+                shop_string,
                 `En bruger har reserveret varer hos din butik`,
                 `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`
             );
