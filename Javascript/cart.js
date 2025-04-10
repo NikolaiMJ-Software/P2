@@ -207,7 +207,7 @@ const button = document.getElementById("cart_button");
 if(button != null) {
     button.addEventListener("click", async () => {
         const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id');
+        const productId = parseInt(urlParams.get('id'));
         let amount = parseInt(document.getElementById("quantity-value").textContent)
         let cart = getCookie("products").split(",").map(Number);
         let currently_in_cart = cart.filter(val => val === productId).length;
