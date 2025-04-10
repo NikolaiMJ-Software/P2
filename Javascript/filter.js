@@ -85,32 +85,24 @@ export async function sortStandart(){
     const shops = await responseShop.json();
     const products = await responseProducts.json();
     
-    console.log('\nSHOPS ARRAY:',shops);
-    console.log('\nNON SORT PRODUCT ARRAY:',products);
-    
     // Sort shops after revenue
     shops.sort((a, b) => a.revenue - b.revenue);
-    console.log('\nSHOPS ARRAY AGAIN:',shops);
 
     // Create a separate shop_id array
     const smallestShop = shops.map(shop => shop.id); 
-    console.log('\nSHOPS ARRAY AGAIN ID:',smallestShop);
 
     // Sort products by revenue based on shops sorted list
     const sortedProductsByShop = [...products].sort((a, b) => a.shop_id - b.shop_id);  // Simple sort by shop_id
-    console.log('\nFIRST SORT BY SHOP_ID:', sortedProductsByShop);
     
     // Add some of the most popular products bought (top: 3)
     const topProducts = products
         .sort((a, b) => b.bought - a.bought) // Sort products by 'bought' count
         .slice(0, 3); // Only top 3
-    console.log('top product',topProducts);
     
     // Merge the two sorted arraies
     const sortedProducts = [
         ...topProducts, 
         ...sortedProductsByShop.filter(product => !topProducts.includes(product))];
-    console.log('\nSECOND SORT POPULAR:',sortedProducts);
     
     return sortedProducts;
 }

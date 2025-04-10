@@ -1,8 +1,11 @@
+import { updateLastVisit } from './calculateDistance.js';
+
 const check_box = document.getElementById('shop_user');
 const city_select = document.getElementById('city');
 const store_select = document.getElementById('store');
 
 document.addEventListener('DOMContentLoaded', () => {
+    updateLastVisit(); // Update users last visit
     const form = document.getElementById('signup-form');
     const error_message = document.getElementById('error-message');
 
