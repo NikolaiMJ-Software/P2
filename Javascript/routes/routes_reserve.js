@@ -2,6 +2,7 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 import sgmail from '@sendgrid/mail';
 import path from 'path';
+import fs from 'fs';
 const app = express();
 app.use(express.json());
 
@@ -17,7 +18,7 @@ const db = new sqlite3.Database(db_path, (err) => {
     console.log('Connected to SQLite database (reserve router).');
     db.run("PRAGMA foreign_keys = ON;");
 });
-let key = await db_get("SELECT private.API_key FROM private WHERE private.id = ?", 2)
+let key = fs.readFileSync(path.join(process.cwd(), `api.txt`)).toString();
 sgmail.setApiKey(key);
 
 // Function to send emails
