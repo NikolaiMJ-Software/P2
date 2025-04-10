@@ -51,7 +51,7 @@ app.get('/user_logged_in', (req, res) => {
     if (!req.user) {
         return res.json({ logged_in: false });
     } else {
-        res.json({logged_in: true, email: req.user.email, name: req.user.name, shop_id: req.user.shop_id || null});
+        res.json({logged_in: true, email: req.user.email, name: req.user.name, shop_id: req.user.shop_id || null, admin_user: req.user.admin_user || null});
     }
 });
 
@@ -90,6 +90,7 @@ app.get('/searchpage', (req, res) => {
         }
         console.log(`\nCity requested: ${city}`); 
         console.log("User:", req.user?.email);
+        console.log("Admin:", req.user?.admin_user);
         res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
     })
 });
@@ -111,6 +112,7 @@ app.get('/productlist', (req, res) => {
     const shop = req.query.shop_id; // Get product id from query    
     console.log(`\nShop requested: ${shop}`); 
     console.log("User:", req.user?.email);
+    console.log("Admin:", req.user?.admin_user);
     res.sendFile(path.join(__dirname, '../HTML/shop_page.html'));
 });
 
