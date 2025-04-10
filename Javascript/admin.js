@@ -195,7 +195,7 @@ function shopTable(){
         //Go to dashboard functionality
         dashboardBtn.textContent = "dashboard"
         dashboardBtn.onclick = () => {
-            alert("Functionality not added yet")
+            window.location.href=`./shop_dashboard?shop=${shop.id}`
         }
 
 
