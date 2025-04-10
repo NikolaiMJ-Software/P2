@@ -10,6 +10,7 @@ import { dirname } from 'path';
 import user_router from './routes/routes_user.js';
 import reserve_router from './routes/routes_reserve.js';
 import shop_dashboard_router from './routes/routes_shop_dashboard.js';
+import admin_router from './routes/routes_admin.js';
 
 // Get the filename and directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
@@ -88,7 +89,7 @@ app.get('/searchpage', (req, res) => {
             res.status(404).json({ error: 'City not found' });
             return;
         }
-        console.log(`City requested: ${city}`); 
+        console.log(`\nCity requested: ${city}`); 
         console.log("User:", req.user?.email);
         res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
     })
@@ -96,8 +97,9 @@ app.get('/searchpage', (req, res) => {
 
 //path to productpage
 app.get('/productpage', (req, res) => {
-    const product = req.query.id; // Get product id from query
-    console.log(`Product requested: ${product}`); 
+    const product = req.query.id; // Get product id from query    
+    console.log(`\nProduct requested: ${product}`); 
+    console.log("User:", req.user?.email);
     res.sendFile(path.join(__dirname, '../HTML/product_page.html'));
 });
 
@@ -105,8 +107,15 @@ app.get('/cart', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/cart.html'))
 })
 
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/admin.html'));
+})
+
 // path to the shop page
 app.get('/productlist', (req, res) => {
+    const shop = req.query.shop_id; // Get product id from query    
+    console.log(`\nShop requested: ${shop}`); 
+    console.log("User:", req.user?.email);
     res.sendFile(path.join(__dirname, '../HTML/shop_page.html'));
 });
 
@@ -325,6 +334,8 @@ app.get('/rating', (req, res) => {
 app.use('/', reserve_router);
 
 app.use('/', shop_dashboard_router);
+
+app.use('/', admin_router);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

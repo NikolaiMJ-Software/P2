@@ -43,7 +43,7 @@ db.serialize(() => {
 
     db.run(`CREATE TABLE IF NOT EXISTS shops (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        shop_name TEXT NOT NULL,
+        shop_name TEXT UNIQUE NOT NULL,
         city_id INTEGER,
         img_path TEXT,
         email TEXT,
