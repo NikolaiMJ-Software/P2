@@ -4,7 +4,8 @@ import sgmail from '@sendgrid/mail';
 import path from 'path';
 const app = express();
 
-sgmail.setApiKey("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");
+let key = await db_get("SELECT private.API_key FROM private WHERE private.id = ?", 2)
+sgmail.setApiKey(key);
 app.use(express.json());
 
 //Makes files work together
