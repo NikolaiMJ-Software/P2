@@ -137,6 +137,14 @@ function fill_table() {
             Rydknap.textContent = "X";
             Rydknap.style.color = "black";
 
+            Rydknap.onclick = () => {
+                remove_from_cart(product);
+                const tableBody = document.querySelector("#cart tbody");
+                tableBody.innerHTML = ""; // Clear the table body
+                fill_table(); // Refill the table
+                document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr."; 
+             } 
+
 
             // Append to button
             remove_button.appendChild(minus);
