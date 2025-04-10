@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
                 const message = await response.text();
                 //if everything works, user is logged out, and page is refreshed
                 console.log("Du logger ud", message);
-                window.location.reload();
+                window.location.href = "./";
             } catch (err){
                 //if user cannot log out, an error happens and user is told its not possible to log out
                 console.error("Kunne ikke logge ud:", err);

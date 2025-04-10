@@ -154,11 +154,13 @@ function shopTable(){
         deleteBtn.textContent = "delete shop"
         deleteBtn.onclick = async () =>{
             if(confirm("Er du sikker på at du vil slette " + shop.shop_name + "?")){
-                const id = shop.id
+                const id = shop.id;
+                const name = shop.shop_name;
+                const cityid = shop.city_id;
                 const updateRes = await fetch("./delete_shop", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ id })
+                    body: JSON.stringify({ id, name, cityid })
                 });
                 if (updateRes.ok) {
                     alert("Shop er blevet fjernet.");
