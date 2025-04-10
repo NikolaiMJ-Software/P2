@@ -1,9 +1,7 @@
 import { getTravelTime, getCurrentPositionPromise } from './calculateDistance.js';
-import { changesInProducts } from './update_with_mail.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     getCurrentPositionPromise(); // Get users location
-    changesInProducts();
     try {
         const response = await fetch('./cities'); // Fetch cities from the server
         const cities = await response.json();

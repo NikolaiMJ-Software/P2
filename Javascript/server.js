@@ -333,11 +333,9 @@ app.use('/', reserve_router);
 
 app.use('/', shop_dashboard_router);
 
-<<<<<<< HEAD
 app.use('/', mail_update_router);
-=======
+
 app.use('/', admin_router);
->>>>>>> 27833a8ab150af06d73ea9dbf1247e773b3b62b6
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
