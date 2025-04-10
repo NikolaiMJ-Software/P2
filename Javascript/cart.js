@@ -95,6 +95,7 @@ function fill_table() {
             let image_element = document.createElement("td");
             let image = document.createElement("img");
             image.style.width = "100px";
+            image.style.padding = "10px";
 
             image.src = products[product-1].img1_path;
 
@@ -111,6 +112,7 @@ function fill_table() {
             let button_element = document.createElement("td");
             let remove_button = document.createElement("BUTTON");
             remove_button.setAttribute("class", button_reserve);
+            remove_button.style.color = "black";
 
             //creates and fills product price element
             let price_element = document.createElement("td");
@@ -151,8 +153,8 @@ function fill_table() {
             //adds all elements as a child to the row, and the row as a child to the table
             row.appendChild(image_element);
             row.appendChild(name_element);
-            row.appendChild(price_element);
             row.appendChild(button_element);
+            row.appendChild(price_element);
             tableBody.appendChild(row);
             
 
