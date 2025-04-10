@@ -92,7 +92,9 @@ export async function sortStandart(){
     const smallestShop = shops.map(shop => shop.id); 
 
     // Sort products by revenue based on shops sorted list
-    const sortedProductsByShop = [...products].sort((a, b) => a.shop_id - b.shop_id);  // Simple sort by shop_id
+    const sortedProductsByShop = [...products].sort((a, b) => {
+        return smallestShop.indexOf(a.shop_id) - smallestShop.indexOf(b.shop_id);
+    });
     
     // Add some of the most popular products bought (top: 3)
     const topProducts = products
