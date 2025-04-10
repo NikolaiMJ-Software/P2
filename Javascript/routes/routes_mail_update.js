@@ -1,9 +1,6 @@
 import express from 'express';
 import sqlite3 from 'sqlite3';
 import path from 'path';
-import multer from 'multer';
-import fs from 'fs';
-import fse from 'fs-extra';
 
 //Makes files work together
 const router = express.Router();
