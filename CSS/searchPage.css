@@ -55,7 +55,7 @@ button {
     gap: 20px;
     justify-content: left;
     align-items: center;
-    max-width: 946px;
+    max-width: 952px;
     margin: auto;
     translate: 0px 150px;
 }
@@ -136,15 +136,15 @@ button {
 }
 
 .productText{
-    color: red;
+    color: #D35050;
     position: absolute;
     translate: 0px -300px;
     font-size: 32px;
     text-shadow: 
-    -1px -1px 0 red,  
-     1px -1px 0 red,
-    -1px  1px 0 red,
-     1px  1px 0 red;
+    -1px -1px 0 #D35050,  
+     1px -1px 0 #D35050,
+    -1px  1px 0 #D35050,
+     1px  1px 0 #D35050;
 }
 
 .advert {
@@ -163,10 +163,10 @@ button {
     height: 450px;
     background: white;
     border-radius: 10px;
-    border-top: 7px solid red;
-    border-bottom: 7px solid red;
-    border-left: 2px solid red;
-    border-right: 2px solid red;    
+    border-top: 7px solid #D35050;
+    border-bottom: 7px solid #D35050;
+    border-left: 2px solid #D35050;
+    border-right: 2px solid #D35050;    
     text-align: center;
     color: black;
 }
