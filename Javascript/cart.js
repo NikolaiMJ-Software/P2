@@ -195,11 +195,17 @@ if(button != null) {
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');
         let amount = parseInt(document.getElementById("quantity-value").textContent)
-        for(let i=0; i<amount; i++) {
-            add_to_cart(productId);
-            console.log(i);
+        let cart = getCookie("products").split(",").map(Number);
+        let currently_in_cart = cart.filter(val => val === productId).length;
+        if(currently_in_cart + amount <= products[productId-1].stock) {
+            for(let i=0; i<amount; i++) {
+                add_to_cart(productId);
+                console.log(i);
+            }
+            alert("Din vare(er) er tilføjet til kurven");
+        } else {
+            alert("Du kan ikke tilføje flere varer til din kurv end der er antal på lager");
         }
-        alert("Din vare(er) er tilføjet til kurven");
     });
 }
 
