@@ -155,6 +155,92 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
     
+        // RIGHTSIDE AD
+        // find the products in the chosen city
+        /* this is done in the creation of products */
+
+        // Pick a random product (this puts advertProduct as the products ID)
+        /* A limit was set so that it can't choose the smallest nor biggest ID we have,
+           to not cause issues when getting a number (it would sometimes give "undefined"),
+           and this is the easiest solution that works to quickly move on */
+           let advertProduct = productList[Math.floor(Math.random() * productList.length)];
+
+           // Get the chosen product
+           let advertChosen = orderedProducts[advertProduct-1];
+           console.log(advertChosen.product_name);
+   
+           // create classes so it can be modified in css and add elements
+           const advertButton = document.createElement('button');
+           const advertImage = document.createElement('img');
+           const advertName = document.createElement('p');
+           const advertDesc = document.createElement('p');
+           const advertPrice = document.createElement('p');
+           const advertDiscount = document.createElement('p');
+           const advertStore = document.createElement('a');
+           const advertText = document.createElement('p');
+   
+           advertButton.classList.add('advertButton');
+           //image
+           advertImage.classList.add('productImage');
+           advertImage.src = `./${advertChosen.img1_path}`;
+           //name
+           advertName.classList.add('productName');
+           if (advertChosen.product_name.length > 41){
+               advertName.textContent = advertChosen.product_name.slice(0, 41);
+               advertName.textContent += "...";
+           }
+           else advertName.textContent = advertChosen.product_name;
+           //description
+           advertDesc.classList.add('productDesc');
+           if (advertChosen.description.length > 75){
+               advertDesc.textContent = advertChosen.description.slice(0, 75);
+               advertDesc.textContent += "...";
+           }
+           else advertDesc.textContent = advertChosen.description;
+           //price
+           advertPrice.classList.add('productPrice');
+           advertPrice.textContent = advertChosen.price + ",-";
+           //discount
+           advertDiscount.classList.add('productDiscount');
+           if(advertChosen.discount != 0 && advertChosen.discount != null)
+           {advertDiscount.textContent = "spar: " + advertChosen.discount + ",-"};
+   
+           // button function redirecting to product page
+           advertButton.onclick = () => {
+               if(email){
+                   window.location.href = `./productpage?email=${encodeURIComponent(email)}&id=${encodeURIComponent(product.id)}`;
+               } else {
+                   window.location.href = `./productpage?id=${encodeURIComponent(product.id)}`;
+               }
+           }
+   
+           //shop button 
+           advertStore.classList.add('productStore');
+           advertStore.href = `./productlist?city=${currentCity}&shop_id=${advertChosen.shop_id}`
+           let advertStoreImage = document.createElement("img");
+           const shopResponse = await fetch(`./shop?id=${advertChosen.shop_id}`);
+           const shopData = await shopResponse.json();
+           if(shopData.img_path){
+               advertStoreImage.src = `./${shopData.img_path}`
+           }
+           advertStoreImage.alt = `${shopData.shop_name}`
+           advertStoreImage.style = "max-width: 125px; max-height: 75px;"
+           advertStore.appendChild(advertStoreImage);
+   
+           //AD text
+           advertText.classList.add('productText');
+           advertText.textContent = "Nuværende Tilbud";
+   
+   
+           // place button in container and add all elements to the button
+           advertContainer.appendChild(advertButton);
+           advertButton.appendChild(advertImage);
+           advertButton.appendChild(advertName);
+           advertButton.appendChild(advertDesc);
+           advertButton.appendChild(advertPrice);
+           advertButton.appendChild(advertDiscount);
+           advertButton.appendChild(advertStore);
+           advertButton.appendChild(advertText);
     }
     catch(err){
         console.log(err);
