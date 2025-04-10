@@ -53,7 +53,7 @@ function db_get(query, params) {
 router.post('/reserve_wares', async (req, res) => {
     const { cart } = req.body;
     let cart_items = Object.values(cart);
-    let user_email = req.user.email;
+    let user_email = Object.values(req.user.email);
     let named_cart = [];
 
     for(let i = 0; i < cart_items.length; i++) {
@@ -71,9 +71,9 @@ router.post('/reserve_wares', async (req, res) => {
         }
     }
 
-    for(let i = 0; i < cart.length; i++) {
+    for(let i = 0; i <= cart_items.length; i++) {
         try{
-            const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart[i][0]]);
+            const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
             await send_mail(
                 shop_mail.email,
                 `En bruger har reserveret varer hos din butik`,
