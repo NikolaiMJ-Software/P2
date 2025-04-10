@@ -10,6 +10,7 @@ import { dirname } from 'path';
 import user_router from './routes/routes_user.js';
 import reserve_router from './routes/routes_reserve.js';
 import shop_dashboard_router from './routes/routes_shop_dashboard.js';
+import mail_update_router from './routes/routes_mail_update.js';
 
 // Get the filename and directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
@@ -322,6 +323,8 @@ app.get('/rating', (req, res) => {
 app.use('/', reserve_router);
 
 app.use('/', shop_dashboard_router);
+
+app.use('/', mail_update_router);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
