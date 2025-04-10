@@ -108,10 +108,6 @@ app.get('/cart', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/cart.html'))
 })
 
-app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, '../HTML/admin.html'));
-})
-
 // path to the shop page
 app.get('/productlist', (req, res) => {
     const shop = req.query.shop_id; // Get product id from query    
