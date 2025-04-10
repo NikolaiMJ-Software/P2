@@ -111,6 +111,7 @@ function fill_table() {
             let button_element = document.createElement("td");
             let remove_button = document.createElement("BUTTON");
             remove_button.setAttribute("class", button_reserve);
+            remove_button.style.color = "black";
 
             //creates and fills product price element
             let price_element = document.createElement("td");
