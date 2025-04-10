@@ -18,8 +18,7 @@ const db = new sqlite3.Database(db_path, (err) => {
     console.log('Connected to SQLite database (reserve router).');
     db.run("PRAGMA foreign_keys = ON;");
 });
-let key = fs.readFileSync(path.join(process.cwd(), `api.txt`)).toString();
-sgmail.setApiKey(key);
+sgmail.setApiKey("Insert key here server-side");
 
 // Function to send emails
 function send_mail(receiver, subject, text) {
@@ -59,11 +58,9 @@ router.post('/reserve_wares', async (req, res) => {
 
     for(let i = 0; i < cart_items.length; i++) {
         named_cart[i] = []
-        console.log("loop:" + i);
         for(let x = 0; x < cart_items[i].length; x++) {
             try {
                 const product = await db_get("SELECT products.product_name FROM products WHERE products.id = ?",[cart_items[i][x]]);
-                console.log("product object:", product);
                 named_cart[i].push(product.product_name);
             } catch (error) {
                 console.error("Database error:", error);
@@ -87,10 +84,11 @@ router.post('/reserve_wares', async (req, res) => {
             console.error("Failed to send seller email:", error);
         }
     }
+    const userCartItems = named_cart.flat().join(', ');
     await send_mail(
         user_email,
         `Du har reserveret varer på Click&hent`,
-        `Du har reserveret følgende varer på Click&hent: ${named_cart}`
+        `Du har reserveret følgende varer på Click&hent: ${userCartItems}`
     )
     return res.json({ success: cart_items });
 });
