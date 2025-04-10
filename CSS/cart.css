@@ -1,59 +1,156 @@
-
 body {
     background-color: var(--page-bg);
     color: var(--primary-text);
-    }
-
-table, td, th {
-    border: 1px solid;
-}
+    font-family: 'Arial', 'Lucida Sans', sans-serif;
+    margin: 0;
+    padding: 30px;
+  }
   
-table {
-    width: 40%;
-    border-collapse: collapse;
-
-}
-
-button {
-    position: relative;
-    color: var(--primary-text);
-}
-
-.button_reserve {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 150px;
-    padding: 10px;
-}
-
-.cart-container {
-    display: flex;
-    align-items: flex-start; /* Aligns items at the top */
-    gap: 20px; /* Space between table and summary box */
-
-}
-
-#Confirm_button {
-    color: rgb(255, 255, 255);
-    background-color: black;
-    border: 10px black;
-    border-radius: 100px;
-    padding: 10px 20px;
-    font-size: 15px;
+  /* Top Navigation Buttons */
+  .top-buttons {
+    background: none;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease; 
-    
-}
-
-#cart-summary {
-    width: 300px;
+    padding: 15px 20px;
+    font-size: 18px;
+    color: var(--primary-text);
+    border-left: 1px solid #ccc;
+    transition: background-color 0.2s ease;
+  }
+  .top-buttons:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Cart Container */
+  .cart-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 40px;
+  }
+  
+  /* Cart Table */
+  #cart {
+    flex: 1 1 600px;
+    border-collapse: collapse;
+    border: 2px solid #A8D5BA;
+    width: 100%;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+  
+  #cart thead th {
+    background-color: white;
+    color: #4A7E8F;
+    font-size: 18px;
+    padding: 12px;
+    border-bottom: 2px solid #A8D5BA;
+  }
+  
+  #cart thead th[colspan="5"] {
+    font-size: 24px;
+    font-weight: bold;
+    border-bottom: 3px solid #A8D5BA;
+    background-color: white;
+    color: #4A7E8F;
+  }
+  
+  #cart td {
     padding: 15px;
-    border: 2px solid black;
-    background-color: whitesmoke;
     text-align: center;
-    color: black;
-}
+    font-size: 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #eaeaea;
+  }
+  
+  #cart img {
+    width: 80px;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  
+  /* Quantity Buttons */
+  .button_reserve {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid #89C7B0;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  .button_reserve:hover {
+    background-color: #E0F2EF;
+  }
+  
+  /* Remove Button (X) */
+  #cart td button {
+    background-color: #E74C3C;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  #cart td button:hover {
+    background-color: #C0392B;
+  }
+  
+  /* Cart Summary */
+  #cart-summary {
+    flex: 1 1 300px;
+    max-width: 320px;
+    padding: 24px;
+    border-radius: 16px;
+    border: 2px solid #A8D5BA;
+    background-color: #fdfdfd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    text-align: center;
+    color: #333;
+  }
+  
+  #total_cost {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #4A7E8F;
+  }
+  
+  /* Confirm Button */
+  #Confirm_button {
+    padding: 12px 24px;
+    background-color: #6FAFB8;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #Confirm_button:hover {
+    background-color: #5E96A2;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .cart-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    #cart,
+    #cart-summary {
+      width: 100%;
+    }
+  }
 
 
 .theme-switcher {
@@ -94,18 +191,4 @@ button {
     --icon-moon: #DCE3FF;
     --form-bg: #2B2A35;
     --form-ph: grey;
-
-
-
 } 
-
-
-
-.top-buttons {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 15px;
-    font-size: 20px;
-    border-left: 1px solid #ccc; /* Vertical line */
-}

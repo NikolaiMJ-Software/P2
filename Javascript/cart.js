@@ -163,8 +163,12 @@ function fill_table() {
                 const buttonWidth = this.clientWidth;
                 if (clickX < buttonWidth / 3) {
                     adjust_table("-", product);
-                } else if (clickX > (2 * buttonWidth) / 3 && parseInt(quantity.textContent) < products[product-1].stock) {
-                    adjust_table("+", product);
+                } else if (clickX > (2 * buttonWidth) / 3) {
+                    if(parseInt(quantity.textContent) < products[product-1].stock) {
+                        adjust_table("+", product);
+                    } else {
+                        alert("Du kan ikke tilføje flerer varer til din kurv end butikken har på lager");
+                    }
                 }
             });
             //adds button to a element in the row

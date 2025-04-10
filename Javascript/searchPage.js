@@ -110,7 +110,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Sort smallest store as standart filter
         products = await sortStandart();
-
+        console.log('Standart sorted list:', products);
+        
         const searchInput = document.getElementById('inputProductSearch');
         const searchForm = document.getElementById('form');
 
