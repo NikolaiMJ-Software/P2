@@ -160,11 +160,12 @@ function fill_table() {
 
             //remove_button.setAttribute("id", product)
             remove_button.addEventListener("click", function (event) {
-                const clickX = event.offsetX;
+                const rect = this.getBoundingClientRect();
+                const clickX = event.clientX - rect.left;
                 const buttonWidth = this.clientWidth;
                 if (clickX < buttonWidth / 3) {
                     adjust_table("-", product);
-                } else if (clickX > (2 * buttonWidth) / 3) {
+                } else if (clickX > 2/3 * buttonWidth) {
                     if(parseInt(quantity.textContent) < products[product-1].stock) {
                         adjust_table("+", product);
                     } else {
