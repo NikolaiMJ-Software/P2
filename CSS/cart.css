@@ -137,6 +137,8 @@ body {
     cursor: pointer;
     font-size: 16px;
     transition: all 0.2s ease;
+    display: block;
+    margin: 0 auto;
   }
   
   .cart-remove-button:hover {
@@ -145,10 +147,8 @@ body {
   }
 
   #cart td:last-child {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+    text-align: center;
+    vertical-align: middle;
   }
   
   /* Responsive Adjustments */
@@ -204,9 +204,3 @@ body {
     --form-bg: #2B2A35;
     --form-ph: grey;
 } 
-
-.remove-cell-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
