@@ -138,17 +138,23 @@ function fill_table() {
             const Rydknap = document.createElement("button");
             Rydknap.className = "cart-remove-button";
             Rydknap.textContent = "X";
-
+            
             Rydknap.onclick = () => {
                 let amount = parseInt(document.getElementById(product).textContent);
                 for(let i = 0; i < amount; i++) {
                     remove_from_cart(product);
                 }
                 const tableBody = document.querySelector("#cart tbody");
-                tableBody.innerHTML = ""; // Clear the table body
-                fill_table(); // Refill the table
+                tableBody.innerHTML = ""; 
+                fill_table(); 
                 document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr."; 
-             } 
+            }
+            
+            const removeContainer = document.createElement("td");
+            removeContainer.className = "remove-cell-wrapper";
+            removeContainer.appendChild(Rydknap);
+            
+            row.appendChild(removeContainer);
 
 
             // Append to button
