@@ -1,6 +1,13 @@
-export async function changesInProducts(){
-    // Shop owner confirm a product has been pick up (via. mail)
-       // Shuld include: price and amount bought
+async function changesInProducts(){
+    /*
+    * After product has been reserved its oploadet to ad DB with a id, this id is includet in the following link
+    * Sends a mail with an button (includeig a link), can say "Kunden har hentet produkter"
+    * If user click on link, redirect to "./user/email/{code}/id/confirm"
+            * Can use: "UUID.randomUUID().toString()" for the code
+        * Then this function run "changesInProducts"
+        * Go into the DB and find the id's product and then run the rest of the function
+        * NOW the page show the user: "Det er blevent rigisteret, nu må du lukke vinduet"
+    */
     
     // changes form mail
     let id = 3; // The product;
