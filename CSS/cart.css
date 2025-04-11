@@ -92,19 +92,7 @@ body {
   }
   
   
-  /* Remove Button (X) */
-  #cart td button {
-    background-color: #E74C3C;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  #cart td button:hover {
-    background-color: #C0392B;
-  }
+
   
   /* Cart Summary */
   #cart-summary {
