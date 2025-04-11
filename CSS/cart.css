@@ -129,6 +129,9 @@ body {
   }
 
   .cart-remove-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: transparent;
     color: #E74C3C;
     border: 2px solid #E74C3C;
@@ -136,12 +139,8 @@ body {
     padding: 6px 10px;
     cursor: pointer;
     font-size: 16px;
+    height: 38px; /* this is the magic tweak */
     transition: all 0.2s ease;
-    display: block;
-    margin: 0 auto;
-  
-    /* ✨ optional tweak */
-    height: 38px;
   }
   
   .cart-remove-button:hover {
