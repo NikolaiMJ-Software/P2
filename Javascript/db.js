@@ -121,8 +121,7 @@ db.serialize(() => {
         ('Kolding', 'Images/Kolding/Kolding_Mini_By.jpg', 55.4904, 9.47216),
         ('Odense', 'Images/Odense/H.C._Andersen_Hus.jpg', 55.39594, 10.38831),
         ('Esbjerg', 'Images/Esbjerg/4hvidemænd.jpg', 55.47028, 8.45187),
-        ('København', 'Images/København/Lille_havfrue.jpg', 55.67594, 12.56553),
-        ('Test', 'Images/Test/test.png', 0, 0)`, (err) => {
+        ('København', 'Images/København/Lille_havfrue.jpg', 55.67594, 12.56553)`, (err) => {
             if (err) console.error('Error inserting data:', err.message);
             else console.log('Cities with image paths inserted.');
         });
