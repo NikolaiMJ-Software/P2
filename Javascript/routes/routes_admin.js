@@ -14,7 +14,7 @@ const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
 //Makes a new database with data from the current database (which can be interacted with)
 const db = new sqlite3.Database(db_path, (err) => {
     if (err) return console.error('Dashboard DB error:', err.message);
-    console.log('Connected to SQLite database (dashboard router).');
+    console.log('Connected to SQLite database (admin router).');
     db.run("PRAGMA foreign_keys = ON;");
 });
 

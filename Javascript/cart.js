@@ -119,8 +119,7 @@ function fill_table() {
             //creates and fills quantity toggle
             let button_element = document.createElement("td");
             let remove_button = document.createElement("BUTTON");
-            remove_button.setAttribute("class", button_reserve);
-            remove_button.style.color = "black";
+            remove_button.className = "button_reserve";
 
             //creates and fills product price element
             let price_element = document.createElement("td");
@@ -142,8 +141,8 @@ function fill_table() {
 
 
             const Rydknap = document.createElement("button");
+            Rydknap.className = "cart-remove-button";
             Rydknap.textContent = "X";
-            Rydknap.style.color = "black";
 
             Rydknap.onclick = () => {
                 let amount = parseInt(document.getElementById(product).textContent);

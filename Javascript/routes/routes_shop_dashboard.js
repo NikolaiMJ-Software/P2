@@ -40,6 +40,10 @@ const upload = multer({storage: storage});
 
 
 router.get('/shop_dashboard', (req, res) => {
+    if (req.user && req.user.admin_user && req.query.shop != undefined) {
+        req.user.shop_id = req.query.shop;
+    }
+
     if(!req.user || !req.user.shop_id){
         return res.status(403).json({ error: "Ikke logget ind som butik" });
     }
@@ -66,7 +70,7 @@ router.get('/shop_products', (req, res)=>{
 router.post('/update_stock', (req, res) => {
     const { id, stock } = req.body;
 
-    if (!req.user || !req.user.shop_id) {
+    if(!req.user || !req.user.shop_id) {
         return res.status(403).send("Ikke autoriseret");
     }
     if(stock>=0){
@@ -84,7 +88,7 @@ router.post('/update_stock', (req, res) => {
 router.post('/delete_ware', (req, res)=>{
     const { id } = req.body;
 
-    if (!req.user || !req.user.shop_id) {
+    if(!req.user || !req.user.shop_id) {
         return res.status(403).send("Ikke autoriseret");
     }
 
@@ -207,7 +211,7 @@ router.post("/update_product", upload.fields([
     async (req, res)=>{
 
     //if user is not logged in, he or she is unauthorized
-    if (!req.user || !req.user.shop_id) {
+    if(!req.user || !req.user.shop_id) {
         return res.status(403).send("Ikke autoriseret");
     }
 
