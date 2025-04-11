@@ -1,20 +1,23 @@
+//The purpose of this script is to managage, showcase, and reserve the product cart client-side
+//The actual reservation is done server-side in routes_reserve.js
+
+//Function used to keep track since user was last active
 import { updateLastVisit } from './calculateDistance.js';
 
-//Start of cart functionality
-
+//Global array for imported product data
 let products = [];
 
-let total_cost = 0;
-//Function that adds product to item cart which is stored in cookies
+//Function that adds a product to the cart
 function add_to_cart(product_id) {
+
+    //Verify input of product_id
     product_id = parseInt(product_id);
-    //Check if product_id is a number
     if(!Number.isInteger(product_id)) {
-        console.error("Invalid product id for adding to cart");
+        console.error("Ugyldig produkt id til tilføjelse til kurv");
     }
-    //Get the cookies
+
+    //Add product with id to the current cart (or make a new cart if none exist)
     let products = getCookie("products").split(",");
-    //Make a new cookie if this is the first item in the cart, otherwise add to existing cart
     if(!products || products[0] === "") {
         document.cookie = `products=${product_id}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     } else {
@@ -22,29 +25,30 @@ function add_to_cart(product_id) {
         products.sort();
         document.cookie = `products=${products.join(",")}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     }
-    console.log(products);
+    console.log("Tilføjede produkt med id " + product_id + " til din kurv");
 }
 
-//Function that removes an item from the cart
+//Function that removes a product from the cart
 function remove_from_cart(product_id) {
-    //Get the cookies and split them into an array of strings for the product id's
+
+    //Gets the current cart and finds index for specified product id
     let products = getCookie("products").split(",");
-    //Find the index that makes the function check_number return true
-    let index = products.findIndex(check_number)
-    //Returns true if number (string) is the same as product_id (integer)
-    function check_number(number) {
-        return number == product_id;
+    let index = products.findIndex(check_id);
+    function check_id(current_id) {
+        return current_id == product_id;
     }
-    //Runs if findIndex could not find a index
+
+    //If a index could be found, remove the index from the cart
     if(index === -1) {
-        console.error("The product could not be found in the cart");
+        console.error("Produktet med id " + product_id + " kunne ikke findes i din kurv");
     } else {
-        //remove the element with the correct index and replaces the cookie with the new product list
         products.splice(index, 1);
         document.cookie = `products=${products.join(",")};path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
+        console.log("Fjernede produkt med id " + product_id + " fra din kurv");
     }
 }
-//Function to get a specific cookie (relevant for other functions, taken from internet)
+
+//Function to get a specific cookie (relevant for other functions) **taken from internet**
 function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
@@ -61,28 +65,26 @@ function getCookie(cname) {
     return "";
 }
 
-//End of cart functionality
 
-//Start of cart.html functionality
-
-//Function for filling data table for cart
+//Function for filling the cart table (used in cart.html)
 function fill_table() {
-    updateLastVisit(); // Update users last visit
-    console.log("Filling table...");
-    total_cost = 0;
-    //Gets cart data from the cookie, and check if the there even is data
-    let data = getCookie("products")
+
+    //Setting up variables and checks if the cart is available
+    let total_cost = 0;
+    let past_product = null;
+    const table_body = document.querySelector("#cart tbody");
+    let data = getCookie("products").split(",").map(Number);
     if (!data) {
-        console.log("Could not load cart...");
+        console.log("Kunne ikke finde din kurv, har du tilføjet varer til den?");
         document.getElementById("total_cost").textContent = "Endelig pris: 0 kr.";
         return;
     }
-    data = data.split(",").map(Number);
-    //Gets the location of the element that new rows will go into
-    const tableBody = document.querySelector("#cart tbody");
-    //forEach function that fills each row with product data and button
-    let past_product = null;
+    console.log("Udfylder tabel med dine varer...");
+
+    //Goes through each product and adds them to the table
     data.forEach(product => {
+
+        //Increases quantity value instead of adding new row if product already has a row
         if(product === past_product) {
             let amount = parseInt(document.getElementById(product).textContent);
             amount++;
@@ -90,76 +92,42 @@ function fill_table() {
             total_cost += products[product-1].price;
             document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
         } else {
-            //create new row
+
+            //Creates a new row in the table
             let row = document.createElement("tr");
 
-            
-            //creates and fills product image element
+            //Creates and fills first column in the row (picture of product)
             let image_element = document.createElement("td");
             let image = document.createElement("img");
-            image.style.width = "100px";
-            image.style.padding = "10px";
-
+            image.setAttribute("id", "pictures");
             image.src = products[product-1].img1_path;
-
             image_element.appendChild(image);
+            row.appendChild(image_element);
 
-
-
-
-            //creates and fills product name element
+            //Creates and fills second column in the row (name of product)
             let name_element = document.createElement("td");
             name_element.textContent = products[product-1].product_name;
+            row.appendChild(name_element);
 
-            //creates and fills quantity toggle
+            //Creates and fills third column in the row (button to show & change quantity)
             let button_element = document.createElement("td");
-            let remove_button = document.createElement("BUTTON");
-            remove_button.className = "button_reserve";
+            let quantity_button = document.createElement("BUTTON");
+            quantity_button.className = "button_reserve";
 
-            //creates and fills product price element
-            let price_element = document.createElement("td");
-            price_element.textContent = products[product-1].price;
-            total_cost += products[product-1].price;
-
-            // "-" element
+            //Adds text "-n+"" within the quantity button to showcase quantity and indicate quantity changing function
             let minus = document.createElement("span");
             minus.textContent = "- ";
-
-            // Quantity value
             let quantity = document.createElement("span");
             quantity.textContent = "1";
             quantity.setAttribute("id", product);
-
-            // "+" element
             let plus = document.createElement("span");
             plus.textContent = " +";
+            quantity_button.appendChild(minus);
+            quantity_button.appendChild(quantity);
+            quantity_button.appendChild(plus);
 
-
-            const Rydknap = document.createElement("button");
-            const Rydknaptd = document.createElement("td");
-            Rydknap.className = "cart-remove-button";
-            Rydknap.textContent = "X";
-            
-
-            Rydknap.onclick = () => {
-                let amount = parseInt(document.getElementById(product).textContent);
-                for(let i = 0; i < amount; i++) {
-                    remove_from_cart(product);
-                }
-                const tableBody = document.querySelector("#cart tbody");
-                tableBody.replaceChildren(); // Clear the table body
-                fill_table(); // Refill the table
-                document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr."; 
-             } 
-
-
-            // Append to button
-            remove_button.appendChild(minus);
-            remove_button.appendChild(quantity);
-            remove_button.appendChild(plus);
-
-            //remove_button.setAttribute("id", product)
-            remove_button.addEventListener("click", function (event) {
+            //Adds event listener for clicking button that changes quantity depending on where you click
+            quantity_button.addEventListener("click", function (event) {
                 const rect = this.getBoundingClientRect();
                 const clickX = event.clientX - rect.left;
                 const buttonWidth = this.clientWidth;
@@ -173,55 +141,77 @@ function fill_table() {
                     }
                 }
             });
-            //adds button to a element in the row
-            button_element.appendChild(remove_button);
 
-            //adds all elements as a child to the row, and the row as a child to the table
-            row.appendChild(image_element);
-            row.appendChild(name_element);
+            //Attaches the quantity button to the column, and column to the row
+            button_element.appendChild(quantity_button);
             row.appendChild(button_element);
-            row.appendChild(price_element);
-            row.appendChild(Rydknaptd);
-            Rydknaptd.appendChild(Rydknap);
-            tableBody.appendChild(row);
-            
 
+            //Creates and fills the fourth column in the row (price of product)
+            let price_element = document.createElement("td");
+            price_element.textContent = products[product-1].price;
+            total_cost += products[product-1].price;
+            row.appendChild(price_element);
+
+            //Creates and fills the fifth column in the row (button to remove all instances of product from cart)
+            let remove_element = document.createElement("td");
+            let remove_button = document.createElement("button");
+            remove_button.className = "cart-remove-button";
+            remove_button.textContent = "X";
+            
+            //Add event listener that removes all instances of the product and refreshes table on click
+            remove_button.onclick = () => {
+                let amount = parseInt(document.getElementById(product).textContent);
+                for(let i = 0; i < amount; i++) {
+                    remove_from_cart(product);
+                }
+                const table_body = document.querySelector("#cart tbody");
+                table_body.replaceChildren();
+                fill_table();
+                document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr."; 
+            } 
+
+            //Attaches the remove button to the column, and column to the row
+            remove_element.appendChild(remove_button);
+            row.appendChild(remove_element);
+            
+            //Updates variables and attaches the row to the main table
             document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
             past_product = product;
+            table_body.appendChild(row);
         }
     });
 }
 
-//function to remove a product from cart, and refresh table
+//Function to edit cart and refresh cart table (used cart.html)
 function adjust_table(action, product_id) {
     if(action === "-") {
-        console.log("Removed product with id " + product_id);
         remove_from_cart(product_id);
     } else if(action === "+") {
-        console.log("Added product with id " + product_id);
         add_to_cart(product_id);
     } else {
-        console.log("Invalid action");
+        console.log("Ugyldig input til adjust_table");
     }
-    //resets table
-    const tableBody = document.querySelector("#cart tbody");
-    tableBody.replaceChildren();
+    const table_body = document.querySelector("#cart tbody");
+    table_body.replaceChildren();
     fill_table();
 }
 
-//Add to cart button (for product page)
+//Button that adds a product to your cart on click (used in product_page.html)
 const button = document.getElementById("cart_button");
 if(button != null) {
     button.addEventListener("click", async () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = parseInt(urlParams.get('id'));
+
+        //Gets the id from the url, and amount from quantity selector
+        const url_parameters = new URLSearchParams(window.location.search);
+        const product_id = parseInt(url_parameters.get('id'));
         let amount = parseInt(document.getElementById("quantity-value").textContent)
+
+        //Checks cart if the added products + products in cart exceed store stock, if not, add to cart
         let cart = getCookie("products").split(",").map(Number);
-        let currently_in_cart = cart.filter(val => val === productId).length;
-        if(currently_in_cart + amount <= products[productId-1].stock) {
-            for(let i=0; i<amount; i++) {
-                add_to_cart(productId);
-                console.log(i);
+        let currently_in_cart = cart.filter(val => val === product_id).length;
+        if(currently_in_cart + amount <= products[product_id-1].stock) {
+            for(let i = 0; i < amount; i++) {
+                add_to_cart(product_id);
             }
             alert("Din vare(er) er tilføjet til kurven");
         } else {
@@ -230,62 +220,62 @@ if(button != null) {
     });
 }
 
-//Reserve wares button (for cart page)
+//Button that sends reservation data to the server (used in cart.html)
 const button_reserve = document.getElementById("Confirm_button");
 if(button_reserve != null) {
-    button_reserve.addEventListener("click", reserve_wares);
-}
-async function reserve_wares() {
-    if(window.getComputedStyle(document.getElementById("login")).display != "none") {
-        alert("du skal være logget ind for at kunne reservere");
-    }else {
-        let cart = getCookie("products").split(",").map(Number);
-        if (cart.length === 0) {
-            alert("Kurven er tom!");
-            return;
-        }
-        let sorted_cart = {};
-        for (let i = 0; i < cart.length; i++) {
-            let product_id = cart[i];
-            let shop_id = products[product_id-1].shop_id;
-            if (!sorted_cart[shop_id]) {
-                sorted_cart[shop_id] = [];
+    button_reserve.addEventListener("click", async () => {
+
+        //Checks login button visibility to determine if user is logged in
+        if(window.getComputedStyle(document.getElementById("login")).display != "none") {
+            alert("du skal være logget ind for at kunne reservere");
+        }else {
+
+            //Gets the cart, and sorts the products into sub-arrays based on which store they belong to
+            let cart = getCookie("products").split(",").map(Number);
+            if (cart.length === 0) {
+                alert("Kurven er tom!");
+                return;
             }
-            sorted_cart[shop_id].push(product_id);
+            let sorted_cart = {};
+            for (let i = 0; i < cart.length; i++) {
+                let product_id = cart[i];
+                let shop_id = products[product_id-1].shop_id;
+                if (!sorted_cart[shop_id]) {
+                    sorted_cart[shop_id] = [];
+                }
+                sorted_cart[shop_id].push(product_id);
+            }
+    
+            //Sends the sorted cart server-side for it to send reservation email (see routes_reserve.js for server-side)
+            console.log("Sender sorteret kurv:", sorted_cart);
+            const response = await fetch('./reserve_wares', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ cart: sorted_cart })
+            });
+            console.log(response.json());
         }
-
-        console.log("Sending sorted cart:", sorted_cart);
-
-        const response = await fetch('./reserve_wares', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ cart: sorted_cart })
-        });
-        const final_response = await response;
-        console.log(final_response.json());
-    }
+    });
 }
 
-async function check_readiness() {
-    console.log("Fetching product data...");
-    const response = await fetch('./products'); // Fetch products from the server
-    products = await response.json();  // Ensure products is fetched before using it
+//Code to grab product data and fill cart table, if the user is on the cart.html page
+if(document.getElementById("cart") != null) async () => {
 
-    function startUp() {
-        console.log("Page loaded");
-        let data = getCookie("products");
-        console.log(data);
+    //Update last visit time, and fills global array with server-side product data (see server.js for server-side)
+    updateLastVisit();
+    console.log("Henter produkt data...");
+    const response = await fetch('./products');
+    products = await response.json();
+
+    //Adds event listener for ready state if not loaded, otherwise just start up
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", start_up);
+    } else {
+        start_up();
+    }
+    function start_up() {
+        console.log("nuværende kurv: " + getCookie("products"));
         fill_table();
     }
-
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", startUp);
-    } else {
-        startUp();  // If already loaded, run immediately
-    }
 }
-if(document.getElementById("cart") != null) {
-    check_readiness();
-}
-//End of cart.html functionality

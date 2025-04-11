@@ -210,3 +210,8 @@ body {
     --form-bg: #2B2A35;
     --form-ph: grey;
 } 
+
+#pictures {
+  width: 100px;
+  padding: 10px;
+}

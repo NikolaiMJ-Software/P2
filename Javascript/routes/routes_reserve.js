@@ -1,3 +1,7 @@
+//The purpose of this script is to handle sending reservation emails via the SendGrid API
+//This script mostly interacts with the client-side cart.js script
+
+//Importing API's and using their definitions
 import express from 'express';
 import sqlite3 from 'sqlite3';
 import sgmail from '@sendgrid/mail';
@@ -5,24 +9,22 @@ import path from 'path';
 import fs from 'fs';
 const app = express();
 app.use(express.json());
-
-//Makes files work together
 const router = express.Router();
 
-//Makes a path to the current database (which can't be directly interacted with)
-const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
+//Locates api.txt for SendGrid API key (THIS ONLY WORKS ON OFFICIAL SERVER SINCE API KEY IS PRIVATE)
+let key = fs.readFileSync(path.join(process.cwd(), `api.txt`)).toString();
+sgmail.setApiKey(key);
 
-//Makes a new database with data from the current database (which can be interacted with)
+//Makes a copy of the database, with directions to the data from db_path
+const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
 const db = new sqlite3.Database(db_path, (err) => {
     if (err) return console.error('Reserve DB error:', err.message);
     console.log('Connected to SQLite database (reserve router).');
     db.run("PRAGMA foreign_keys = ON;");
 });
-let key = fs.readFileSync(path.join(process.cwd(), `api.txt`)).toString();
-sgmail.setApiKey(key);
 
-// Function to send emails
-function send_mail(receiver, subject, text) {
+//Function to send an email
+async function send_mail(receiver, subject, text) {
     //struct for email data
     const mail_data = {
         to: receiver,
@@ -31,7 +33,7 @@ function send_mail(receiver, subject, text) {
         text: text,
     };
 
-    //Sends email and verifies if it goes through
+    //Sends email and verifies whether it goes through
     return sgmail.send(mail_data)
     .then(() => {
         console.log('Email sent successfully');
@@ -42,6 +44,7 @@ function send_mail(receiver, subject, text) {
     });
 }
 
+//Async version of db.get
 function db_get(query, params) {
     return new Promise((resolve, reject) => {
         db.get(query, params, (err, row) => {
@@ -51,12 +54,16 @@ function db_get(query, params) {
     });
 }
 
+//Reciever function for sending reservation emails for an entire cart (receives signal from cart.js)
 router.post('/reserve_wares', async (req, res) => {
+
+    //Gathers and converts data to be useful
     const { cart } = req.body;
     let cart_items = Object.values(cart);
     let user_email = req.user.email;
     let named_cart = [];
 
+    //Creates a new cart array, where names are shown instead of id's
     for(let i = 0; i < cart_items.length; i++) {
         named_cart[i] = []
         for(let x = 0; x < cart_items[i].length; x++) {
@@ -70,7 +77,7 @@ router.post('/reserve_wares', async (req, res) => {
         }
     }
     
-
+    //Sends an email to each store (each sub-array is only products from that store)
     for(let i = 0; i < cart_items.length; i++) {
         try{
             const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
@@ -85,14 +92,15 @@ router.post('/reserve_wares', async (req, res) => {
             console.error("Failed to send seller email:", error);
         }
     }
-    const userCartItems = named_cart.flat().join(', ');
+
+    //Sends email to user that is reserving the wares
     await send_mail(
         user_email,
         `Du har reserveret varer på Click&hent`,
-        `Du har reserveret følgende varer på Click&hent: ${userCartItems}`
+        `Du har reserveret følgende varer på Click&hent: ${named_cart.flat().join(', ')}`
     )
     return res.json({ success: cart_items });
 });
 
-//This is important, for god who knows what (do not remove)
+//Exports router. functions to be available in server.js
 export default router;
