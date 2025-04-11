@@ -147,7 +147,7 @@ function fill_table() {
                     remove_from_cart(product);
                 }
                 const tableBody = document.querySelector("#cart tbody");
-                tableBody.innerHTML = ""; // Clear the table body
+                tableBody.replaceChildren(); // Clear the table body
                 fill_table(); // Refill the table
                 document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr."; 
              } 
