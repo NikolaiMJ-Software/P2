@@ -203,7 +203,7 @@ function adjust_table(action, product_id) {
     }
     //resets table
     const tableBody = document.querySelector("#cart tbody");
-    tableBody.innerHTML = "";
+    tableBody.remove();
     fill_table();
 }
 
