@@ -36,12 +36,36 @@ document.addEventListener("DOMContentLoaded", async () =>{
             logo_panel.style.display = "block";
         }
     });
+
     //close button for edit panel
     logo_close_button.addEventListener("click", async (e) => {
         //make edit panel invisible
         logo_panel.style.display = "none";
         //removes any data left in the panel
         logo_form.reset();
+    });
+
+
+    //add event listener for the update form, loooking after submit button
+    logo_form.addEventListener("submit", async (e)=>{
+        e.preventDefault();
+        //takes all data from the form
+        const form_data = new FormData(logo_form);
+
+        //sent all the form data to the update_product route and await updates
+        const updateRes = await fetch("./update_logo",{
+            method: "POST",
+            body: form_data,
+        });
+        
+            //if product is update sent approval alert and reload page, if not alert update error
+            if (updateRes.ok) {
+                alert("Logo er blevet opdateret.");
+                location.reload();
+            } else {
+                alert("Kunne ikke opdatere logo.");
+            }
+
     });
 
     //get all products

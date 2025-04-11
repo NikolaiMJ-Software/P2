@@ -114,8 +114,7 @@ function fill_table() {
             //creates and fills quantity toggle
             let button_element = document.createElement("td");
             let remove_button = document.createElement("BUTTON");
-            remove_button.setAttribute("class", button_reserve);
-            remove_button.style.color = "black";
+            remove_button.className = "button_reserve";
 
             //creates and fills product price element
             let price_element = document.createElement("td");
@@ -137,8 +136,8 @@ function fill_table() {
 
 
             const Rydknap = document.createElement("button");
+            Rydknap.className = "cart-remove-button";
             Rydknap.textContent = "X";
-            Rydknap.style.color = "black";
 
             Rydknap.onclick = () => {
                 let amount = parseInt(document.getElementById(product).textContent);
@@ -163,8 +162,12 @@ function fill_table() {
                 const buttonWidth = this.clientWidth;
                 if (clickX < buttonWidth / 3) {
                     adjust_table("-", product);
-                } else if (clickX > (2 * buttonWidth) / 3 && parseInt(quantity.textContent) < products[product-1].stock) {
-                    adjust_table("+", product);
+                } else if (clickX > (2 * buttonWidth) / 3) {
+                    if(parseInt(quantity.textContent) < products[product-1].stock) {
+                        adjust_table("+", product);
+                    } else {
+                        alert("Du kan ikke tilføje flerer varer til din kurv end butikken har på lager");
+                    }
                 }
             });
             //adds button to a element in the row

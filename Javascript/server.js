@@ -52,6 +52,7 @@ app.get('/user_logged_in', (req, res) => {
     if (!req.user) {
         return res.json({ logged_in: false });
     } else {
+        if (req.user.admin_user) req.user.shop_id = null;
         res.json({logged_in: true, email: req.user.email, name: req.user.name, shop_id: req.user.shop_id || null, admin_user: req.user.admin_user || null});
     }
 });
