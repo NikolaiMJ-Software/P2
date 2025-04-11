@@ -139,6 +139,9 @@ body {
     transition: all 0.2s ease;
     display: block;
     margin: 0 auto;
+  
+    /* ✨ optional tweak */
+    height: 38px;
   }
   
   .cart-remove-button:hover {
