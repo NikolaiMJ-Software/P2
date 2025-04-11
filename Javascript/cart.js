@@ -1,49 +1,54 @@
+//The purpose of this file is to manage, display, and reserve wares in the cart client-side
+//See routes_reserve for server-side reservation script
+
+//Function to update last visit time
 import { updateLastVisit } from './calculateDistance.js';
 
-//Start of cart functionality
-
+//Global array for product data from database
 let products = [];
 
-let total_cost = 0;
-//Function that adds product to item cart which is stored in cookies
+//Function that adds product cart
 function add_to_cart(product_id) {
+
+    //Check if valid input
     product_id = parseInt(product_id);
-    //Check if product_id is a number
     if(!Number.isInteger(product_id)) {
-        console.error("Invalid product id for adding to cart");
+        console.error("ugyldigt produkt id for tilføjelse til kurv");
     }
-    //Get the cookies
-    let products = getCookie("products").split(",");
-    //Make a new cookie if this is the first item in the cart, otherwise add to existing cart
-    if(!products || products[0] === "") {
+
+    //Adds the product to the cart (cookie)
+    let cart = getCookie("products").split(",");
+    if(!cart || cart[0] === "") {
         document.cookie = `products=${product_id}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     } else {
-        products.push(product_id);
-        products.sort();
-        document.cookie = `products=${products.join(",")}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
+        cart.push(product_id);
+        cart.sort();
+        document.cookie = `products=${cart.join(",")}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     }
-    console.log(products);
+
+    console.log("Tilføjede produkt med id " + product_id + "til din kurv");
 }
 
-//Function that removes an item from the cart
+//Function that removes an item from cart
 function remove_from_cart(product_id) {
-    //Get the cookies and split them into an array of strings for the product id's
+
+    //Checks the current cart for the index of product with product_id
     let products = getCookie("products").split(",");
-    //Find the index that makes the function check_number return true
     let index = products.findIndex(check_number)
-    //Returns true if number (string) is the same as product_id (integer)
     function check_number(number) {
         return number == product_id;
     }
-    //Runs if findIndex could not find a index
+
+    //Removes the index by splicing the array, then replaces the old cart with the new one
     if(index === -1) {
-        console.error("The product could not be found in the cart");
+        console.error("Indekset for produktet kunne ikke findes, så det kunne ikke fjernes fra din kurv");
     } else {
-        //remove the element with the correct index and replaces the cookie with the new product list
         products.splice(index, 1);
         document.cookie = `products=${products.join(",")};path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
+        console.log("Fjernede produkt med id " + product_id + "fra din kurv");
     }
 }
+
 //Function to get a specific cookie (relevant for other functions, taken from internet)
 function getCookie(cname) {
     let name = cname + "=";
@@ -69,7 +74,7 @@ function getCookie(cname) {
 function fill_table() {
     updateLastVisit(); // Update users last visit
     console.log("Filling table...");
-    total_cost = 0;
+    let total_cost = 0;
     //Gets cart data from the cookie, and check if the there even is data
     let data = getCookie("products")
     if (!data) {
