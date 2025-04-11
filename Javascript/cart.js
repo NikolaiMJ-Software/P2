@@ -142,7 +142,7 @@ function fill_table() {
 
             Rydknap.onclick = () => {
                 let amount = parseInt(document.getElementById(product).textContent);
-                for(let i =  n       0; i < amount; i++) {
+                for(let i = 0; i < amount; i++) {
                     remove_from_cart(product);
                 }
                 const tableBody = document.querySelector("#cart tbody");
