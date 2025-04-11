@@ -147,10 +147,12 @@ body {
   }
 
   #cart td:last-child {
-    text-align: center;
-    vertical-align: middle;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    vertical-align: middle; 
   }
-  
   /* Responsive Adjustments */
   @media (max-width: 768px) {
     .cart-container {
