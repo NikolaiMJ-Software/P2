@@ -136,6 +136,7 @@ function fill_table() {
 
 
             const Rydknap = document.createElement("button");
+            const Rydknaptd = document.createElement("td");
             Rydknap.className = "cart-remove-button";
             Rydknap.textContent = "X";
 
@@ -178,7 +179,8 @@ function fill_table() {
             row.appendChild(name_element);
             row.appendChild(button_element);
             row.appendChild(price_element);
-            row.appendChild(Rydknap);
+            row.appendChild(Rydknaptd);
+            Rydknaptd.appendChild(Rydknap);
             tableBody.appendChild(row);
             
 
