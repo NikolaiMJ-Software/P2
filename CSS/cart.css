@@ -142,7 +142,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 50%;
+    height: 100%;
   }
   
   .cart-remove-button:hover {
@@ -151,11 +151,10 @@ body {
   }
 
   #cart td:last-child {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    vertical-align: middle; 
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0; /* Remove extra space */
   }
   /* Responsive Adjustments */
   @media (max-width: 768px) {

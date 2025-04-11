@@ -139,6 +139,7 @@ function fill_table() {
             const Rydknaptd = document.createElement("td");
             Rydknap.className = "cart-remove-button";
             Rydknap.textContent = "X";
+            
 
             Rydknap.onclick = () => {
                 let amount = parseInt(document.getElementById(product).textContent);
