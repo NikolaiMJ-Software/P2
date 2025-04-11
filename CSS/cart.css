@@ -143,6 +143,13 @@ body {
     background-color: #E74C3C;
     color: white;
   }
+
+  #cart td:last-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
   
   /* Responsive Adjustments */
   @media (max-width: 768px) {
