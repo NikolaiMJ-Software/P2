@@ -174,13 +174,30 @@ button {
   #star-rating .star.selected {
     color: goldenrod;
   }
+
+  .textarea-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; 
+    gap: 4px;
+  }
+
   #user-name, #user-comment {
+    height: 150px;
     width: 100%;
     margin: 10px 0;
     padding: 8px;
     box-sizing: border-box;
+    resize: none;
   }
-  
+
+  #comment-char-count {
+    font-size: 0.75rem;
+    margin-top: -6px;
+    margin-bottom: 10px;
+  }
+
   dialog {
       border: none;
       border-radius: 8px;
