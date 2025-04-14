@@ -170,7 +170,7 @@ button {
     max-width: 946px;
     box-sizing: border-box;
     translate: 640px 0px;
-    height: 100vh;
+    height: auto;
   }
 
 .advertButton{
