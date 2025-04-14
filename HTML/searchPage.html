@@ -13,7 +13,7 @@
   
   
   <div style="text-align: right;">
-    <button class="top-buttons" id="cart" style="font-family: Arial;" onclick="window.location.href='./cart'">Din kurv</button>
+    <button class="top-buttons" id="cart_top_button" style="font-family: Arial;" onclick="window.location.href='./cart'">Din kurv (0)</button>
     <button class="top-buttons" id="signup" style="font-family: Arial;" onclick="window.location.href='./signup'">Signup</button>
     <button class="top-buttons" id="login" style="font-family: Arial;" onclick="window.location.href='./login'">Login</button>
     <button class="top-buttons" id="logout" style="display: none;">Logout</button>
@@ -70,6 +70,7 @@
     <script type="module" src="./Javascript/searchPage.js"></script>
     <script type="module" src="./Javascript/filter.js"></script>
     <script type="module" src="./Javascript/logout.js"></script>
+    <script type="module" src="./Javascript/cart.js"></script>
     <script src="./Javascript/theme.js"></script>
 
     <script>
@@ -94,7 +95,7 @@
        if (event.key.toLowerCase() === "½") { 
         document.body.style.transition = "transform .5s ease-in-out";
         document.body.style.transform = "rotate(360deg)";
-        document.body.style.backgroundImage = "url('https://m.media-amazon.com/images/I/518WEjkEM-L.png')";
+        document.body.style.backgroundImage = "url('https://gcdn.thunderstore.io/live/repository/icons/dogstuck-chickenjockeyforduck-1.0.0.png.256x256_q95.png')";
         document.body.style.backgroundRepeat = "repeat";
         setTimeout(() => {
             document.body.style.transition = "none";

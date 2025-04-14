@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         users.style = `` //show this page
 
         //Add search bar to page
-        let currentSearch = document.getElementById("userSearch");
+        let userSearch = document.getElementById("userSearch");
         userSearch.innerHTML = ``
         userSearch.appendChild (createSearch())
         
@@ -21,14 +21,37 @@ document.addEventListener("DOMContentLoaded", async () => {
         shops.style = "" //show this page
 
         //Add search bar to page
-        let currentSearch = document.getElementById("shopSearch");
+        let shopSearch = document.getElementById("shopFunctions");
         shopSearch.innerHTML = ``
-        shopSearch.appendChild (createSearch())
+        shopSearch.appendChild(createSearch())
+
+        //Add shop creation to page
+        let createShop = document.createElement('button')
+        createShop.onclick = () => {window.location.href=`./new_store`}
+        createShop.textContent = "Create a new shop";
+        createShop.style = "margin-left: 10px"
+        shopSearch.appendChild(createShop);
 
         //load shop data
         shopTable()
     }
+
+    document.getElementById("crash-button").onclick = () =>{
+        if(confirm("Vil du gerne crashe serveren?")){
+            if(confirm("Er du helt sikker på du vil crashe serveren?")){
+                if(confirm("Er du 100% sikker?")){
+                    alert("Server will crash in 10 seconds")
+                    setTimeout(crashServer, 10000)
+                }
+            }
+        }
+    }
 })
+
+async function crashServer(){
+    alert("Server will now crash")
+    await fetch("./crash_server")     
+}
 
 //Function to create the search bar and functionality
 function createSearch(){
