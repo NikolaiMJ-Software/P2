@@ -1,4 +1,4 @@
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   console.log("comments.js loaded");
 
   const params = new URLSearchParams(window.location.search);
@@ -21,33 +21,42 @@
   let hasCommented = false;
   let selectedRating = 0;
   let allComments = [];
+
+  //charcount
+  const charCountDisplay = document.getElementById('comment-char-count');
+  const maxChars = 400;
+
   // Open popup
   openBtn?.addEventListener('click', () => {
     if (!isLoggedIn) {
       alert("Du skal være logget ind for at kunne anmelde eller kommentere");
       return;
     }
-if (hasCommented) {
-  if (confirm("Du har allerede skrevet en kommentar til dette produkt. Vil du opdatere den?")) {
-    // Pre-fill comment box and stars
-    const previousComment = allComments.find(c => c.name === userName);
-    if (previousComment) {
-      commentInput.value = previousComment.comment;
-      selectedRating = previousComment.rating;
+    if (hasCommented) {
+      if (confirm("Du har allerede skrevet en kommentar til dette produkt. Vil du opdatere den?")) {
+        // Pre-fill comment box and stars
+        const previousComment = allComments.find(c => c.name === userName);
+        if (previousComment) {
+          commentInput.value = previousComment.comment;
 
-      stars.forEach(s => {
-        const val = parseInt(s.dataset.value);
-        s.classList.toggle('selected', val <= selectedRating);
-      });
+          // Update char count display
+          charCountDisplay.textContent = `${previousComment.comment.length} / ${maxChars} tegn`;
+          charCountDisplay.style.color = previousComment.comment.length > maxChars ? 'red' : '';
+          selectedRating = previousComment.rating;
+
+          stars.forEach(s => {
+            const val = parseInt(s.dataset.value);
+            s.classList.toggle('selected', val <= selectedRating);
+          });
+        }
+
+        modal.style.display = 'flex';
+      }
+      return;
     }
-
-    modal.style.display = 'flex';
-  }
-  return;
-}
-
     modal.style.display = 'flex';
   });
+
   avgStars?.addEventListener('click', () => {
     if (!isLoggedIn) {
       alert("Du skal være logget ind for at kunne anmelde eller kommentere");
@@ -59,25 +68,35 @@ if (hasCommented) {
         const previousComment = allComments.find(c => c.name === userName);
         if (previousComment) {
           commentInput.value = previousComment.comment;
+
+          // Update char count display
+          charCountDisplay.textContent = `${previousComment.comment.length} / ${maxChars} tegn`;
+          charCountDisplay.style.color = previousComment.comment.length > maxChars ? 'red' : '';
           selectedRating = previousComment.rating;
-    
+
           stars.forEach(s => {
             const val = parseInt(s.dataset.value);
             s.classList.toggle('selected', val <= selectedRating);
           });
         }
-    
+
         modal.style.display = 'flex';
       }
       return;
     }
-    
     modal.style.display = 'flex';
   });
 
   // Close popup
   closeBtn?.addEventListener('click', () => {
     modal.style.display = 'none';
+  });
+
+  //charcount
+  commentInput.addEventListener('input', () => {
+    const currentLength = commentInput.value.length;
+    charCountDisplay.textContent = `${currentLength} / ${maxChars} tegn`;
+    charCountDisplay.style.color = currentLength > maxChars ? 'red' : '';
   });
 
   // Load comments from server
@@ -90,35 +109,47 @@ if (hasCommented) {
     } else {
       return; // no ID, no fetch
     }
-  
+
     fetch(id)
       .then(res => res.json())
       .then(comments => {
         allComments = comments;
         // Clear both containers
-        commentList.innerHTML = '';
+        commentList.replaceChildren();
         const bottomList = document.getElementById('comments-list-bottom');
-        if (bottomList) bottomList.innerHTML = '';
-  
+        if (bottomList) bottomList.replaceChildren();
+
         comments.forEach(c => {
           const li = document.createElement('li');
           li.style.marginBottom = '12px'; // spacing
-        
+
+          const nameAndStars = document.createElement('div');
+          const name = document.createElement('strong');
+          name.textContent = c.name;
+
+          const starsSpan = document.createElement('span');
+          starsSpan.className = 'average-stars';
           let starsHTML = '';
           let rating = Math.min(c.rating || 0, 5); // cap at 5
           const full = Math.floor(rating);
           const half = (rating % 1 >= 0.5);
           for (let i = 0; i < full; i++) starsHTML += '★';
           for (let i = full + (half ? 1 : 0); i < 5; i++) starsHTML += '☆';
+          starsSpan.textContent = starsHTML;
 
-          li.innerHTML = `
-            <div>
-              <strong>${c.name}</strong> 
-              <span class="average-stars">${starsHTML}</span>
-            </div>            <div>${c.comment}</div>
-            <small>${new Date(c.timestamp).toLocaleString()}</small>
-          `;
-        
+          nameAndStars.appendChild(name);
+          nameAndStars.appendChild(starsSpan);
+
+          const commentText = document.createElement('div');
+          commentText.textContent = c.comment;
+
+          const time = document.createElement('small');
+          time.textContent = new Date(c.timestamp).toLocaleString();
+
+          li.appendChild(nameAndStars);
+          li.appendChild(commentText);
+          li.appendChild(time);
+
           commentList.appendChild(li);
           if (bottomList) bottomList.appendChild(li.cloneNode(true));
         });
@@ -129,7 +160,6 @@ if (hasCommented) {
       });
   }
 
-
   // "sanitize" user input
   function sanitizeInput(input) {
     // Create a temporary DOM element
@@ -138,11 +168,19 @@ if (hasCommented) {
 
     //allow only specific characters
     return sanitizedInput.replace(/[^a-zA-Z0-9\s.,!?-]/g, ''); // Removes anything other than letters, numbers, and a few punctuation marks
-}
+  }
+
   // Handle submission
   submitBtn.addEventListener('click', () => {
     if (!isLoggedIn) {
       alert("Du skal være logget ind for at kunne anmelde eller kommentere");
+      return;
+    }
+
+    //stop the comment from submitting if its too large
+    const rawComment = commentInput.value.trim();
+    if (rawComment.length > maxChars) {
+      charCountDisplay.style.color = 'red';
       return;
     }
 
@@ -154,13 +192,12 @@ if (hasCommented) {
       return;
     }
 
-
     const payload = {
       name,
       comment,
       rating: selectedRating
     };
-  
+
     if (product_id) {
       payload.product_id = product_id;
     } else if (shop_id) {
@@ -169,7 +206,6 @@ if (hasCommented) {
       alert("Der mangler et produkt- eller butik-ID");
       return;
     }
-  
 
     fetch('./comment', {
       method: 'PUT',
@@ -179,6 +215,8 @@ if (hasCommented) {
       .then(res => res.json())
       .then(() => {
         commentInput.value = '';
+        charCountDisplay.textContent = `0 / ${maxChars} tegn`;
+        charCountDisplay.style.color = '';
         modal.style.display = 'none'; //close after submit
         loadComments();
         fetchAverageRating(); // update average after new rating
@@ -241,31 +279,33 @@ if (hasCommented) {
   // Render star icons based on average
   function displayAverageRating(average, count) {
     const container = document.getElementById('average-rating-display');
-    container.innerHTML = '';
+    container.replaceChildren();
 
     if (!average) {
-//      container.innerHTML = 'Der er endnu ingen bedømmelser';
-      container.innerHTML = '☆☆☆☆☆';
+      container.textContent = '☆☆☆☆☆';
       return;
     }
-  // Calculate the number of full stars (meaning whole number part of the average)
-    const fullStars = Math.floor(average);
-  // If the decimal part of the average is 0.5 or more, show one half star
-    const hasHalf = average % 1 >= 0.5;
 
+    // Calculate the number of full stars (meaning whole number part of the average)
+    const fullStars = Math.floor(average);
+
+    // If the decimal part of the average is 0.5 or more, show one half star
+    const hasHalf = average % 1 >= 0.5;
+    
     // Add full star icons (★) equal to the number of whole stars
     for (let i = 0; i < fullStars; i++) {
-      container.innerHTML += '★';
+      container.append('★');
     }
+    
     // add a halfstar (⯪) if average is above 0.5
-    if (hasHalf) container.innerHTML += '⯪';
-
+    if (hasHalf) container.append('⯪');
+    
     // Add empty stars (☆) for the remaining stars to complete 5 total
     for (let i = fullStars + (hasHalf ? 1 : 0); i < 5; i++) {
-      container.innerHTML += '☆';
+      container.append('☆');
     }
     //show the average
-    container.innerHTML += ` (${average})`;
+    container.append(` (${average})`);
   }
 
   fetchAverageRating();
