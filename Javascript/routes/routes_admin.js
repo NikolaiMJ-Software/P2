@@ -19,14 +19,14 @@ const db = new sqlite3.Database(db_path, (err) => {
 });
 
 router.get('/admin', (req, res) => {
-    if(!req.user || !req.user.admin_user){
+    /*if(!req.user || !req.user.admin_user){
         return res.status(403).json({ error: "Ikke logget ind som admin" });
-    }
+    }*/
     res.sendFile(path.join(process.cwd(), '.', 'HTML', 'admin.html'));
 })
 
 router.get('/get_users', (req, res) => {
-    db.all(`SELECT id, email, name, shop_id FROM users ORDER BY id ASC`, (err, rows) => {
+    db.all(`SELECT id, email, name, shop_id FROM users WHERE admin_user != 1 ORDER BY id ASC`, (err, rows) => {
         if(err){
             res.status(500).json({ error: err.message });
             return;
@@ -90,6 +90,19 @@ router.post('/edit_email', (req, res) => {
             return res.status(500).send("Databasefejl");
         }
         res.send("Email opdateret")
+    })
+})
+
+router.post(`/update_userStores`, (req, res) => {
+    const {userId, shopId} = req.body;
+    if (!userId){
+        return res.status(500).send("Databasefejl");
+    }
+    db.run(`UPDATE users SET shop_id = ? WHERE id = ?`, [shopId, userId], (err) =>{
+        if (err){
+            return res.status(500).send("Databasefejl");
+        }
+        res.send("Shops opdateret")
     })
 })
 

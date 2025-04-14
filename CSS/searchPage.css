@@ -4,6 +4,21 @@ body {
     min-height: 2000px;
 }
 
+@media (max-width: 1800px) {
+    .advert {
+      transform: scale(0.8);
+      translate: -40px -44px;
+    }
+    .advertButton {
+      transform: scale(0.8);
+      translate: -50px -44px;
+    }
+    .productText {
+      transform: scale(0.8);
+      translate: -50px -44px;
+    }
+}
+
 .productHeader{
     display: flex;
     flex-direction: column;
@@ -54,8 +69,8 @@ button {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: left;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
     max-width: 952px;
     margin: auto;
     translate: 0px 150px;
@@ -73,7 +88,6 @@ button {
     border-right: 2px solid #A8D5BA ;
     text-align: center;
     color: black;
-    
 }
 
 .productImage{

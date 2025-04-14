@@ -16,6 +16,10 @@ td {
     padding-right: 5px;
 }
 
+.hidden{
+    visibility: collapse;
+}
+
 #user-table-body{
     text-align: left;
 }
@@ -27,4 +31,8 @@ td {
 #editBtn{
     float: right;
     
+}
+
+#shopSearch, #userSearch{
+    padding-top: 10px;
 }
