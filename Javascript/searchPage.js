@@ -30,6 +30,7 @@ async function updateImage(products) {
         const productDiscount = document.createElement('p');
         const productStore = document.createElement('a');
         const productText = document.createElement('p');
+        const productRating = document.createElement('div');
         productButton.dataset.product = product.product_name.toLowerCase();
 
         //initialize all attributes.
@@ -74,7 +75,26 @@ async function updateImage(products) {
         productStoreImage.alt = `${shopData.shop_name}`
         productStoreImage.style = "max-width: 125px; max-height: 75px;"
         productStore.appendChild(productStoreImage);
+        //rating
+        try {
+            const ratingResponse = await fetch(`./comments?product_id=${product.id}`);
+            const ratings = await ratingResponse.json();
+            productRating.classList.add('rating');
 
+            if (ratings.length > 0) {
+                const total = ratings.reduce((sum, r) => sum + r.rating, 0);
+                const average = total / ratings.length;
+
+                // Display star icons based on average
+                const stars = '★'.repeat(Math.round(average)) + '☆'.repeat(5 - Math.round(average));
+                productRating.textContent = stars;
+            } else {
+                productRating.textContent = '☆'.repeat(5);
+            }
+        } catch (err) {
+            console.error("Rating fetch failed:", err);
+            productRating.textContent = "Bedømmelse ikke tilgængelig";
+        }
         //add onclick function to bring you to the specific products page
         productButton.onclick = () => {
             if(email){
@@ -94,6 +114,8 @@ async function updateImage(products) {
         productButton.appendChild(productDiscount);
         productButton.appendChild(productStore);
         productButton.appendChild(productText);
+        productButton.appendChild(productRating);
+        
     };
 }
 
@@ -179,6 +201,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const advertDiscount = document.createElement('p');
         const advertStore = document.createElement('a');
         const advertText = document.createElement('p');
+        const productRating = document.createElement('div');
 
         advertButton.classList.add('advertButton');
         //image
@@ -205,13 +228,32 @@ document.addEventListener("DOMContentLoaded", async () => {
         advertDiscount.classList.add('productDiscount');
         if(advertChosen.discount != 0 && advertChosen.discount != null)
         {advertDiscount.textContent = "spar: " + advertChosen.discount + ",-"};
+        //rating
+        try {
+            const ratingResponse = await fetch(`./comments?product_id=${advertChosen.id}`);
+            const ratings = await ratingResponse.json();
+            productRating.classList.add('rating');
 
+            if (ratings.length > 0) {
+                const total = ratings.reduce((sum, r) => sum + r.rating, 0);
+                const average = total / ratings.length;
+
+                // Display star icons based on average
+                const stars = '★'.repeat(Math.round(average)) + '☆'.repeat(5 - Math.round(average));
+                productRating.textContent = stars;
+            } else {
+                productRating.textContent = '☆'.repeat(5);
+            }
+        } catch (err) {
+            console.error("Rating fetch failed:", err);
+            productRating.textContent = "Bedømmelse ikke tilgængelig";
+        }
         // button function redirecting to product page
         advertButton.onclick = () => {
             if(email){
-                window.location.href = `./productpage?email=${encodeURIComponent(email)}&id=${encodeURIComponent(product.id)}`;
+                window.location.href = `./productpage?email=${encodeURIComponent(email)}&id=${encodeURIComponent(advertChosen.id)}`;
             } else {
-                window.location.href = `./productpage?id=${encodeURIComponent(product.id)}`;
+                window.location.href = `./productpage?id=${encodeURIComponent(advertChosen.id)}`;
             }
         }
 
@@ -242,6 +284,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         advertButton.appendChild(advertDiscount);
         advertButton.appendChild(advertStore);
         advertButton.appendChild(advertText);
+        advertButton.appendChild(productRating);
     }
     catch(err){
         console.log(err);
