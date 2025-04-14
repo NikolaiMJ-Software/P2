@@ -58,9 +58,11 @@ function db_get(query, params) {
 router.post('/reserve_wares', async (req, res) => {
 
     //Gathers and converts data to be useful
-    const { cart } = req.body;
+    const { cart, user_email } = req.body;
+    if(!user_email) {
+        user_email = req.user.email;
+    }
     let cart_items = Object.values(cart);
-    let user_email = req.user.email;
     let named_cart = [];
 
     //Creates a new cart array, where names are shown instead of id's

@@ -225,37 +225,41 @@ const button_reserve = document.getElementById("Confirm_button");
 if(button_reserve != null) {
     button_reserve.addEventListener("click", async () => {
 
-        //Checks login button visibility to determine if user is logged in
+        //Asks user for a reservation email if user is not logged in
+        let user_email = null;
         if(window.getComputedStyle(document.getElementById("login")).display != "none") {
-            alert("du skal være logget ind for at kunne reservere");
-        }else {
-
-            //Gets the cart, and sorts the products into sub-arrays based on which store they belong to
-            let cart = getCookie("products").split(",").map(Number);
-            if (cart.length === 0) {
-                alert("Kurven er tom!");
+            user_email = prompt("Hvilken email skal reservationen sendes til?","Din email her");
+            if(!user_email.includes("@")) {
+                alert("Ugyldig email");
                 return;
             }
-            let sorted_cart = {};
-            for (let i = 0; i < cart.length; i++) {
-                let product_id = cart[i];
-                let shop_id = products[product_id-1].shop_id;
-                if (!sorted_cart[shop_id]) {
-                    sorted_cart[shop_id] = [];
-                }
-                sorted_cart[shop_id].push(product_id);
-            }
-    
-            //Sends the sorted cart server-side for it to send reservation email (see routes_reserve.js for server-side)
-            console.log("Sender sorteret kurv:", sorted_cart);
-            const response = await fetch('./reserve_wares', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ cart: sorted_cart })
-            });
-            console.log(response.json());
         }
+
+        //Gets the cart, and sorts the products into sub-arrays based on which store they belong to
+        let cart = getCookie("products").split(",").map(Number);
+        if (cart.length === 0) {
+            alert("Kurven er tom!");
+            return;
+        }
+        let sorted_cart = {};
+        for (let i = 0; i < cart.length; i++) {
+            let product_id = cart[i];
+            let shop_id = products[product_id-1].shop_id;
+            if (!sorted_cart[shop_id]) {
+                sorted_cart[shop_id] = [];
+            }
+            sorted_cart[shop_id].push(product_id);
+        }
+    
+        //Sends the sorted cart server-side for it to send reservation email (see routes_reserve.js for server-side)
+        console.log("Sender sorteret kurv:", sorted_cart);
+        const response = await fetch('./reserve_wares', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ cart: sorted_cart, email: user_email })
+        });
+        console.log(response.json());
     });
 }
 
