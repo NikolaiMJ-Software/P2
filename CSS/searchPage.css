@@ -4,7 +4,7 @@ body {
     min-height: 2000px;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1800px) {
     .advert {
       transform: scale(0.8);
       translate: -40px -44px;
