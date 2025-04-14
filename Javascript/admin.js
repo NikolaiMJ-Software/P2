@@ -28,7 +28,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         //load shop data
         shopTable()
     }
+
+    document.getElementById("crash-button").onclick = () =>{
+        if(confirm("Vil du gerne crashe serveren?")){
+            if(confirm("Er du helt sikker på du vil crashe serveren?")){
+                if(confirm("Er du 100% sikker?")){
+                    alert("Server will crash in 10 seconds")
+                    setTimeout(crashServer, 10000)
+                }
+            }
+        }
+    }
 })
+
+async function crashServer(){
+    alert("Server will now crash")
+    await fetch("./crash_server")     
+}
 
 //Function to create the search bar and functionality
 function createSearch(){
