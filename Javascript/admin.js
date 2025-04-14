@@ -1,17 +1,60 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
+    let currentSearch;
     //Page change buttons
     document.getElementById("user-button").onclick = () => {
         hidePages()
-        document.getElementById("users").style = ""
+        let users = document.getElementById("users")
+        users.style = ``
+
+        currentSearch = document.getElementById("userSearch");
+        userSearch.innerHTML = ``
+        userSearch.appendChild (createSearch())
+        
         userTable()
     }
     document.getElementById("shop-button").onclick = () =>{
         hidePages()
-        document.getElementById("shops").style = ""
+        let shops = document.getElementById("shops")
+        shops.style = ""
+
+        currentSearch = document.getElementById("shopSearch");
+        shopSearch.innerHTML = ``
+        shopSearch.appendChild (createSearch())
+
         shopTable()
     }
 })
+
+function createSearch(){
+    let searchField = document.createElement("input")
+        searchField.type = "search"
+        searchField.placeholder = "Søg efter email..."
+
+    //Search field
+    searchField.addEventListener('input', () => {
+        const searchValue = searchField.value.toLowerCase();
+        console.log(searchValue);
+
+        //find email values 
+        let emails;
+        if (searchField.parentElement.id === "userSearch"){
+            emails = document.querySelectorAll(".userEmail")
+        } else if (searchField.parentElement.id === "shopSearch"){
+            emails = document.querySelectorAll(".shopEmail")
+        }
+
+        emails.forEach(email => {
+            if (email.textContent.includes(searchValue)) {
+                email.parentElement.classList.remove('hidden')// Show matching users
+            } else {
+                email.parentElement.classList.add('hidden') // Hide non-matching users
+            }
+        });
+    });
+        
+    return searchField;
+}
 
 function hidePages() {
     const managementArea = document.getElementById("management-area")
@@ -73,6 +116,7 @@ function userTable(){
 
         //Alter shop status
         shopSlct.name = "stores"
+        shopSlct.className = "userStore"
 
         let nullShop = document.createElement("option")
         nullShop.value = null
@@ -93,6 +137,7 @@ function userTable(){
         userId.textContent = user.id
         username.textContent = user.name
         email.textContent = user.email
+        email.className = "userEmail"
         shopId.textContent = user.shop_id
 
         //initialize table
@@ -108,9 +153,20 @@ function userTable(){
     });
 
     let updateBtn = document.getElementById("shopUpdate")
-    updateBtn.onclick = () => {
-        alert("Functionality not added yet")
-    }
+    updateBtn.addEventListener('click', () => {
+        const userShopIds = document.querySelectorAll(".userStore")
+        if (confirm("Er du sikker på du vil opdatere shop id'er?")) {
+            userShopIds.forEach(async userShop => {
+            let userId = userShop.parentElement.parentElement.firstChild.textContent;
+            let shopId = userShop.value
+            console.log(`changed user ${userId} shop to shop ${shopId}`)
+            fetch(`./update_userStores`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId, shopId })
+            });
+        });}
+    })
 }
 
 //Fetch shop data
@@ -204,6 +260,7 @@ function shopTable(){
         cityId.textContent = shop.city_id
         shopName.textContent = shop.shop_name
         emailTd.textContent = shop.email
+        emailTd.className = "shopEmail"
         revenue.textContent = shop.revenue
         
         //Initialize table

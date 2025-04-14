@@ -27,6 +27,7 @@ db.serialize(() => {
     db.run(`DROP TABLE IF EXISTS shops`);
     db.run(`DROP TABLE IF EXISTS cities`);
     db.run(`DROP TABLE IF EXISTS private`);
+    db.run(`DROP TABLE IF EXISTS orders`);
 
     db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -111,73 +112,92 @@ db.serialize(() => {
         )`, (err) => {
         if (err) console.error("Error creating table 'comments':", err.message);
         else console.log("Table 'comments' created.");
-      });
+    });
 
-        db.run(`INSERT INTO cities (city, image_path, latitude, longitude) VALUES 
-        ('Aalborg', 'Images/Aalborg/musikkenshus.jpg', 57.0499998, 9.916663),
-        ('Randers', 'Images/Randers/Randers_Regnskov.jpg', 56.4607, 10.03639),
-        ('Aarhus', 'Images/Aarhus/gamle_by.jpg', 56.1572, 10.2107),
-        ('Horsens', 'Images/Horsens/Horsens_Fængsel.jpg', 55.86066, 9.85034),
-        ('Kolding', 'Images/Kolding/Kolding_Mini_By.jpg', 55.4904, 9.47216),
-        ('Odense', 'Images/Odense/H.C._Andersen_Hus.jpg', 55.39594, 10.38831),
-        ('Esbjerg', 'Images/Esbjerg/4hvidemænd.jpg', 55.47028, 8.45187),
-        ('København', 'Images/København/Lille_havfrue.jpg', 55.67594, 12.56553)`, (err) => {
+    db.run(`CREATE TABLE orders (
+        shop_id INTEGER,
+        order_id INTEGER,
+        product_id INTEGER,
+        amount INTEGER,
+        price REAL
+
+    )`, (err) => {
+        if (err) console.error("Error creating table:", err.message);
+        else console.log("Table 'orders' created with UNIQUE constraint.");
+    });
+
+    db.run(`INSERT INTO cities (city, image_path, latitude, longitude) VALUES 
+    ('Aalborg', 'Images/Aalborg/musikkenshus.jpg', 57.0499998, 9.916663),
+    ('Randers', 'Images/Randers/Randers_Regnskov.jpg', 56.4607, 10.03639),
+    ('Aarhus', 'Images/Aarhus/gamle_by.jpg', 56.1572, 10.2107),
+    ('Horsens', 'Images/Horsens/Horsens_Fængsel.jpg', 55.86066, 9.85034),
+    ('Kolding', 'Images/Kolding/Kolding_Mini_By.jpg', 55.4904, 9.47216),
+    ('Odense', 'Images/Odense/H.C._Andersen_Hus.jpg', 55.39594, 10.38831),
+    ('Esbjerg', 'Images/Esbjerg/4hvidemænd.jpg', 55.47028, 8.45187),
+    ('København', 'Images/København/Lille_havfrue.jpg', 55.67594, 12.56553)`, (err) => {
+        if (err) console.error('Error inserting data:', err.message);
+        else console.log('Cities with image paths inserted.');
+    });
+
+    db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude, revenue) VALUES
+        ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com', 57.048939, 9.921764, 150000),
+        ('jerrys vare', '1', 'Images/Aalborg/jerrys vare/logo.png', 'nikolai456654@gmail.com', 57.070059, 9.946330, 10)`, (err) => {
             if (err) console.error('Error inserting data:', err.message);
-            else console.log('Cities with image paths inserted.');
-        });
+            else console.log('Shop inserted.');
+    });
 
-        db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude, revenue) VALUES
-            ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'nikolai456654@gmail.com', 57.048939, 9.921764, 150000),
-            ('jerrys vare', '1', 'Images/Aalborg/jerrys vare/logo.png', 'nikolai456654@gmail.com', 57.070059, 9.946330, 10)`, (err) => {
-                if (err) console.error('Error inserting data:', err.message);
-                else console.log('Shop inserted.');
-        });
+    db.run(`INSERT INTO private (name, API_key) VALUES
+        ('Google maps', 'AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ')`, (err) => {
+            if (err) console.error('Error inserting data:', err.message);
+            else console.log('private inserted.');
+    });
 
-        db.run(`INSERT INTO private (name, API_key) VALUES
-            ('Google maps', 'AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ')`, (err) => {
-                if (err) console.error('Error inserting data:', err.message);
-                else console.log('private inserted.');
-        });
+    db.run(`INSERT INTO users (email, name, password, shop_id, admin_user) VALUES
+        ('sspg.dk@gmail.com', 'Sebastian', '123', 2, 0),
+        ('mormorogmorfar123456789@gmail.com', 'ikke mormor & morfar', '123', 1, 0),
+        ('admin', 'admin', 'admin', NULL, 1)`, (err) => {
+            if (err) console.error('Error inserting data:', err.message);
+            else console.log('Users inserted.');
+    });
 
-        db.run(`INSERT INTO users (email, name, password, shop_id, admin_user) VALUES
-            ('sspg.dk@gmail.com', 'Sebastian', '123', 2, 0),
-            ('mormorogmorfar123456789@gmail.com', 'ikke mormor & morfar', '123', 1, 0),
-            ('admin', 'admin', 'admin', NULL, 1)`, (err) => {
-                if (err) console.error('Error inserting data:', err.message);
-                else console.log('Users inserted.');
-        });
+    db.run(`INSERT INTO products (city_id, shop_id, product_name, stock, bought, price, description, img1_path, img2_path, img3_path, img4_path, specifications, discount, parent_id) 
+        VALUES
+        (1, 1, 'den grimme maskine (hvid)', 10, 0, 25, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png',
+        'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321826.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321831.png', 'Den er faktisk virkelig grim', 30, NULL),
+            (1, 1, 'den grimme maskine (sort)', 6, 5, 25, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128322066.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128321832.png',
+            'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128321830.png', '', 'Den er faktisk virkelig grim', 30, 1),
 
-        db.run(`INSERT INTO products (city_id, shop_id, product_name, stock, bought, price, description, img1_path, img2_path, img3_path, img4_path, specifications, discount, parent_id) 
-            VALUES
-            (1, 1, 'den grimme maskine (hvid)', 10, 0, 25, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png',
-            'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321826.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321831.png', 'Den er faktisk virkelig grim', 30, NULL),
-                (1, 1, 'den grimme maskine (sort)', 6, 5, 25, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128322066.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128321832.png',
-                'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128321830.png', '', 'Den er faktisk virkelig grim', 30, 1),
+        
+        (1, 2, 'Eiffeltårnet', 1, 0, 1000900, 'Du skal selv hente den', 'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel1.jpg', 'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel2.webp',
+        'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel3.jpg', 'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel4.webp', 'Den er virkelig høj, og lavet af franskmænd', 20, NULL),
+        
+        (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Black)', 100, 2, 9259, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
+        'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black3.png',
+        'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 240, NULL),
 
+            (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Blue)', 43, 2, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
+            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_blue/titanium_blue1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_blue/titanium_blue2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_blue/titanium_blue3.png',
+            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4),
+        
+            (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Gray)', 23, 0, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
+            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_gray/titanium_gray1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_gray/titanium_gray2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_gray/titanium_gray3.png',
+            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4),
             
-            (1, 2, 'Eiffeltårnet', 1, 0, 1000900, 'Du skal selv hente den', 'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel1.jpg', 'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel2.webp',
-            'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel3.jpg', 'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel4.webp', 'Den er virkelig høj, og lavet af franskmænd', 20, NULL),
-            
-            (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Black)', 100, 2, 9259, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
-            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black3.png',
-            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 240, NULL),
+            (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Silver)', 93, 0, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
+            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver3.png',
+            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4)`, (err) => {
+            if (err) console.error('Error inserting data:', err.message);
+            else console.log('product inserted.');
+    });
 
-                (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Blue)', 43, 2, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
-                'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_blue/titanium_blue1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_blue/titanium_blue2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_blue/titanium_blue3.png',
-                'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4),
-            
-                (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Gray)', 23, 0, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
-                'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_gray/titanium_gray1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_gray/titanium_gray2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_gray/titanium_gray3.png',
-                'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4),
-                
-                (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Silver)', 93, 0, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
-                'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver3.png',
-                'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4)`, (err) => {
-                if (err) console.error('Error inserting data:', err.message);
-                else console.log('product inserted.');
-        });
-        db.run(`CREATE INDEX idx_shops_city ON shops(city_id);`);
-        db.run(`CREATE INDEX idx_products_shop ON products(shop_id);`);
+    db.run(`INSERT INTO orders (shop_id, order_id, product_id, amount, price) VALUES 
+    (2, 1, 3, 1, 1000000)`, (err) => {
+        if (err) console.error('Error inserting data:', err.message);
+        else console.log('Order inserted.');
+    });
+
+    db.run(`CREATE INDEX idx_shops_city ON shops(city_id);`);
+    db.run(`CREATE INDEX idx_products_shop ON products(shop_id);`);
 });
 
 db.close();
