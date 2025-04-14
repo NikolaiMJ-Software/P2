@@ -1,37 +1,43 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
-    let currentSearch;
     //Page change buttons
     document.getElementById("user-button").onclick = () => {
-        hidePages()
+        hidePages() //hide all pages
         let users = document.getElementById("users")
-        users.style = ``
+        users.style = `` //show this page
 
-        currentSearch = document.getElementById("userSearch");
+        //Add search bar to page
+        let currentSearch = document.getElementById("userSearch");
         userSearch.innerHTML = ``
         userSearch.appendChild (createSearch())
         
+        //load user data
         userTable()
     }
-    document.getElementById("shop-button").onclick = () =>{
-        hidePages()
-        let shops = document.getElementById("shops")
-        shops.style = ""
 
-        currentSearch = document.getElementById("shopSearch");
+    document.getElementById("shop-button").onclick = () =>{
+        hidePages() //hide all pages
+        let shops = document.getElementById("shops")
+        shops.style = "" //show this page
+
+        //Add search bar to page
+        let currentSearch = document.getElementById("shopSearch");
         shopSearch.innerHTML = ``
         shopSearch.appendChild (createSearch())
 
+        //load shop data
         shopTable()
     }
 })
 
+//Function to create the search bar and functionality
 function createSearch(){
+    //Initialize search field
     let searchField = document.createElement("input")
         searchField.type = "search"
         searchField.placeholder = "Søg efter email..."
 
-    //Search field
+    //Search field functionality
     searchField.addEventListener('input', () => {
         const searchValue = searchField.value.toLowerCase();
         console.log(searchValue);
@@ -44,6 +50,7 @@ function createSearch(){
             emails = document.querySelectorAll(".shopEmail")
         }
 
+        //Hide data not matching the search
         emails.forEach(email => {
             if (email.textContent.includes(searchValue)) {
                 email.parentElement.classList.remove('hidden')// Show matching users
@@ -64,6 +71,7 @@ function hidePages() {
             temp = temp.nextElementSibling
         }
 }
+
 //Fetch User data
 const userResponse = await fetch("./get_users")
 const users = await userResponse.json()
@@ -152,6 +160,7 @@ function userTable(){
         userTable.appendChild(tableRow)
     });
 
+    //Update user shop functionality
     let updateBtn = document.getElementById("shopUpdate")
     updateBtn.addEventListener('click', () => {
         const userShopIds = document.querySelectorAll(".userStore")

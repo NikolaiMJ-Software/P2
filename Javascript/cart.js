@@ -89,6 +89,11 @@ function fill_table() {
             let amount = parseInt(document.getElementById(product).textContent);
             amount++;
             document.getElementById(product).textContent = amount;
+
+            let product_price = parseInt(document.getElementById(product + "price").textContent);
+            product_price += products[product-1].price;
+            document.getElementById(product + "price").textContent = product_price;
+            
             total_cost += products[product-1].price;
             document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
         } else {
@@ -148,6 +153,7 @@ function fill_table() {
 
             //Creates and fills the fourth column in the row (price of product)
             let price_element = document.createElement("td");
+            price_element.setAttribute("id", product + "price");
             price_element.textContent = products[product-1].price;
             total_cost += products[product-1].price;
             row.appendChild(price_element);
@@ -260,6 +266,9 @@ if(button_reserve != null) {
             body: JSON.stringify({ cart: sorted_cart, user_email: user_email })
         });
         console.log(response.json());
+        alert("Du har nu reserveret dine varer, check din email");
+        document.cookie = `products=;path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
+        fill_table();
     });
 }
 

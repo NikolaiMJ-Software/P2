@@ -59,15 +59,8 @@ router.post('/reserve_wares', async (req, res) => {
 
     //Gathers and converts data to be useful
     let { cart, user_email } = req.body;
-    console.log(cart);
-    console.log(user_email);
     if(!user_email) {
-        if (req.user && req.user.email) {
-            user_email = req.user.email;
-        } else {
-            console.error("No email provided and no user is logged in.");
-            return res.status(400).json({ error: "Ingen email angivet og brugeren er ikke logget ind." });
-        }
+        user_email = req.user.email;
     }
     let cart_items = Object.values(cart);
     let named_cart = [];
