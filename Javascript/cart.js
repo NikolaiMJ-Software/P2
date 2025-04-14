@@ -244,9 +244,10 @@ if(button_reserve != null) {
 
         //Asks user for a reservation email if user is not logged in
         let user_email = null;
+        const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(window.getComputedStyle(document.getElementById("login")).display != "none") {
             user_email = prompt("Hvilken email skal reservationen sendes til?","Din email her");
-            if(!user_email.includes("@")) {
+            if(!email_regex.test(user_email)) {
                 alert("Ugyldig email");
                 return;
             }
