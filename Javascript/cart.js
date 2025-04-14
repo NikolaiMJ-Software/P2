@@ -290,9 +290,11 @@ if(button_reserve != null) {
     updateLastVisit();
 
     //If on searchPage.html or product_page.html, update the cart button to show number of wares
-    if(document.getElementById("filterButton") != null || document.getElementById("shop_name_button") != null) {
-        update_cart_button();
-    }
+    window.addEventListener('pageshow', () => {
+        if(document.getElementById("filterButton") != null || document.getElementById("shop_name_button") != null) {
+            update_cart_button();
+        }
+    });
 
     //If on product_page.html or cart.html, load the product database
     if(document.getElementById("shop_name_button") != null || document.getElementById("cart") != null) {
