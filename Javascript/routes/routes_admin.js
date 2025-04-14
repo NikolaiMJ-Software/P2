@@ -19,9 +19,9 @@ const db = new sqlite3.Database(db_path, (err) => {
 });
 
 router.get('/admin', (req, res) => {
-    /*if(!req.user || !req.user.admin_user){
+    if(!req.user || !req.user.admin_user){
         return res.status(403).json({ error: "Ikke logget ind som admin" });
-    }*/
+    }
     res.sendFile(path.join(process.cwd(), '.', 'HTML', 'admin.html'));
 })
 
@@ -104,6 +104,14 @@ router.post(`/update_userStores`, (req, res) => {
         }
         res.send("Shops opdateret")
     })
+})
+
+router.get(`/crash_server`, (req, res) =>{
+    if(!req.user || !req.user.admin_user){
+        return res.status(403).json({ error: "Ikke logget ind som admin" });
+    }
+    console.log("Server is closing now")
+    process.exit();
 })
 
 export default router;
