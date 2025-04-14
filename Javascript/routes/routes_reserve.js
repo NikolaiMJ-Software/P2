@@ -58,7 +58,7 @@ function db_get(query, params) {
 router.post('/reserve_wares', async (req, res) => {
 
     //Gathers and converts data to be useful
-    const { cart, user_email } = req.body;
+    let { cart, user_email } = req.body;
     if(!user_email) {
         user_email = req.user.email;
     }
