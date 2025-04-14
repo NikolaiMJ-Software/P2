@@ -10,11 +10,12 @@ let productList = [], advertContainer = document.getElementById('advertList'); /
 const urlParams = new URLSearchParams(window.location.search);
 const email = urlParams.get('email');
 
-function updateImage(products){
+async function updateImage(products) {
     updateLastVisit(); // Update users last visit
-    productContainer.innerHTML = '';// Remove old products
+    productContainer.innerHTML = ''; // Clear existing products
+    productButtons.length = 0; // Reset product buttons array
     //go through products
-    products.forEach(async product => {
+    for (const product of products) {
         console.log(product.product_name + " " + product.price);
         if(product.discount > 0){
             productList += product.id;
