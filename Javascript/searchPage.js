@@ -30,6 +30,7 @@ async function updateImage(products) {
         const productDiscount = document.createElement('p');
         const productStore = document.createElement('a');
         const productText = document.createElement('p');
+        const productRating = document.createElement('div');
         productButton.dataset.product = product.product_name.toLowerCase();
 
         //initialize all attributes.
@@ -74,7 +75,26 @@ async function updateImage(products) {
         productStoreImage.alt = `${shopData.shop_name}`
         productStoreImage.style = "max-width: 125px; max-height: 75px;"
         productStore.appendChild(productStoreImage);
+        //rating
+        try {
+            const ratingResponse = await fetch(`./comments?product_id=${product.id}`);
+            const ratings = await ratingResponse.json();
+            productRating.classList.add('rating');
 
+            if (ratings.length > 0) {
+                const total = ratings.reduce((sum, r) => sum + r.rating, 0);
+                const average = total / ratings.length;
+
+                // Display star icons based on average
+                const stars = '★'.repeat(Math.round(average)) + '☆'.repeat(5 - Math.round(average));
+                productRating.textContent = stars;
+            } else {
+                productRating.textContent = '☆'.repeat(5);
+            }
+        } catch (err) {
+            console.error("Rating fetch failed:", err);
+            productRating.textContent = "Bedømmelse ikke tilgængelig";
+        }
         //add onclick function to bring you to the specific products page
         productButton.onclick = () => {
             if(email){
@@ -94,6 +114,8 @@ async function updateImage(products) {
         productButton.appendChild(productDiscount);
         productButton.appendChild(productStore);
         productButton.appendChild(productText);
+        productButton.appendChild(productRating);
+        
     };
 }
 
