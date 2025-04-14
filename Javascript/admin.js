@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         users.style = `` //show this page
 
         //Add search bar to page
-        let currentSearch = document.getElementById("userSearch");
+        let userSearch = document.getElementById("userSearch");
         userSearch.innerHTML = ``
         userSearch.appendChild (createSearch())
         
@@ -21,9 +21,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         shops.style = "" //show this page
 
         //Add search bar to page
-        let currentSearch = document.getElementById("shopSearch");
+        let shopSearch = document.getElementById("shopFunctions");
         shopSearch.innerHTML = ``
-        shopSearch.appendChild (createSearch())
+        shopSearch.appendChild(createSearch())
+
+        //Add shop creation to page
+        let createShop = document.createElement('button')
+        createShop.onclick = () => {window.location.href=`./new_store`}
+        createShop.textContent = "Create a new shop";
+        createShop.style = "margin-left: 10px"
+        shopSearch.appendChild(createShop);
 
         //load shop data
         shopTable()
