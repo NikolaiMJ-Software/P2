@@ -8,6 +8,9 @@
 </head>
 <body>
     <div id="upper-half">
+        <div id="homeButton">
+            <button onclick="window.location.href = `./`">Click & Hent</button>
+        </div>
         <div id="buttons">
             <button id="user-button">Users</button>
             <button id="shop-button">Shops</button>
@@ -16,24 +19,24 @@
     <div id="management-area">
         <!-- User management -->
          <div style="display: none;" id="users">
-            <form id="shopUpdater">
-                <table id="user-table">
-                    <tbody id="user-table-body">
-                        <tr>
-                            <th>ID</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Shop ID</th>
-                            <th><button id="shopUpdate">Update shops</button></th>
-                            <th>Delete</th>
-                        </tr>
-                    </tbody>
-                </table>
-            </form>
+            <div id="userSearch"></div>
+            <table id="user-table">
+                <tbody id="user-table-body">
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Shop ID</th>
+                        <th><button id="shopUpdate">Update shops</button></th>
+                        <th>Delete</th>
+                    </tr>
+                </tbody>
+            </table>
          </div>
 
         <!-- Shop management -->
          <div style="display: none;" id="shops">
+            <div id="shopSearch"></div>
             <table id="shop-table">
                 <tbody id="shop-table-body">
                     <tr>
