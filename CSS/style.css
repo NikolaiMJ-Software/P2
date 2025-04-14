@@ -244,3 +244,49 @@ progress {
     100% { transform: rotate(360deg); }
   }
 
+/* ===========================
+   Button and General Hover Effects (Refined)
+=========================== */
+
+/* Smooth transition for all buttons */
+button, .advertButton, .product {
+    transition: all 0.3s ease;
+}
+
+/* Top buttons like "kurv", "login", "signup" */
+.top-buttons:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transition: background-color 0.2s ease;
+}
+
+/* Form search button hover - only slightly darker now */
+form button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: scale(1.05);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* ===========================
+   Input Focus & Hover
+=========================== */
+
+input:focus {
+    background-color: #fcfcfc;
+    box-shadow: 0 0 4px rgba(94, 150, 162, 0.15);
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+input:hover {
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
+
+/* ===========================
+   Progress Bar Animations
+=========================== */
+
+#loading-progress::-webkit-progress-value,
+#loading-progress::-moz-progress-bar {
+    transition: width 0.4s ease;
+}
+
