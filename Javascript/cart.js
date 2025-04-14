@@ -263,16 +263,14 @@ if(button_reserve != null) {
     });
 }
 
-//Code to grab product data and fill cart table, if the user is on the cart.html page
-if(document.getElementById("cart") != null) async () => {
+//Update last visit time, and fills global array with server-side product data (see server.js for server-side)
+updateLastVisit();
+console.log("Henter produkt data...");
+const response = await fetch('./products');
+products = response.json();
 
-    //Update last visit time, and fills global array with server-side product data (see server.js for server-side)
-    updateLastVisit();
-    console.log("Henter produkt data...");
-    const response = await fetch('./products');
-    products = await response.json();
-
-    //Adds event listener for ready state if not loaded, otherwise just start up
+//If on cart.html, add event listener for ready state if not loaded, otherwise just start up
+if(document.getElementById("cart") != null) () => {
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", start_up);
     } else {
