@@ -198,6 +198,7 @@ function userTable(){
                 body: JSON.stringify({ userId, shopId })
             });
         });}
+        window.location.reload();
     })
 }
 

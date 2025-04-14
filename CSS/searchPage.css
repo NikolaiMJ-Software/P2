@@ -170,7 +170,7 @@ button {
     max-width: 946px;
     box-sizing: border-box;
     translate: 640px 0px;
-    height: 100%;
+    height: 100vh;
   }
 
 .advertButton{
@@ -332,6 +332,31 @@ form button:hover {
     color: #2B2A35;
     cursor: pointer;
 }
+
+/* ===========================
+    rating
+=========================== */
+.product .rating {
+    position: absolute;
+    bottom: 14%;
+    transform: translateX(25%);
+    font-size: 25px;
+    color: goldenrod;
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .advertButton .rating {
+    position: absolute;
+    bottom: 14%;
+    transform: translateX(25%);
+    font-size: 25px;
+    color: goldenrod;
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+  }
 
 /* ===========================
    Input Focus & Hover (Subtle)
