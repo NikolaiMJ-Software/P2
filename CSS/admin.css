@@ -16,6 +16,10 @@ td {
     padding-right: 5px;
 }
 
+.hidden{
+    visibility: collapse;
+}
+
 #user-table-body{
     text-align: left;
 }
