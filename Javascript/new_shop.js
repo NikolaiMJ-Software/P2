@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
             if (update_res.ok) {
                 alert("Butikken er blevet tilføjet.");
-                window.location.href = './signup';
+                history.back();
             } else {
                 const error_text = await update_res.text();
                 error_message.textContent = error_text;
