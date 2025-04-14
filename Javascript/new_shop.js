@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const lat = form.latitude.value;
         const long = form.longitude.value;
+        const email = form.email.value;
 
 
         if (!lat || !long) {
@@ -30,7 +31,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        //variable which checks if mails are valid
+        const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+        //test mail, if not valid sent error
+        if (!email_regex.test(email)) {
+            error_message.textContent = 'Ugyldig e-mailadresse.';
+            return;
+        }
+        
         const form_data = new FormData(form);
 
         const update_res = await fetch("./new_shop",{
@@ -40,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
             if (update_res.ok) {
                 alert("Butikken er blevet tilføjet.");
-                window.location.href = './signup';
+                history.back();
             } else {
                 const error_text = await update_res.text();
                 error_message.textContent = error_text;

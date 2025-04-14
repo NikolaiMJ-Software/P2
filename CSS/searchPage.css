@@ -334,6 +334,31 @@ form button:hover {
 }
 
 /* ===========================
+    rating
+=========================== */
+.product .rating {
+    position: absolute;
+    bottom: 14%;
+    transform: translateX(25%);
+    font-size: 25px;
+    color: goldenrod;
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .advertButton .rating {
+    position: absolute;
+    bottom: 14%;
+    transform: translateX(25%);
+    font-size: 25px;
+    color: goldenrod;
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+  }
+
+/* ===========================
    Input Focus & Hover (Subtle)
 =========================== */
 
