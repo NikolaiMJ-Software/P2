@@ -54,8 +54,8 @@ button {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: left;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
     max-width: 952px;
     margin: auto;
     translate: 0px 150px;
@@ -73,7 +73,6 @@ button {
     border-right: 2px solid #A8D5BA ;
     text-align: center;
     color: black;
-    
 }
 
 .productImage{
