@@ -46,9 +46,9 @@ function createSearch(){
 
         emails.forEach(email => {
             if (email.textContent.includes(searchValue)) {
-                email.parentElement.hidden = false; // Show matching cities
+                email.parentElement.classList.remove('hidden')// Show matching users
             } else {
-                email.parentElement.hidden = true; // Hide non-matching cities
+                email.parentElement.classList.add('hidden') // Hide non-matching users
             }
         });
     });
