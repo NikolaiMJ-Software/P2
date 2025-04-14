@@ -59,6 +59,8 @@ router.post('/reserve_wares', async (req, res) => {
 
     //Gathers and converts data to be useful
     let { cart, user_email } = req.body;
+    console.log(cart);
+    console.log(user_email);
     if(!user_email) {
         if (req.user && req.user.email) {
             user_email = req.user.email;

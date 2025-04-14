@@ -257,7 +257,7 @@ if(button_reserve != null) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({ cart: sorted_cart, email: user_email })
+            body: JSON.stringify({ cart: sorted_cart, user_email: user_email })
         });
         console.log(response.json());
     });
