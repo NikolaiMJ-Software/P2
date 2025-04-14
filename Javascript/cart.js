@@ -50,11 +50,12 @@ function remove_from_cart(product_id) {
 
 //Updates cart button number that showcases amount of wares in cart
 function update_cart_button() {
-    let products = getCookie("products").split(",");
-    if(products === "") {
-        products.length = 0;
+    let length = getCookie("products").split(",").length;
+    if(length === 1 && getCookie("products").split(",")[0] === "") {
+        length = 0;
     }
-    document.getElementById("cart_top_button").textContent = "Din kurv (" + products.length + ")"
+    console.log("length: " + length);
+    document.getElementById("cart_top_button").textContent = "Din kurv (" + length + ")"
 }
 
 //Function to get a specific cookie (relevant for other functions) **taken from internet**
