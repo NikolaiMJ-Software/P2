@@ -20,17 +20,13 @@ td {
     visibility: collapse;
 }
 
-#user-table-body{
-    text-align: left;
-}
-
-#shop-table-body{
+#user-table-body, #shop-table-body{
     text-align: left;
 }
 
 #editBtn{
     float: right;
-    
+    margin-left: 10px;
 }
 
 #shopSearch, #userSearch{
