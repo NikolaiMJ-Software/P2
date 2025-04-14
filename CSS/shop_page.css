@@ -5,6 +5,7 @@ body {
 
 .productHeader{
     display: flex;
+    font-size: 25px;
     flex-direction: column;
     align-items: center;
     translate: 0px 100px;
