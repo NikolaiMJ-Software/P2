@@ -28,3 +28,7 @@ td {
     float: right;
     
 }
+
+#shopSearch, #userSearch{
+    padding-top: 10px;
+}
