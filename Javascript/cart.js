@@ -48,6 +48,15 @@ function remove_from_cart(product_id) {
     }
 }
 
+//Updates cart button number that showcases amount of wares in cart
+function update_cart_button() {
+    let products = getCookie("products").split(",");
+    if(products === "") {
+        products.length = 0;
+    }
+    document.getElementById("cart_top_button").textContent = "Din kurv (" + products.length + ")"
+}
+
 //Function to get a specific cookie (relevant for other functions) **taken from internet**
 function getCookie(cname) {
     let name = cname + "=";
@@ -74,7 +83,7 @@ function fill_table() {
     let past_product = null;
     const table_body = document.querySelector("#cart tbody");
     let data = getCookie("products").split(",").map(Number);
-    if (!data) {
+    if (!data || data === "") {
         console.log("Kunne ikke finde din kurv, har du tilføjet varer til den?");
         document.getElementById("total_cost").textContent = "Endelig pris: 0 kr.";
         return;
