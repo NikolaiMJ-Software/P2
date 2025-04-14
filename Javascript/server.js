@@ -176,6 +176,7 @@ app.get('/product', (req, res) => {
         res.json(rows[0]); // Returns first matching product
     });
 });
+
 // return products sharing the same parent_id
 app.get('/allVariants', (req, res) => {
     const parentId = Number(req.query.parent_id);
@@ -326,6 +327,16 @@ app.get('/rating', (req, res) => {
             average: row.avg_rating ? Number(row.avg_rating).toFixed(1) : null,
             count: row.total
         });
+    });
+});
+
+app.get('/orders', (req, res) => {
+    db.all(`SELECT * FROM orders ORDER BY id ASC`, (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json(rows);
     });
 });
 
