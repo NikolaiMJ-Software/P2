@@ -19,9 +19,9 @@ const db = new sqlite3.Database(db_path, (err) => {
 });
 
 router.get('/admin', (req, res) => {
-    /*if(!req.user || !req.user.admin_user){
+    if(!req.user || !req.user.admin_user){
         return res.status(403).json({ error: "Ikke logget ind som admin" });
-    }*/
+    }
     res.sendFile(path.join(process.cwd(), '.', 'HTML', 'admin.html'));
 })
 
@@ -98,12 +98,31 @@ router.post(`/update_userStores`, (req, res) => {
     if (!userId){
         return res.status(500).send("Databasefejl");
     }
-    db.run(`UPDATE users SET shop_id = ? WHERE id = ?`, [shopId, userId], (err) =>{
-        if (err){
-            return res.status(500).send("Databasefejl");
-        }
-        res.send("Shops opdateret")
-    })
+
+    if (shopId == "null") {
+        db.run(`UPDATE users SET shop_id = null WHERE id = ?`, [userId], (err) =>{
+            if (err){
+                console.log(err)
+                return res.status(500).send("Databasefejl");
+            }
+            res.send("Shop opdateret")
+        })
+    } else{
+        db.run(`UPDATE users SET shop_id = ? WHERE id = ?`, [shopId, userId], (err) =>{
+            if (err){
+                return res.status(500).send("Databasefejl");
+            }
+            res.send("Shop opdateret")
+        })
+    }
+})
+
+router.get(`/crash_server`, (req, res) =>{
+    if(!req.user || !req.user.admin_user){
+        return res.status(403).json({ error: "Ikke logget ind som admin" });
+    }
+    console.log("Server is closing now")
+    process.exit();
 })
 
 export default router;
