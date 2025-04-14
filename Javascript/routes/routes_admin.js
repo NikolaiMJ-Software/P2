@@ -98,12 +98,23 @@ router.post(`/update_userStores`, (req, res) => {
     if (!userId){
         return res.status(500).send("Databasefejl");
     }
-    db.run(`UPDATE users SET shop_id = ? WHERE id = ?`, [shopId, userId], (err) =>{
-        if (err){
-            return res.status(500).send("Databasefejl");
-        }
-        res.send("Shops opdateret")
-    })
+
+    if (shopId == "null") {
+        db.run(`UPDATE users SET shop_id = null WHERE id = ?`, [userId], (err) =>{
+            if (err){
+                console.log(err)
+                return res.status(500).send("Databasefejl");
+            }
+            res.send("Shop opdateret")
+        })
+    } else{
+        db.run(`UPDATE users SET shop_id = ? WHERE id = ?`, [shopId, userId], (err) =>{
+            if (err){
+                return res.status(500).send("Databasefejl");
+            }
+            res.send("Shop opdateret")
+        })
+    }
 })
 
 router.get(`/crash_server`, (req, res) =>{
