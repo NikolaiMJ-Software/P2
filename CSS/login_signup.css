@@ -201,3 +201,58 @@ section {
     border-color: #5E96A2;
     box-shadow: 0 0 3px #5E96A2;
   }
+
+/* =============================
+   Subtle Input and Select Focus/Hover
+============================= */
+
+.form .input__box input:hover,
+.form .input__box input:focus,
+.form .input__box select:hover,
+.form .input__box select:focus {
+    border-color: #5E96A2;
+    background-color: #fdfdfd;
+    box-shadow: 0 0 4px rgba(94, 150, 162, 0.15);
+    transition: all 0.3s ease;
+}
+
+/* =============================
+   Submit Button - Soft Hover
+============================= */
+
+.form .input__box input[type="submit"] {
+    transition: all 0.3s ease;
+}
+
+.form .input__box input[type="submit"]:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(74, 126, 143, 0.15);
+}
+
+/* =============================
+   Nav Items - Gentle Feedback
+============================= */
+
+.nav-item {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.nav-item:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    transform: scale(1.02);
+    border-radius: 8px;
+}
+
+/* =============================
+   Container - Pulse on Hover (very subtle)
+============================= */
+
+.container {
+    transition: box-shadow 0.3s ease;
+}
+
+.container:hover {
+    box-shadow: 0 0 12px rgba(74, 126, 143, 0.1);
+}
+
+

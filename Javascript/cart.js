@@ -17,13 +17,13 @@ function add_to_cart(product_id) {
     }
 
     //Add product with id to the current cart (or make a new cart if none exist)
-    let products = getCookie("products").split(",");
-    if(!products || products[0] === "") {
+    let cart = getCookie("products").split(",");
+    if(!cart || cart[0] === "") {
         document.cookie = `products=${product_id}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     } else {
-        products.push(product_id);
-        products.sort();
-        document.cookie = `products=${products.join(",")}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
+        cart.push(product_id);
+        cart.sort();
+        document.cookie = `products=${cart.join(",")}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     }
     console.log("Tilføjede produkt med id " + product_id + " til din kurv");
 }
@@ -225,42 +225,46 @@ const button_reserve = document.getElementById("Confirm_button");
 if(button_reserve != null) {
     button_reserve.addEventListener("click", async () => {
 
-        //Checks login button visibility to determine if user is logged in
+        //Asks user for a reservation email if user is not logged in
+        let user_email = null;
         if(window.getComputedStyle(document.getElementById("login")).display != "none") {
-            alert("du skal være logget ind for at kunne reservere");
-        }else {
-
-            //Gets the cart, and sorts the products into sub-arrays based on which store they belong to
-            let cart = getCookie("products").split(",").map(Number);
-            if (cart.length === 0) {
-                alert("Kurven er tom!");
+            user_email = prompt("Hvilken email skal reservationen sendes til?","Din email her");
+            if(!user_email.includes("@")) {
+                alert("Ugyldig email");
                 return;
             }
-            let sorted_cart = {};
-            for (let i = 0; i < cart.length; i++) {
-                let product_id = cart[i];
-                let shop_id = products[product_id-1].shop_id;
-                if (!sorted_cart[shop_id]) {
-                    sorted_cart[shop_id] = [];
-                }
-                sorted_cart[shop_id].push(product_id);
-            }
-    
-            //Sends the sorted cart server-side for it to send reservation email (see routes_reserve.js for server-side)
-            console.log("Sender sorteret kurv:", sorted_cart);
-            const response = await fetch('./reserve_wares', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ cart: sorted_cart })
-            });
-            console.log(response.json());
         }
+
+        //Gets the cart, and sorts the products into sub-arrays based on which store they belong to
+        let cart = getCookie("products").split(",").map(Number);
+        if (cart.length === 0) {
+            alert("Kurven er tom!");
+            return;
+        }
+        let sorted_cart = {};
+        for (let i = 0; i < cart.length; i++) {
+            let product_id = cart[i];
+            let shop_id = products[product_id-1].shop_id;
+            if (!sorted_cart[shop_id]) {
+                sorted_cart[shop_id] = [];
+            }
+            sorted_cart[shop_id].push(product_id);
+        }
+    
+        //Sends the sorted cart server-side for it to send reservation email (see routes_reserve.js for server-side)
+        console.log("Sender sorteret kurv:", sorted_cart);
+        const response = await fetch('./reserve_wares', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ cart: sorted_cart, email: user_email })
+        });
+        console.log(response.json());
     });
 }
 
-//Code to grab product data and fill cart table, if the user is on the cart.html page
-if(document.getElementById("cart") != null) async () => {
+//Starting up function for both cart.html and product_page.html
+(async function(){
 
     //Update last visit time, and fills global array with server-side product data (see server.js for server-side)
     updateLastVisit();
@@ -268,14 +272,16 @@ if(document.getElementById("cart") != null) async () => {
     const response = await fetch('./products');
     products = await response.json();
 
-    //Adds event listener for ready state if not loaded, otherwise just start up
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", start_up);
-    } else {
-        start_up();
+    //If on cart.html, add event listener for ready state if not loaded, otherwise just start up
+    if(document.getElementById("cart") != null) {
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", start_up);
+        } else {
+            start_up();
+        }
+        function start_up() {
+            console.log("nuværende kurv: " + getCookie("products"));
+            fill_table();
+        }
     }
-    function start_up() {
-        console.log("nuværende kurv: " + getCookie("products"));
-        fill_table();
-    }
-}
+})();
