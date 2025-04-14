@@ -4,6 +4,21 @@ body {
     min-height: 2000px;
 }
 
+@media (max-width: 1200px) {
+    .advert {
+      transform: scale(0.8);
+      translate: -40px -44px;
+    }
+    .advertButton {
+      transform: scale(0.8);
+      translate: -50px -44px;
+    }
+    .productText {
+      transform: scale(0.8);
+      translate: -50px -44px;
+    }
+}
+
 .productHeader{
     display: flex;
     flex-direction: column;
