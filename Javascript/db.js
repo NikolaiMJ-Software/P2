@@ -115,12 +115,13 @@ db.serialize(() => {
     });
 
     db.run(`CREATE TABLE orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         shop_id INTEGER,
         order_id INTEGER,
         product_id INTEGER,
         amount INTEGER,
-        price REAL
-
+        price REAL,
+        code TEXT
     )`, (err) => {
         if (err) console.error("Error creating table:", err.message);
         else console.log("Table 'orders' created with UNIQUE constraint.");
@@ -190,8 +191,8 @@ db.serialize(() => {
             else console.log('product inserted.');
     });
 
-    db.run(`INSERT INTO orders (shop_id, order_id, product_id, amount, price) VALUES 
-    (2, 1, 3, 1, 1000000)`, (err) => {
+    db.run(`INSERT INTO orders (shop_id, order_id, product_id, amount, price, code) VALUES 
+    (2, 1, 3, 1, 1000000, '123-abc')`, (err) => {
         if (err) console.error('Error inserting data:', err.message);
         else console.log('Order inserted.');
     });
