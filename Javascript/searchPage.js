@@ -94,7 +94,7 @@ async function updateImage(products) {
         productButton.appendChild(productDiscount);
         productButton.appendChild(productStore);
         productButton.appendChild(productText);
-    });
+    };
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
