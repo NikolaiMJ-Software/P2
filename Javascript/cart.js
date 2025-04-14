@@ -17,13 +17,13 @@ function add_to_cart(product_id) {
     }
 
     //Add product with id to the current cart (or make a new cart if none exist)
-    let products = getCookie("products").split(",");
-    if(!products || products[0] === "") {
+    let cart = getCookie("products").split(",");
+    if(!cart || cart[0] === "") {
         document.cookie = `products=${product_id}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     } else {
-        products.push(product_id);
-        products.sort();
-        document.cookie = `products=${products.join(",")}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
+        cart.push(product_id);
+        cart.sort();
+        document.cookie = `products=${cart.join(",")}; path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`
     }
     console.log("Tilføjede produkt med id " + product_id + " til din kurv");
 }
@@ -263,21 +263,25 @@ if(button_reserve != null) {
     });
 }
 
-//Update last visit time, and fills global array with server-side product data (see server.js for server-side)
-updateLastVisit();
-console.log("Henter produkt data...");
-const response = await fetch('./products');
-products = response.json();
+//Starting up function for both cart.html and product_page.html
+(async function(){
 
-//If on cart.html, add event listener for ready state if not loaded, otherwise just start up
-if(document.getElementById("cart") != null) () => {
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", start_up);
-    } else {
-        start_up();
+    //Update last visit time, and fills global array with server-side product data (see server.js for server-side)
+    updateLastVisit();
+    console.log("Henter produkt data...");
+    const response = await fetch('./products');
+    products = await response.json();
+
+    //If on cart.html, add event listener for ready state if not loaded, otherwise just start up
+    if(document.getElementById("cart") != null) {
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", start_up);
+        } else {
+            start_up();
+        }
+        function start_up() {
+            console.log("nuværende kurv: " + getCookie("products"));
+            fill_table();
+        }
     }
-    function start_up() {
-        console.log("nuværende kurv: " + getCookie("products"));
-        fill_table();
-    }
-}
+})();
