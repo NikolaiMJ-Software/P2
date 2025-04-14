@@ -8,10 +8,13 @@ import fse from 'fs-extra';
 // Set up Multer
 const upload = multer({ dest: 'uploads/' }); // or configure custom storage
 
+//define router as a variable using express
 const router = express.Router();
 
+//define db path
 const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
 
+//define db variable as a variable connecting to the click and collect db
 const db = new sqlite3.Database(db_path, (err) => {
     if (err) return console.error('Login DB error:', err.message);
     console.log('Connected to SQLite database (user router).');
@@ -27,7 +30,7 @@ router.post('/login', (req, res) => {
     if (!email || !password) {
         return res.status(400).json('Email og password er nødvendig');
     }
-
+    //find all information on a user from table users
     db.get(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, password], (err, user) => {
         //if there is a server error the following message will be printed
         if (err) {
@@ -38,7 +41,7 @@ router.post('/login', (req, res) => {
         if (!user) {
             return res.status(401).send("Ugyldig email eller password");
         }
-
+        //save 4 variables as session variables, which all routes has acces to
         req.session.user = {
             email: user.email,
             shop_id: user.shop_id,
@@ -80,18 +83,23 @@ router.post('/signup', (req, res)=>{
     );
 });
 
+//route to logout
 router.get('/logout', (req, res)=>{
+    //destroy the current session variables
     req.session.destroy((err)=>{
         if(err){
             console.error("Failed to end session:", err);
             return res.status(500).send("Log ud fejl")
         }
+        //clear cookies and send logged out
         res.clearCookie('connect.sid');
         res.send("Du loggede ud");
     })
 });
 
+//get cities route
 router.get('/get_cities', (req, res)=>{
+    //finds all city names and ids from table city
     db.all(`SELECT id, city FROM cities`, (err, rows) => {
         //if there is a server error the following message will be printed
         if (err) {
@@ -102,9 +110,12 @@ router.get('/get_cities', (req, res)=>{
     });
 });
 
+//find stores route
 router.get('/get_stores', (req, res)=>{
+    //gets city id from front end code
     const city_id = req.query.city_id;
 
+    //selects all shop ids and shop names from shops table by city id
     db.all(`SELECT id, shop_name FROM shops WHERE city_id = ?`, [city_id], (err, rows)=>{
         //if there is a server error the following message will be printed
         if (err) {
@@ -115,9 +126,11 @@ router.get('/get_stores', (req, res)=>{
     })
 });
 
-
+//add new shop route, which uses a "logo" given from front end
 router.post("/new_shop", upload.fields([{ name: 'logo', maxCount: 1 }]), async (req, res) => {
+    //tries the following:
     try {
+        //defines following variables from front end code
         const { butik: name, email, city_name: city_id, longitude: long, latitude: lat } = req.body;
         // check if any inputs are missing
         if (!name || !email || !city_id || !long || !lat) {
