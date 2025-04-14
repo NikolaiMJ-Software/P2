@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         //variable which checks if mails are valid
         const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        //rest mail, if not valid sent error
+        //test mail, if not valid sent error
         if (!email_regex.test(email)) {
             error_message.textContent = 'Ugyldig e-mailadresse.';
             return;
