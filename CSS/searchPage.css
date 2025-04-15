@@ -15,7 +15,8 @@ body {
     }
     .productText {
       transform: scale(0.8);
-      transform-origin: top left;
+      transform-origin: center;
+
     }
 }
 
@@ -155,11 +156,7 @@ button {
     position: absolute;
     translate: 0px -300px;
     font-size: 32px;
-    text-shadow: 
-    -1px -1px 0 #D35050,  
-     1px -1px 0 #D35050,
-    -1px  1px 0 #D35050,
-     1px  1px 0 #D35050;
+    font-weight: bolder;
 }
 
 .advert {
@@ -331,6 +328,7 @@ form button:hover {
     background-color: #fffafa;
     color: #2B2A35;
     cursor: pointer;
+    transform-origin: center;
 }
 
 /* ===========================

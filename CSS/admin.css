@@ -39,3 +39,9 @@ td {
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+#crash-timer{
+    position: absolute;
+    right: 0;
+    top: 0;
+}

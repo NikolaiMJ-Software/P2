@@ -41,12 +41,24 @@ document.addEventListener("DOMContentLoaded", async () => {
             if(confirm("Er du helt sikker på du vil crashe serveren?")){
                 if(confirm("Er du 100% sikker?")){
                     alert("Server will crash in 10 seconds")
-                    setTimeout(crashServer, 10000)
+                    setTimeout(crashServer, 12000)
+                    countdown(10);
                 }
             }
         }
     }
 })
+
+function countdown(seconds){
+    let x = setInterval(() => {
+        document.getElementById("timer").textContent = seconds;
+        seconds--;
+
+        if(seconds < 0){
+            clearInterval(x);
+        }
+    }, 1000);
+}
 
 async function crashServer(){
     alert("Server will now crash")
