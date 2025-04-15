@@ -92,8 +92,9 @@ router.post('/reserve_wares', async (req, res) => {
             // Random generatet unik code
             const code = crypto.randomUUID();
 
+            const baseUrl = "https://cs-25-sw-2-06.p2datsw.cs.aau.dk/node0";
             // Update orders
-            const response = await fetch("/mail_order", {
+            const response = await fetch(`${baseUrl}/mail_order`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -105,7 +106,7 @@ router.post('/reserve_wares', async (req, res) => {
             });
 
             const order = await response.json();
-            const url = `./comfirm?id=${order.id}&code=${code}`;
+            const url = `${baseUrl}/comfirm?id=${order.id}&code=${code}`;
         
             //Sends an email to each store (each sub-array is only products from that store)
             const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
