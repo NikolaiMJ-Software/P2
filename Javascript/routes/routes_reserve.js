@@ -100,7 +100,7 @@ router.post('/reserve_wares', async (req, res) => {
     for(let i = 0; i > cart_items.length; i++) {
         let shop_name = await db_get("SELECT shops.shop_name FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
         let shop_name_string = shop_name.shop_name
-        user_text += `${shop_name_string}:\n${named_cart[i]}`;
+        user_text += `${shop_name_string}:\n${named_cart[i]}\n`;
     }
 
     //Sends email to user that is reserving the wares
