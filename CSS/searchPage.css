@@ -15,7 +15,8 @@ body {
     }
     .productText {
       transform: scale(0.8);
-      transform-origin: top left;
+      transform-origin: center;
+
     }
 }
 
@@ -327,6 +328,7 @@ form button:hover {
     background-color: #fffafa;
     color: #2B2A35;
     cursor: pointer;
+    transform-origin: center;
 }
 
 /* ===========================
