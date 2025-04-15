@@ -280,6 +280,8 @@ if(button_reserve != null) {
         console.log(response.json());
         alert("Du har nu reserveret dine varer, check din email");
         document.cookie = `products=;path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
+        const table_body = document.querySelector("#cart tbody");
+        table_body.replaceChildren();
         fill_table();
     });
 }
