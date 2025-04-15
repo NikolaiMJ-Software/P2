@@ -26,23 +26,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         shopSearch.appendChild(createSearch())
 
         //Add shop creation to page
-        let createShop = document.createElement('button')
+        /*let createShop = document.createElement('button')
         createShop.onclick = () => {window.location.href=`./new_store`}
         createShop.textContent = "Create a new shop";
         createShop.style = "margin-left: 10px"
-        shopSearch.appendChild(createShop);
+        shopSearch.appendChild(createShop);*/
 
         //load shop data
         shopTable()
     }
 
+    //crash button
     document.getElementById("crash-button").onclick = () =>{
         if(confirm("Vil du gerne crashe serveren?")){
             if(confirm("Er du helt sikker på du vil crashe serveren?")){
                 if(confirm("Er du 100% sikker?")){
                     alert("Server will crash in 10 seconds")
-                    setTimeout(crashServer, 12000)
-                    countdown(10);
+                    setTimeout(crashServer, 12000) //crash server in 12 seconds
+                    countdown(10); //start countdown for 10 seconds
                 }
             }
         }
@@ -128,15 +129,15 @@ function userTable(){
     //Insert all users into table
     users.forEach(user => {
         //initialize elements
-        let tableRow = document.createElement("tr")
-        let userId = document.createElement("td")
-        let username = document.createElement("td")
-        let email = document.createElement("td")
-        let shopId = document.createElement("td")
-        let shopName = document.createElement("td")
-        let shopSlct = document.createElement("select")
-        let deleteTd = document.createElement("td")
-        let deleteBtn = document.createElement("button")
+        let tableRow = document.createElement("tr"),
+            userId = document.createElement("td"),
+            username = document.createElement("td"),
+            email = document.createElement("td"),
+            shopId = document.createElement("td"),
+            shopName = document.createElement("td"),
+            shopSlct = document.createElement("select"),
+            deleteTd = document.createElement("td"),
+            deleteBtn = document.createElement("button");
 
         //Delete user functionality
         deleteBtn.textContent = "delete user"
@@ -173,8 +174,6 @@ function userTable(){
             shopChoice.textContent = shop.id + " " + shop.shop_name
             shopSlct.appendChild(shopChoice)
         })
-
-
 
         //Initialize table contents
         userId.textContent = user.id
@@ -236,20 +235,17 @@ function shopTable(){
     //Insert all shops into table
     shops.forEach(shop => {
         //initialize elements for the table
-        let tableRow = document.createElement("tr")
-        let shopId = document.createElement("td")
-        let cityId = document.createElement("td")
-        let shopName = document.createElement("td")
-        let emailTd = document.createElement("td")
-        let emailEdit = document.createElement("button")
-
-        let revenue = document.createElement("td")
-
-        let dashboard = document.createElement("td")
-        let dashboardBtn = document.createElement("button")
-
-        let deleteTd = document.createElement("td")
-        let deleteBtn = document.createElement("button")
+        let tableRow = document.createElement("tr"),
+            shopId = document.createElement("td"),
+            cityId = document.createElement("td"),
+            shopName = document.createElement("td"),
+            emailTd = document.createElement("td"),
+            emailEdit = document.createElement("button"),
+            revenue = document.createElement("td"),
+            dashboard = document.createElement("td"),
+            dashboardBtn = document.createElement("button"),
+            deleteTd = document.createElement("td"),
+            deleteBtn = document.createElement("button");
 
         //Delete shop functionality
         deleteBtn.textContent = "delete shop"
