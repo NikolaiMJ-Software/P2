@@ -79,11 +79,9 @@ export async function filters(products) {
 };
 
 // Sorts after smallest shops and top 3 most popular products (define by revenue and bought)
-export async function sortStandart(){
+export async function sortStandart(products){
     const responseShop = await fetch('./shop'); // Fetch shops from the server
-    const responseProducts = await fetch('./products'); // Fetch products from the server
     const shops = await responseShop.json();
-    const products = await responseProducts.json();
     
     // Sort shops after revenue
     shops.sort((a, b) => a.revenue - b.revenue);

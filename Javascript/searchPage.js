@@ -237,9 +237,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch('./products'); // Fetch products from the server
         let orderedProducts = await response.json();
         let products = orderedProducts.filter(product => product.city_id === currentCityId); // Save only the chosen citys products
+        console.log(products)
 
         // Sort smallest store as standart filter
-        products = await sortStandart();
+        products = await sortStandart(products);
         console.log('Standart sorted list:', products);
         
         const searchInput = document.getElementById('inputProductSearch');
