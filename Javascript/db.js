@@ -115,12 +115,11 @@ db.serialize(() => {
     });
 
     db.run(`CREATE TABLE orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         shop_id INTEGER,
-        order_id INTEGER,
-        product_id INTEGER,
-        amount INTEGER,
-        price REAL
-
+        products TEXT,
+        code TEXT,
+        FOREIGN KEY(shop_id) REFERENCES shops(id)
     )`, (err) => {
         if (err) console.error("Error creating table:", err.message);
         else console.log("Table 'orders' created with UNIQUE constraint.");
@@ -141,7 +140,7 @@ db.serialize(() => {
 
     db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude, revenue) VALUES
         ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'aeje24@student.aau.dk', 57.048939, 9.921764, 150000),
-        ('jerrys vare', '1', 'Images/Aalborg/jerrys vare/logo.png', 'aeje24@student.aau.dk', 57.070059, 9.946330, 10)`, (err) => {
+        ('jerrys vare', '1', 'Images/Aalborg/jerrys vare/logo.png', 'mormorogmorfar123456789@gmail.com', 57.070059, 9.946330, 10)`, (err) => {
             if (err) console.error('Error inserting data:', err.message);
             else console.log('Shop inserted.');
     });
@@ -190,11 +189,22 @@ db.serialize(() => {
             else console.log('product inserted.');
     });
 
-    db.run(`INSERT INTO orders (shop_id, order_id, product_id, amount, price) VALUES 
-    (2, 1, 3, 1, 1000000)`, (err) => {
-        if (err) console.error('Error inserting data:', err.message);
-        else console.log('Order inserted.');
-    });
+    const products = [
+        { product_id: 1, amount: 2, price: 100 },
+        { product_id: 2, amount: 1, price: 150 }
+    ];
+    const productsJson = JSON.stringify(products);
+    const shop_id = 1;
+
+    db.run(`INSERT INTO orders (shop_id, products, code) VALUES (?, ?, ?)`, [shop_id, productsJson, '123-abc'], 
+        (err) => {
+            if (err) {
+                console.error('Error inserting data:', err.message);
+            } else {
+                console.log('Order inserted successfully.');
+            }
+        }
+    );
 
     db.run(`CREATE INDEX idx_shops_city ON shops(city_id);`);
     db.run(`CREATE INDEX idx_products_shop ON products(shop_id);`);

@@ -84,15 +84,15 @@ router.post('/mail_revenue', checkPassword, (req, res) => {
 });
 
 router.post('/mail_order', checkPassword, (req, res) => {
-    const { shop_id, order_id, product_id, amount, price } = req.body;
+    const { shop_id, products } = req.body;
 
-    if (!shop_id || !order_id || !product_id || !amount || !price) {
-        return res.status(400).json({ message: 'Mangler shop_id, order_id, produkt_id, antal og pris ting' });
+    if (!shop_id || !products) {
+        return res.status(400).json({ message: 'Mangler shop_id, produkt_id, antal og pris ting' });
     }
 
     /* Lounce quest*/
     if (revenue >= 0){
-        db.run(`UPDATE orders SET shop_id = ? WHERE order_id = ? SET product_id = ? SET amount = ? SET price = ?`, [shop_id, order_id, product_id, amount, price], function (err) {
+        db.run(`UPDATE orders SET shop_id = ? SET products = ? `, [shop_id, products], function (err) {
             if (err){
                 return res.status(500).send("Databasefejl");
             }else{

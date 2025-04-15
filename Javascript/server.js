@@ -345,6 +345,9 @@ app.get('/orders', (req, res) => {
     });
 });
 
+app.get('/confirm', (req, res) => {
+    res.sendFile(path.join(__dirname, '../HTML/confirm.html'));
+});
 
 app.use('/', reserve_router);
 
