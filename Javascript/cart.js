@@ -48,6 +48,16 @@ function remove_from_cart(product_id) {
     }
 }
 
+//Updates cart button number that showcases amount of wares in cart
+function update_cart_button() {
+    let length = getCookie("products").split(",").length;
+    if(length === 1 && getCookie("products").split(",")[0] === "") {
+        length = 0;
+    }
+    console.log("length: " + length);
+    document.getElementById("cart_top_button").textContent = "Din kurv (" + length + ")"
+}
+
 //Function to get a specific cookie (relevant for other functions) **taken from internet**
 function getCookie(cname) {
     let name = cname + "=";
@@ -74,9 +84,9 @@ function fill_table() {
     let past_product = null;
     const table_body = document.querySelector("#cart tbody");
     let data = getCookie("products").split(",").map(Number);
+    document.getElementById("total_cost").textContent = "Endelig pris: 0 kr.";
     if (!data) {
         console.log("Kunne ikke finde din kurv, har du tilføjet varer til den?");
-        document.getElementById("total_cost").textContent = "Endelig pris: 0 kr.";
         return;
     }
     console.log("Udfylder tabel med dine varer...");
@@ -89,6 +99,11 @@ function fill_table() {
             let amount = parseInt(document.getElementById(product).textContent);
             amount++;
             document.getElementById(product).textContent = amount;
+
+            let product_price = parseInt(document.getElementById(product + "price").textContent);
+            product_price += products[product-1].price;
+            document.getElementById(product + "price").textContent = product_price;
+            
             total_cost += products[product-1].price;
             document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
         } else {
@@ -148,6 +163,7 @@ function fill_table() {
 
             //Creates and fills the fourth column in the row (price of product)
             let price_element = document.createElement("td");
+            price_element.setAttribute("id", product + "price");
             price_element.textContent = products[product-1].price;
             total_cost += products[product-1].price;
             row.appendChild(price_element);
@@ -214,6 +230,7 @@ if(button != null) {
                 add_to_cart(product_id);
             }
             alert("Din vare(er) er tilføjet til kurven");
+            update_cart_button();
         } else {
             alert("Du kan ikke tilføje flere varer til din kurv end der er antal på lager");
         }
@@ -227,9 +244,10 @@ if(button_reserve != null) {
 
         //Asks user for a reservation email if user is not logged in
         let user_email = null;
+        const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(window.getComputedStyle(document.getElementById("login")).display != "none") {
             user_email = prompt("Hvilken email skal reservationen sendes til?","Din email her");
-            if(!user_email.includes("@")) {
+            if(!email_regex.test(user_email)) {
                 alert("Ugyldig email");
                 return;
             }
@@ -260,17 +278,33 @@ if(button_reserve != null) {
             body: JSON.stringify({ cart: sorted_cart, user_email: user_email })
         });
         console.log(response.json());
+        alert("Du har nu reserveret dine varer, check din email");
+        document.cookie = `products=;path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
+        const table_body = document.querySelector("#cart tbody");
+        table_body.replaceChildren();
+        fill_table();
     });
 }
 
-//Starting up function for both cart.html and product_page.html
+//Starting up function for all pages this script is used in
 (async function(){
 
-    //Update last visit time, and fills global array with server-side product data (see server.js for server-side)
+    //Update timestamp for last visit
     updateLastVisit();
-    console.log("Henter produkt data...");
-    const response = await fetch('./products');
-    products = await response.json();
+
+    //If on searchPage.html or product_page.html, update the cart button to show number of wares
+    window.addEventListener('pageshow', () => {
+        if(document.getElementById("filterButton") != null || document.getElementById("shop_name_button") != null) {
+            update_cart_button();
+        }
+    });
+
+    //If on product_page.html or cart.html, load the product database
+    if(document.getElementById("shop_name_button") != null || document.getElementById("cart") != null) {
+        console.log("Henter produkt data...");
+        const response = await fetch('./products');
+        products = await response.json();
+    }
 
     //If on cart.html, add event listener for ready state if not loaded, otherwise just start up
     if(document.getElementById("cart") != null) {

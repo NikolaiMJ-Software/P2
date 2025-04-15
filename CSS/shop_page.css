@@ -5,19 +5,20 @@ body {
 
 .productHeader{
     display: flex;
+    font-size: 25px;
     flex-direction: column;
     align-items: center;
     translate: 0px 100px;
 }
-
 form {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    overflow: hidden;
-    width: 400px; /* Adjust width */
-    background-color: white;
+  display: flex;
+  align-items: center;
+  border: 2px solid #A8D5BA;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 400px; /* Adjust width */
+  background-color: white;
+  caret-color: #A8D5BA;
 }
 
 /* Style the input field */
@@ -74,14 +75,17 @@ button {
 }
 
 .product{
-    position: relative;
-    width: 300px;
-    height: 450px;
-    background: white;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    text-align: center;
-    color: black;
+  position: relative;
+  width: 300px;
+  height: 450px;
+  background: white;
+  border-radius: 10px;
+  border-top: 7px solid #A8D5BA;
+  border-bottom: 7px solid #89C7B0;
+  border-left: 2px solid #A8D5BA ;
+  border-right: 2px solid #A8D5BA ;
+  text-align: center;
+  color: black;
 }
 
 .productImage{
@@ -221,7 +225,7 @@ button {
     }  
     
     .average-stars {
-      font-size: 20px;
+      font-size: 35px;
       color: goldenrod;
       margin: 8px 0 12px;
       text-align: left;

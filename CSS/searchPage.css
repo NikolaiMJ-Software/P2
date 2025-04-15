@@ -4,6 +4,22 @@ body {
     min-height: 2000px;
 }
 
+@media (max-width: 1800px) {
+    .advert {
+      transform: scale(0.8);
+      transform-origin: top left;
+    }
+    .advertButton {
+      transform: scale(0.8);
+      transform-origin: top left;
+    }
+    .productText {
+      transform: scale(0.8);
+      transform-origin: center;
+
+    }
+}
+
 .productHeader{
     display: flex;
     flex-direction: column;
@@ -140,11 +156,7 @@ button {
     position: absolute;
     translate: 0px -300px;
     font-size: 32px;
-    text-shadow: 
-    -1px -1px 0 #D35050,  
-     1px -1px 0 #D35050,
-    -1px  1px 0 #D35050,
-     1px  1px 0 #D35050;
+    font-weight: bolder;
 }
 
 .advert {
@@ -155,10 +167,12 @@ button {
     max-width: 946px;
     box-sizing: border-box;
     translate: 640px 0px;
+    height: 200vh;
   }
 
 .advertButton{
-    position: relative;
+    position: sticky;
+    top: 50px;
     width: 300px;
     height: 450px;
     background: white;
@@ -314,7 +328,33 @@ form button:hover {
     background-color: #fffafa;
     color: #2B2A35;
     cursor: pointer;
+    transform-origin: center;
 }
+
+/* ===========================
+    rating
+=========================== */
+.product .rating {
+    position: absolute;
+    bottom: 14%;
+    transform: translateX(25%);
+    font-size: 25px;
+    color: goldenrod;
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .advertButton .rating {
+    position: absolute;
+    bottom: 14%;
+    transform: translateX(25%);
+    font-size: 25px;
+    color: goldenrod;
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+  }
 
 /* ===========================
    Input Focus & Hover (Subtle)

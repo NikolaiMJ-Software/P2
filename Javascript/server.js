@@ -90,6 +90,11 @@ app.get('/searchpage', (req, res) => {
             res.status(404).json({ error: 'City not found' });
             return;
         }
+        if (rows[0].city !== "Aalborg"){
+            res.status(404).json({ error: 'City not sat up' });
+            return;
+        }
+
         console.log(`\nCity requested: ${city}`); 
         console.log("User:", req.user?.email);
         console.log("Admin:", req.user?.admin_user);

@@ -7,6 +7,12 @@
     position: absolute;
     bottom: 0;
     left: 0;
+    min-width: -webkit-fill-available;
+}
+
+#crash-button{
+    position: absolute;
+    right: 0;
 }
 
 
@@ -20,19 +26,22 @@ td {
     visibility: collapse;
 }
 
-#user-table-body{
-    text-align: left;
-}
-
-#shop-table-body{
+#user-table-body, #shop-table-body{
     text-align: left;
 }
 
 #editBtn{
     float: right;
-    
+    margin-left: 10px;
 }
 
-#shopSearch, #userSearch{
+#shopFunctions, #userSearch{
     padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#crash-timer{
+    position: absolute;
+    right: 0;
+    top: 0;
 }

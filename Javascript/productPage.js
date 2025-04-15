@@ -258,8 +258,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // Highlight current product
                 if (variant.id === id) {
-                    box.style.border = '2px solid red';
-                }
+                    box.style.border = '2px solid #4A7E8F';
+                }    
+
 
                 // Append the box to the container
                 container.appendChild(box);
