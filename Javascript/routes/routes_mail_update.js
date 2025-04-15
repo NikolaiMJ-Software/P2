@@ -2,13 +2,13 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 import path from 'path';
 
-//Makes files work together
+// Makes files work together
 const router = express.Router();
 
-//Makes a path to the current database (which can't be directly interacted with)
+// Makes a path to the current database (which can't be directly interacted with)
 const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
 
-//Makes a new database with data from the current database (which can be interacted with)
+// Makes a new database with data from the current database (which can be interacted with)
 const db = new sqlite3.Database(db_path, (err) => {
     if (err) return console.error('Mail_update DB error:', err.message);
     console.log('Connected to SQLite database (Mail_update router).');
@@ -52,7 +52,7 @@ router.post('/mail_bought', checkPassword, (req, res) => {
         return res.status(400).json({ message: 'Både bought og id skal sendes' });
     }
 
-    /* Lounce quest*/
+    // Lounce quest
     if (bought >= 0){
         db.run(`UPDATE products SET bought = ? WHERE id = ?`, [bought, id], function (err) {
             if (err){
@@ -71,7 +71,7 @@ router.post('/mail_revenue', checkPassword, (req, res) => {
         return res.status(400).json({ message: 'Både revenue og shop_id skal sendes' });
     }
 
-    /* Lounce quest*/
+    // Lounce quest
     if (revenue >= 0){
         db.run(`UPDATE shops SET revenue = ? WHERE id = ?`, [revenue, shop_id], function (err) {
             if (err){
@@ -90,16 +90,14 @@ router.post('/mail_order', checkPassword, (req, res) => {
         return res.status(400).json({ message: 'Mangler shop_id, produkt_id, antal og pris ting' });
     }
 
-    /* Lounce quest*/
-    if (revenue >= 0){
-        db.run(`UPDATE orders SET shop_id = ? SET products = ? `, [shop_id, products], function (err) {
-            if (err){
-                return res.status(500).send("Databasefejl");
-            }else{
-                res.send("Orders updated");
-            }
-        });
-    }
+    // Lounce quest
+    db.run(`UPDATE orders SET shop_id = ? SET products = ? `, [shop_id, products], function (err) {
+        if (err){
+            return res.status(500).send("Databasefejl");
+        }else{
+            res.send("Orders updated");
+        }
+    });
 });
 
 export default router;
