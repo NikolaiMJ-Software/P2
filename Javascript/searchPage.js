@@ -13,6 +13,7 @@ const email = urlParams.get('email');
 async function updateImage(products) {
     updateLastVisit(); // Update users last visit
     productContainer.innerHTML = ''; // Clear existing products
+    advertContainer.innerHTML = ''; // empy the ad
     productButtons.length = 0; // Reset product buttons array
     //go through products
     for (const product of products) {
