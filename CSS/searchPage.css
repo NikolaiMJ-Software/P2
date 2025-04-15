@@ -155,11 +155,7 @@ button {
     position: absolute;
     translate: 0px -300px;
     font-size: 32px;
-    text-shadow: 
-    -1px -1px 0 #D35050,  
-     1px -1px 0 #D35050,
-    -1px  1px 0 #D35050,
-     1px  1px 0 #D35050;
+    font-weight: bolder;
 }
 
 .advert {
