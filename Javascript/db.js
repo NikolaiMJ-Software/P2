@@ -118,7 +118,8 @@ db.serialize(() => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         shop_id INTEGER,
         products TEXT,
-        code TEXT
+        code TEXT,
+        FOREIGN KEY(shop_id) REFERENCES shops(id)
     )`, (err) => {
         if (err) console.error("Error creating table:", err.message);
         else console.log("Table 'orders' created with UNIQUE constraint.");
