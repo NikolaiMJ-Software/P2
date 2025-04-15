@@ -113,9 +113,9 @@ router.post('/reserve_wares', async (req, res) => {
             await send_mail(
                 shop_mail.email,
                 `En bruger har reserveret varer hos din butik`,
-                `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`,
-                `Brugeren ${user_email} har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`,
-                `Klik her for at bekrafte kundens afhæntning: ${url}`
+                `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}
+                Brugeren ${user_email} har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}
+                Klik her for at bekrafte kundens afhæntning: ${url}`
             );
         }
 
