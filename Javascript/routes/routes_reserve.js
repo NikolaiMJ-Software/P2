@@ -93,7 +93,7 @@ router.post('/reserve_wares', async (req, res) => {
             const code = crypto.randomUUID();
 
             // Update orders
-            const response = await fetch("./mail_order", {
+            const response = await fetch("/mail_order", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
