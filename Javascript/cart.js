@@ -50,11 +50,12 @@ function remove_from_cart(product_id) {
 
 //Updates cart button number that showcases amount of wares in cart
 function update_cart_button() {
-    let products = getCookie("products").split(",");
-    if(products === "") {
-        products.length = 0;
+    let length = getCookie("products").split(",").length;
+    if(length === 1 && getCookie("products").split(",")[0] === "") {
+        length = 0;
     }
-    document.getElementById("cart_top_button").textContent = "Din kurv (" + products.length + ")"
+    console.log("length: " + length);
+    document.getElementById("cart_top_button").textContent = "Din kurv (" + length + ")"
 }
 
 //Function to get a specific cookie (relevant for other functions) **taken from internet**
@@ -243,9 +244,10 @@ if(button_reserve != null) {
 
         //Asks user for a reservation email if user is not logged in
         let user_email = null;
+        const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(window.getComputedStyle(document.getElementById("login")).display != "none") {
             user_email = prompt("Hvilken email skal reservationen sendes til?","Din email her");
-            if(!user_email.includes("@")) {
+            if(!email_regex.test(user_email)) {
                 alert("Ugyldig email");
                 return;
             }
@@ -289,9 +291,11 @@ if(button_reserve != null) {
     updateLastVisit();
 
     //If on searchPage.html or product_page.html, update the cart button to show number of wares
-    if(document.getElementById("filterButton") != null || document.getElementById("shop_name_button") != null) {
-        update_cart_button();
-    }
+    window.addEventListener('pageshow', () => {
+        if(document.getElementById("filterButton") != null || document.getElementById("shop_name_button") != null) {
+            update_cart_button();
+        }
+    });
 
     //If on product_page.html or cart.html, load the product database
     if(document.getElementById("shop_name_button") != null || document.getElementById("cart") != null) {
