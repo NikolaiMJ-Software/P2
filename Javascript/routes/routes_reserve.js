@@ -87,7 +87,7 @@ router.post('/reserve_wares', async (req, res) => {
             await send_mail(
                 shop_string,
                 `En bruger har reserveret varer hos din butik`,
-                `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`
+                `Brugeren ${user_email} har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`
             );
         }
         catch (error) {
@@ -95,11 +95,19 @@ router.post('/reserve_wares', async (req, res) => {
         }
     }
 
+    //Generate a proper text-string for the email the user is getting
+    let user_text = `Du har reserveret fra følgende butikker på Click&hent:\n`;
+    for(let i = 0; i < cart_items.length; i++) {
+        let shop_name = await db_get("SELECT shops.shop_name FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
+        let shop_name_string = shop_name.shop_name
+        user_text += `${shop_name_string}:\n${named_cart[i]}\n`;
+    }
+
     //Sends email to user that is reserving the wares
     await send_mail(
         user_email,
         `Du har reserveret varer på Click&hent`,
-        `Du har reserveret følgende varer på Click&hent: ${named_cart.flat().join(', ')}`
+        user_text
     )
     return res.json({ success: cart_items });
 });
