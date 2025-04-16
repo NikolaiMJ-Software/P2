@@ -244,10 +244,10 @@ app.get('/comments', (req, res) => {
     let param = '';
 
     if (product_id) {
-        query = 'SELECT name, comment, rating, timestamp FROM comments WHERE product_id = ? ORDER BY timestamp DESC';
+        query = 'SELECT name, user_email, comment, rating, timestamp FROM comments WHERE product_id = ? ORDER BY timestamp DESC';
         param = product_id;
     } else if (shop_id) {
-        query = 'SELECT name, comment, rating, timestamp FROM comments WHERE shop_id = ? ORDER BY timestamp DESC';
+        query = 'SELECT name, user_email, comment, rating, timestamp FROM comments WHERE shop_id = ? ORDER BY timestamp DESC';
         param = shop_id;
     } else {
         return res.status(400).json({ error: 'Missing product_id or shop_id' });
@@ -267,6 +267,7 @@ app.get('/comments', (req, res) => {
 app.put('/comment', (req, res) => {
     const { product_id, shop_id, name, comment, rating } = req.body;
     const timestamp = Date.now();
+    const email = req.user.email;
 
     if ((!product_id && !shop_id) || !name || !comment) {
         return res.status(400).json({ error: 'Missing product_id or shop_id, name, or comment' });
@@ -276,8 +277,8 @@ app.put('/comment', (req, res) => {
     let queryValue = product_id || shop_id;
 
     db.get(
-        `SELECT id FROM comments WHERE ${queryField} = ? AND name = ?`,
-        [queryValue, name],
+        `SELECT id FROM comments WHERE ${queryField} = ? AND user_email = ?`,
+        [queryValue, email],
         (err, row) => {
             if (err) {
                 return res.status(500).json({ error: err.message });
@@ -285,8 +286,8 @@ app.put('/comment', (req, res) => {
 
             if (!row) {
                 db.run(
-                    `INSERT INTO comments (${queryField}, name, comment, rating, timestamp) VALUES (?, ?, ?, ?, ?)`,
-                    [queryValue, name, comment, rating, timestamp],
+                    `INSERT INTO comments (${queryField}, name, user_email, comment, rating, timestamp) VALUES (?, ?, ?, ?, ?, ?)`,
+                    [queryValue, name, email, comment, rating, timestamp],
                     function (err) {
                         if (err) return res.status(500).json({ error: err.message });
                         res.json({ success: true, updated: false });
