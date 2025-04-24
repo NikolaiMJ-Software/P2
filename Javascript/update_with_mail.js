@@ -45,6 +45,8 @@ console.log('the ordered product', orderProducts, 'Shop id: ' + shop_id );
 
         // Changes from mail
         for (const orderProduct of orderProducts) {
+console.log('Type of orderProduct: ', typeof orderProduct);
+console.log('Current orderProduct:', orderProduct);
             const product_id = orderProduct.product_id; // The product;
             const change = orderProduct.amount; // Amount
             const price = orderProduct.price; // Price for the product
