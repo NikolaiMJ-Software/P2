@@ -154,10 +154,18 @@ button {
 .productText{
     color: #D35050;
     position: absolute;
-    translate: 0px -300px;
+    transform: translateY(-300px);
     font-size: 32px;
     font-weight: bolder;
 }
+
+@-moz-document url-prefix() {
+    .productText {
+      font-size: 24px;
+      transform: translateY(-300px);
+      left: 13%;
+    }
+  }
 
 .advert {
     position: absolute;
