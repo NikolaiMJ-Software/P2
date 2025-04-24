@@ -55,7 +55,12 @@ async function updateImage(products) {
         else productDesc.textContent = product.description;
         //price
         productPrice.classList.add('productPrice');
-        productPrice.textContent = product.price + ",-";
+        let finalPrice = product.price;
+        if (product.discount > 0 && product.discount < product.price) {
+            finalPrice = (product.price - product.discount).toFixed(2);
+        }
+        productPrice.textContent = `${finalPrice},-`;
+
         //discount
         productDiscount.classList.add('productDiscount');
         if(product.discount > 0)
@@ -165,7 +170,11 @@ async function updateImage(products) {
         else advertDesc.textContent = advertChosen.description;
         //price
         advertPrice.classList.add('productPrice');
-        advertPrice.textContent = advertChosen.price + ",-";
+        let finalAdvertPrice = advertChosen.price;
+        if (advertChosen.discount > 0 && advertChosen.discount < advertChosen.price) {
+            finalAdvertPrice = (advertChosen.price - advertChosen.discount).toFixed(2);
+        }
+        advertPrice.textContent = `${finalAdvertPrice},-`;
         //discount
         advertDiscount.classList.add('productDiscount');
         if(advertChosen.discount != 0 && advertChosen.discount != null)
