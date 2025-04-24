@@ -56,8 +56,8 @@ async function updateImage(products) {
         //price
         productPrice.classList.add('productPrice');
         let finalPrice = product.price;
-        if (product.discount > 0 && product.discount < product.price) {
-            finalPrice = (product.price - product.discount).toFixed(2);
+        if (product.discount > 0) {
+            finalPrice -= product.discount;
         }
         productPrice.textContent = `${finalPrice},-`;
 

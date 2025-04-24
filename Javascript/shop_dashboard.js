@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
         //define discount for the product, anc check if discount is over 0
         const has_discount = product.discount && product.discount > 0;
         //make the discount to a %
-        const discounted_price = has_discount ? product.price - (product.price * product.discount) / 100 : product.price;
+        const discounted_price = has_discount ? product.price - product.discount : product.price;
     
         //if product has discount add the discount element
         if (has_discount) {
@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
             //defines discounted class to work with css
             discounted.className = "price-discounted";
             //define discounted price in kr. using former caluclation variable and limiting the discounted price to two decimals
-            discounted.textContent = `${discounted_price.toFixed(2)} kr.`;
+            discounted.textContent = `${discounted_price} kr.`;
     
             //create span element for original price
             const original = document.createElement("span");
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", async () =>{
             //define class for css
             tag.className = "price-tag";
             //define discount amount and add - and % in front and end
-            tag.textContent = `-${product.discount}%`;
+            tag.textContent = `-${product.discount} kr.`;
     
             // append these features
             price_container.append(discounted, original, tag);
