@@ -71,29 +71,28 @@ router.post('/reserve_wares', async (req, res) => {
         for(let i = 0; i < cart_items.length; i++) {
             const products = [];
             named_cart[i] = [];
-
             for(let x = 0; x < cart_items[i].length; x++) {
                 const product_id = cart_items[i][x];
                 const product = await db_get("SELECT products.product_name FROM products WHERE products.id = ?",[product_id]);
-                
+                // Insert the values in products
                 products.push({
                     product_id,
                     amount: 1,
                     price: product.price
                 });
-                
                 named_cart[i].push(product.product_name);
             }
         
-
+            // Define the shop_id based on cart
             const shopObj = await db_get("SELECT shop_id FROM products WHERE id = ?", [cart_items[i][0]]);
             const shop_id = shopObj.shop_id;
             
             // Random generatet unik code
             const code = crypto.randomUUID();
 
+            const baseUrl = "https://cs-25-sw-2-06.p2datsw.cs.aau.dk/node0";
             // Update orders
-            const response = await fetch("./mail_order", {
+            const response = await fetch(`${baseUrl}/mail_order`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -105,16 +104,16 @@ router.post('/reserve_wares', async (req, res) => {
             });
 
             const order = await response.json();
-            const url = `./comfirm?id=${order.id}&code=${code}`;
+            const url = `${baseUrl}/confirm?id=${order.id}&code=${code}`;
         
             //Sends an email to each store (each sub-array is only products from that store)
             const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
             await send_mail(
                 shop_mail.email,
                 `En bruger har reserveret varer hos din butik`,
-                `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`,
-                `Brugeren ${user_email} har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}`
-                `Klik her for at bekrafte kundens afhæntning: ${url}`
+                `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]},
+                Brugeren ${user_email} har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}
+                Klik her for at bekrafte kundens afhæntning: ${url}`
             );
         }
 

@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const avgStars = document.getElementById('average-rating-display');
 
   let userName = null;
+  let userEmail = null;
   let isLoggedIn = false;
   let hasCommented = false;
   let selectedRating = 0;
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hasCommented) {
       if (confirm("Du har allerede skrevet en kommentar til dette produkt. Vil du opdatere den?")) {
         // Pre-fill comment box and stars
-        const previousComment = allComments.find(c => c.name === userName);
+        const previousComment = allComments.find(c => c.email === userEmail);
         if (previousComment) {
           commentInput.value = previousComment.comment;
 
@@ -65,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hasCommented) {
       if (confirm("Du har allerede skrevet en kommentar til dette produkt. Vil du opdatere den?")) {
         // Pre-fill comment box and stars
-        const previousComment = allComments.find(c => c.name === userName);
+        const previousComment = allComments.find(c => c.email === userEmail);
         if (previousComment) {
           commentInput.value = previousComment.comment;
 
@@ -229,7 +230,8 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
       isLoggedIn = data.logged_in;
       if (isLoggedIn) {
-        userName = data.name || data.email;
+        userName = data.name;
+        userEmail = data.email;
       }
       loadComments(); // Call after checking login
     });

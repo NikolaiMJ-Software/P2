@@ -87,15 +87,18 @@ router.post('/mail_order', checkPassword, (req, res) => {
     const { shop_id, products } = req.body;
 
     if (!shop_id || !products) {
-        return res.status(400).json({ message: 'Mangler shop_id, produkt_id, antal og pris ting' });
+        return res.status(400).json({ message: 'Mangler shop_id eller produkter' });
     }
 
     // Lounce quest
-    db.run(`UPDATE orders SET shop_id = ? SET products = ? `, [shop_id, products], function (err) {
-        if (err){
-            return res.status(500).send("Databasefejl");
-        }else{
-            res.send("Orders updated");
+    const sql = `INSERT INTO orders (shop_id, products) VALUES (?, ?)`;
+    
+    db.run(sql, [shop_id, JSON.stringify(products)], function (err) {
+        if (err) {
+            return res.status(500).json({ message: "Databasefejl" });
+        } else {
+            // Return new id
+            res.json({ message: "Ordre oprettet", id: this.lastID });
         }
     });
 });
