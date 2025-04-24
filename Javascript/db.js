@@ -198,7 +198,7 @@ db.serialize(() => {
     const shop_id = 2;
     const order_id = 1;
 
-    db.run(`INSERT INTO orders (id, shop_id, products, code) VALUES (?, ?, ?, ?)`, [order_id, shop_id, productsJson, '123-abc'], 
+    db.run(`INSERT INTO orders (id, shop_id, products, code) VALUES (?, ?, ?, ?)`, [order_id, shop_id, productsJson, "123-abc"], 
         (err) => {
             if (err) {
                 console.error('Error inserting data:', err.message);

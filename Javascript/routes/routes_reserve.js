@@ -87,7 +87,7 @@ router.post('/reserve_wares', async (req, res) => {
             const shopObj = await db_get("SELECT shop_id FROM products WHERE id = ?", [cart_items[i][0]]);
             const shop_id = shopObj.shop_id;
             
-            // Random generatet code and make code, and products as a sting
+            // Random generatet code, then make code, and products as a sting
             const code = crypto.randomUUID();
             const codeString = JSON.stringify(code);
             const orderProducts = JSON.stringify(products);
