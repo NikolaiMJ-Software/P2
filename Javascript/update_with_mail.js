@@ -37,8 +37,6 @@ async function changesInProducts(id, code){
         const shop_id = order.shop_id;
         const orderProducts = JSON.parse(JSON.parse(order.products)); // convert to an object
 
-        let outOfStock = [];
-
         // Changes from mail
         for (const orderProduct of orderProducts) {
             const product_id = orderProduct.product_id; // The product;
@@ -63,14 +61,15 @@ async function changesInProducts(id, code){
             }
 
             // Skip to the next product in the order, if product is out of stock
-            if (product.stock <= 0){
-                for(let i = 0; i < outOfStock.length; i++){
-                    if (product.product_name === outOfStock[i]){
-                        continue;
-                    }
+            const diff = product.stock - change;
+            if(diff <= 0){
+                if (diff === 0){
+                    alert(`Det er den sidste af: ${product.product_name}, lager skal fyldes op.`);
+                } else if (product.stock > 0){
+                    alert(`Der er ikke nok på lager af: ${product.product_name}, lager skal fylde op.`);
+                } else{
+                    alert(`${product.product_name} er ikke på lager.\nKan ikke bekræfte afhentning af produktet`);
                 }
-                outOfStock.push(product.product_name);
-                alert(`${product.product_name} er ikke på lager.\nKan ikke bekrafte afhæntning`);
                 continue;
             }
 
