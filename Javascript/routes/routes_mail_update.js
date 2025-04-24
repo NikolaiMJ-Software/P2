@@ -103,4 +103,25 @@ router.post('/mail_order', checkPassword, (req, res) => {
     });
 });
 
+router.post('/update_order', checkPassword, (req, res) => {
+    const { id, shop_id, products, code } = req.body;
+
+    if (!id || !shop_id || !products) {
+        return res.status(400).json({ message: 'Mangler id, shop_id eller produkter' });
+    }
+
+    const finalCode = code === "" ? null : code;
+
+    const sql = `UPDATE orders SET shop_id = ?, products = ?, code = ? WHERE id = ?`;
+
+    db.run(sql, [shop_id, products, finalCode, id], function (err) {
+        if (err) {
+            return res.status(500).json({ message: "Databasefejl ved opdatering" });
+        } else {
+            res.json({ message: "Ordre opdateret", changes: this.changes });
+        }
+    });
+});
+
+
 export default router;

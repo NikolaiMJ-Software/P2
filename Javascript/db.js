@@ -190,13 +190,13 @@ db.serialize(() => {
     });
 
     const products = [
-        { product_id: 1, amount: 2, price: 100 },
-        { product_id: 2, amount: 1, price: 150 }
+        { product_id: 3, amount: 1, price: 1000000 }
     ];
     const productsJson = JSON.stringify(products);
-    const shop_id = 1;
+    const shop_id = 2;
+    const order_id = 1;
 
-    db.run(`INSERT INTO orders (shop_id, products, code) VALUES (?, ?, ?)`, [shop_id, productsJson, '123-abc'], 
+    db.run(`INSERT INTO orders (id, shop_id, products, code) VALUES (?, ?, ?, ?)`, [order_id, shop_id, productsJson, '123-abc'], 
         (err) => {
             if (err) {
                 console.error('Error inserting data:', err.message);
