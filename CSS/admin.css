@@ -7,7 +7,7 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    min-width: -webkit-fill-available;
+    min-width: 99vw;
 }
 
 #crash-button{

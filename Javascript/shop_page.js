@@ -66,8 +66,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 productImage.classList.add('productImage');
                 productImage.src = `./${product.img1_path}`;
 
-                productName.classList.add('productName');
-                productName.textContent = product.product_name;
+                productName.classList.add('productName')
+                if (product.product_name.length > 41){
+                    productName.textContent = product.product_name.slice(0, 41);
+                    productName.textContent += "...";
+                } else {
+                    productName.textContent = product.product_name;
+                }
 
                 productDesc.classList.add('productDesc');
                 productDesc.textContent =
