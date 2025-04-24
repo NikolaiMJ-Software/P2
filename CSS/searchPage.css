@@ -135,14 +135,20 @@ button {
     top: 85%;
 }
 
-.productStore{
+.productStore {
     position: absolute;
-    top: 85%;
-    align-self: anchor-center;
-    text-align: left;
+    top: 88%;
     left: 5%;
-    
+    transform: translateY(-50%);
 }
+
+.productStore img {
+    max-width: 100px;
+    max-height: 60px;
+    display: block;
+    margin-top: 10px;
+  }
+  
 
 .productDiscount{
     position: absolute;
@@ -154,10 +160,19 @@ button {
 .productText{
     color: #D35050;
     position: absolute;
-    translate: 0px -300px;
-    font-size: 32px;
+    transform: translateY(-300px);
+    font-size: 28px;
+    justify-self: anchor-center;
     font-weight: bolder;
 }
+
+@-moz-document url-prefix() {
+    .productText {
+      font-size: 24px;
+      transform: translateY(-300px);
+      left: 13%;
+    }
+  }
 
 .advert {
     position: absolute;
