@@ -70,6 +70,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (product.product_name.length > 41){
                     productName.textContent = product.product_name.slice(0, 41);
                     productName.textContent += "...";
+                } else {
+                    productName.textContent = product.product_name;
                 }
 
                 productDesc.classList.add('productDesc');
