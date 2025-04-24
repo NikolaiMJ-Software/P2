@@ -28,11 +28,8 @@ console.log('Orders: ', orders);
             continue;
         }
 
-        // Remove "" character
-        const orderCode = order.code.replace(/"/g, '');
-
-console.log('ORDERS CODE, and THE URL CODE', orderCode, code);
-        if (orderCode !== code){
+console.log('ORDERS CODE, and THE URL CODE', order.code, code);
+        if (order.code !== `"${code}"`){
             alert('Ordre er allerede behandlet');
             break;
         }
