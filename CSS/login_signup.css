@@ -255,4 +255,19 @@ section {
     box-shadow: 0 0 12px rgba(74, 126, 143, 0.1);
 }
 
+  /* Top Navigation Buttons */
+  .top-buttons {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 15px 20px;
+    font-size: 18px;
+    color: var(--primary-text);
+    border-left: 1px solid #ccc;
+    transition: background-color 0.2s ease;
+  }
+  .top-buttons:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
 
+  

@@ -87,22 +87,25 @@ router.post('/reserve_wares', async (req, res) => {
             const shopObj = await db_get("SELECT shop_id FROM products WHERE id = ?", [cart_items[i][0]]);
             const shop_id = shopObj.shop_id;
             
-            // Random generatet unik code
+            // Random generatet code, then make code, and products as a sting
             const code = crypto.randomUUID();
-
+            const codeString = JSON.stringify(code);
+            const orderProducts = JSON.stringify(products);
             const baseUrl = "https://cs-25-sw-2-06.p2datsw.cs.aau.dk/node0";
-            // Update orders
+
+            // Store orders
             const response = await fetch(`${baseUrl}/mail_order`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     password: '1234',
                     shop_id,
-                    products,
-                    code 
+                    products: orderProducts,
+                    code: codeString
                 })
             });
 
+            // Insert the new id and code in the link, what would be send
             const order = await response.json();
             const url = `${baseUrl}/confirm?id=${order.id}&code=${code}`;
         
@@ -111,9 +114,8 @@ router.post('/reserve_wares', async (req, res) => {
             await send_mail(
                 shop_mail.email,
                 `En bruger har reserveret varer hos din butik`,
-                `En bruger har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]},
-                Brugeren ${user_email} har fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}
-                Klik her for at bekrafte kundens afhæntning: ${url}`
+                `Brugeren med email ${user_email} fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}\n\n
+                Klik her for at bekræfte kundens afhæntning: ${url}`
             );
         }
 

@@ -2,10 +2,17 @@
 body {
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
-    height: 120vh; /* Full screen height */
     margin: 0;
     background-color: var(--page-bg);;
     flex-wrap: wrap;
+}
+
+footer {
+    margin: 0;
+    background-color: #777;
+    padding: 10px;
+    text-align: center;
+    color: white;
 }
 
 /* Wrapper for the heading and search bar */
@@ -14,6 +21,7 @@ body {
     flex-direction: column; /* Stack items vertically */
     align-items: center; /* Center horizontally */
     text-align: center;
+    min-height: 100vh;
 }
 
 /* Space between heading and search bar */
