@@ -7,13 +7,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const cities = await response.json();
         const container = document.getElementById('city-buttons'); // Target div
 
-
-    const confirm = document.getElementById('confirm-button');
-    const something = document.createElement('button');
-
-    something.onclick = () => { window.location.href = `./confirm?id=1&code=123-abc`; }
-    confirm.appendChild(something);
-
         const searchInput = document.getElementById('query');
         const searchForm = document.getElementById('form');
 

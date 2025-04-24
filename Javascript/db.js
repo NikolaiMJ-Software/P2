@@ -21,13 +21,13 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 
 db.serialize(() => {
-    db.run(`DROP TABLE IF EXISTS users`);
     db.run(`DROP TABLE IF EXISTS comments`);
+    db.run(`DROP TABLE IF EXISTS orders`);
+    db.run(`DROP TABLE IF EXISTS users`);
     db.run(`DROP TABLE IF EXISTS products`);
     db.run(`DROP TABLE IF EXISTS shops`);
     db.run(`DROP TABLE IF EXISTS cities`);
     db.run(`DROP TABLE IF EXISTS private`);
-    db.run(`DROP TABLE IF EXISTS orders`);
 
     db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -103,16 +103,18 @@ db.serialize(() => {
         product_id INTEGER,
         shop_id INTEGER,
         name TEXT,
+        user_email TEXT,
         comment TEXT,
         rating INTEGER,
         timestamp INTEGER,
+        FOREIGN KEY(user_email) REFERENCES users(email),
         FOREIGN KEY(product_id) REFERENCES products(id),
         FOREIGN KEY(shop_id) REFERENCES shops(id)
-
-        )`, (err) => {
+    )`, (err) => {
         if (err) console.error("Error creating table 'comments':", err.message);
         else console.log("Table 'comments' created.");
     });
+    
 
     db.run(`CREATE TABLE orders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -190,13 +192,13 @@ db.serialize(() => {
     });
 
     const products = [
-        { product_id: 1, amount: 2, price: 100 },
-        { product_id: 2, amount: 1, price: 150 }
+        { product_id: 3, amount: 1, price: 1000000 }
     ];
     const productsJson = JSON.stringify(products);
-    const shop_id = 1;
+    const shop_id = 2;
+    const order_id = 1;
 
-    db.run(`INSERT INTO orders (shop_id, products, code) VALUES (?, ?, ?)`, [shop_id, productsJson, '123-abc'], 
+    db.run(`INSERT INTO orders (id, shop_id, products, code) VALUES (?, ?, ?, ?)`, [order_id, shop_id, productsJson, '123-abc'], 
         (err) => {
             if (err) {
                 console.error('Error inserting data:', err.message);

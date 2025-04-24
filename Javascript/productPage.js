@@ -59,7 +59,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateElement('product_name', product_name);
         /*updateElement('shop_id', shop_id);*/
         updateElement('stock', stock);
-        updateElement('price', price);
+        //update price with the discount if applicaple
+        let finalPrice = price;
+        if (discount > 0 && discount < price) {
+            finalPrice = (price - discount).toFixed(2);
+        }
+        updateElement('price', `${finalPrice}`);
+
         updateElement('description', description);
         updateElement('discount', discount);
 

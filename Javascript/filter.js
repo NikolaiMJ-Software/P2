@@ -51,7 +51,7 @@ export async function filters(products) {
 
         } else {
             // As standart sort by smalles shop (by revenue)
-            sortedProducts = await sortStandart();
+            sortedProducts = await sortStandart(products);
         }
         
         if (distanceFilter) {

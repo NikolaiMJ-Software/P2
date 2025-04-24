@@ -76,7 +76,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         : product.description;
 
                 productPrice.classList.add('productPrice');
-                productPrice.textContent = product.price + ",-";
+                let finalPrice = product.price;
+                if (product.discount > 0 && product.discount < product.price) {
+                    finalPrice = (product.price - product.discount).toFixed(2);
+                }
+                productPrice.textContent = `${finalPrice},-`;
 
                 productDiscount.classList.add('productDiscount');
                 if (product.discount != 0) {

@@ -87,10 +87,12 @@ router.post('/reserve_wares', async (req, res) => {
             const shopObj = await db_get("SELECT shop_id FROM products WHERE id = ?", [cart_items[i][0]]);
             const shop_id = shopObj.shop_id;
             
-            // Random generatet unik code
+            // Random generatet code and make code, and products as a sting
             const code = crypto.randomUUID();
-
+            const codeString = JSON.stringify(code);
+            const orderProducts = JSON.stringify(products);
             const baseUrl = "https://cs-25-sw-2-06.p2datsw.cs.aau.dk/node0";
+
             // Update orders
             const response = await fetch(`${baseUrl}/mail_order`, {
                 method: "POST",
@@ -98,11 +100,12 @@ router.post('/reserve_wares', async (req, res) => {
                 body: JSON.stringify({
                     password: '1234',
                     shop_id,
-                    products,
-                    code 
+                    products: orderProducts,
+                    code: codeString
                 })
             });
 
+            // Insert the new id and code in the link, what would be send
             const order = await response.json();
             const url = `${baseUrl}/confirm?id=${order.id}&code=${code}`;
         
