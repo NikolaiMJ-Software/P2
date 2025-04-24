@@ -156,6 +156,7 @@ button {
     position: absolute;
     transform: translateY(-300px);
     font-size: 28px;
+    justify-self: anchor-center;
     font-weight: bolder;
 }
 
