@@ -40,7 +40,7 @@ console.log('id: ', id, "" + 'code: ', code);
         
         const shop_id = order.shop_id;
 console.log('\nthe ordered product before PARSE: ', order.products);
-        const orderProducts = JSON.parse(order.products);
+        const orderProducts = JSON.parse(JSON.parse(order.products));
 console.log('the ordered product', orderProducts, 'Shop id: ' + shop_id );
 
         // Changes from mail
