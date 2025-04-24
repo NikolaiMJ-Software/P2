@@ -113,9 +113,22 @@ router.post('/reserve_wares', async (req, res) => {
             const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
             await send_mail(
                 shop_mail.email,
-                `En bruger har reserveret varer hos din butik`,
-                `Brugeren med email ${user_email} fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}\n\n
-                Klik her for at bekræfte kundens afhæntning: ${url}`
+                "En bruger har reserveret varer hos din butik",
+                `<!DOCTYPE html>
+                <html>
+                <body>
+                    <p>Brugeren med email <strong>${user_email}</strong> fra <strong>Click&hent</strong> har reserveret følgende varer fra din butik:</p>
+                    <ul>
+                        ${named_cart[i].map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    <p>
+                        <a href="${url}" style="color: #0066cc; text-decoration: underline;">
+                            Klik her for at bekræfte kundens afhentning
+                        </a>
+                    </p>
+                </body>
+                </html>`,
+                { contentType: 'text/html' }
             );
         }
 
