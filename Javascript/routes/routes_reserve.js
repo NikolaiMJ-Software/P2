@@ -73,7 +73,7 @@ router.post('/reserve_wares', async (req, res) => {
             named_cart[i] = [];
             for(let x = 0; x < cart_items[i].length; x++) {
                 const product_id = cart_items[i][x];
-                const product = await db_get("SELECT products.product_name FROM products WHERE products.id = ?",[product_id]);
+                const product = await db_get("SELECT products.product_name, products.price FROM products WHERE products.id = ?",[product_id]);
                 // Insert the values in products
                 products.push({
                     product_id,
