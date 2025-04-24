@@ -27,12 +27,16 @@ console.log('Orders: ', orders);
         if (order.id !== id) {
             continue;
         }
-console.log('ORDERS CODE, and THE URL CODE', order.code, code);
-        if (order.code !== code){
+
+        // Remove "" character
+        const orderCode = order.code.replace(/"/g, '');
+
+console.log('ORDERS CODE, and THE URL CODE', orderCode, code);
+        if (orderCode !== code){
             alert('Ordre er allerede behandlet');
             break;
         }
-    
+
         // Save current order
         selectedOrder = order;
 console.log('id: ', id, "" + 'code: ', code); 
