@@ -172,7 +172,7 @@ async function updateImage(products) {
         advertPrice.classList.add('productPrice');
         let finalAdvertPrice = advertChosen.price;
         if (advertChosen.discount > 0 && advertChosen.discount < advertChosen.price) {
-            finalAdvertPrice = (advertChosen.price - advertChosen.discount).toFixed(2);
+            finalAdvertPrice -= advertChosen.discount;
         }
         advertPrice.textContent = `${finalAdvertPrice},-`;
         //discount
