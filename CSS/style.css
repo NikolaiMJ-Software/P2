@@ -9,10 +9,10 @@ body {
 
 footer {
     margin: 0;
-    background-color: #777;
+    background-color: black;
     padding: 10px;
     text-align: center;
-    color: white;
+    color: var(--secoundary-text);
 }
 
 /* Wrapper for the heading and search bar */
