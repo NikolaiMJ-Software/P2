@@ -61,8 +61,8 @@ async function changesInProducts(id, code){
             }
 
             // Skip to the next product in the order, if product is out of stock
-            if (products.stock <= 0){
-                alert(`${products.product_name} er ikke på lager.\nKan ikke bekrafte afhæntning`);
+            if (product.stock <= 0){
+                alert(`${product.product_name} er ikke på lager.\nKan ikke bekrafte afhæntning`);
                 continue;
             }
 
