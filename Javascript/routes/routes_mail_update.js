@@ -84,16 +84,13 @@ router.post('/mail_revenue', checkPassword, (req, res) => {
 });
 
 router.post('/mail_order', checkPassword, (req, res) => {
-    const { shop_id, products } = req.body;
+    const { shop_id, products, code } = req.body;
 
-    if (!shop_id || !products) {
-        return res.status(400).json({ message: 'Mangler shop_id eller produkter' });
+    if (!shop_id || !products || !code) {
+        return res.status(400).json({ message: 'Mangler shop_id, produkter eller code' });
     }
-
-    // Lounce quest
-    const sql = `INSERT INTO orders (shop_id, products) VALUES (?, ?)`;
     
-    db.run(sql, [shop_id, JSON.stringify(products)], function (err) {
+    db.run(`INSERT INTO orders (shop_id, products, code) VALUES (?, ?, ?)`, [shop_id, JSON.stringify(products), code], function (err) {
         if (err) {
             return res.status(500).json({ message: "Databasefejl" });
         } else {

@@ -93,7 +93,7 @@ router.post('/reserve_wares', async (req, res) => {
             const orderProducts = JSON.stringify(products);
             const baseUrl = "https://cs-25-sw-2-06.p2datsw.cs.aau.dk/node0";
 
-            // Update orders
+            // Store orders
             const response = await fetch(`${baseUrl}/mail_order`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
