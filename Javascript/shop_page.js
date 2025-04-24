@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 productImage.src = `./${product.img1_path}`;
 
                 productName.classList.add('productName')
-                if (productName.product_name.length > 41){
+                if (product.product_name.length > 41){
                     productName.textContent = productName.product_name.slice(0, 41);
                     productName.textContent += "...";
                 }
