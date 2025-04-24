@@ -163,9 +163,9 @@ db.serialize(() => {
 
     db.run(`INSERT INTO products (city_id, shop_id, product_name, stock, bought, price, description, img1_path, img2_path, img3_path, img4_path, specifications, discount, parent_id) 
         VALUES
-        (1, 1, 'den grimme maskine (hvid)', 10, 0, 25, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png',
+        (1, 1, 'den grimme maskine (hvid)', 10, 0, 55, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png',
         'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321826.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321831.png', 'Den er faktisk virkelig grim', 30, NULL),
-            (1, 1, 'den grimme maskine (sort)', 6, 5, 25, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128322066.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128321832.png',
+            (1, 1, 'den grimme maskine (sort)', 6, 5, 55, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128322066.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128321832.png',
             'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/variant_1/dv_web_D18000128321830.png', '', 'Den er faktisk virkelig grim', 30, 1),
 
         
