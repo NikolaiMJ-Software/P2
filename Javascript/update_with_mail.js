@@ -50,6 +50,11 @@ async function changesInProducts(id, code){
             const responseProducts = await fetch('./products'); // Fetch products from the server
             const products = await responseProducts.json();
 
+            if (products.stock <= 0){
+                alert(`${products.product_name} er ikke på lager.\nKan ikke bekrafte afhæntning`);
+                continue;
+            }
+
             // The database update "stock", "bought" og "revenue" based on the confirmation
             const product = products.find(p => p.id === product_id); // Find the products
             console.log('Current product: ', product);
