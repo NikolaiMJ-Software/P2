@@ -50,18 +50,20 @@ async function changesInProducts(id, code){
             const responseProducts = await fetch('./products'); // Fetch products from the server
             const products = await responseProducts.json();
 
-            if (products.stock <= 0){
-                alert(`${products.product_name} er ikke på lager.\nKan ikke bekrafte afhæntning`);
-                continue;
-            }
-
             // The database update "stock", "bought" og "revenue" based on the confirmation
             const product = products.find(p => p.id === product_id); // Find the products
             console.log('Current product: ', product);
             
+            // Skip to the next product in the order, if product is not found
             if (!product) {
                 console.error(`Produkt med ID ${product_id} ikke fundet`);
-                continue; // Skip to the next product in the order
+                continue; 
+            }
+
+            // Skip to the next product in the order, if product is out of stock
+            if (products.stock <= 0){
+                alert(`${products.product_name} er ikke på lager.\nKan ikke bekrafte afhæntning`);
+                continue;
             }
 
             // Calc new values
