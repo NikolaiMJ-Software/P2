@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
     const order_id = Number(params.get('id'));
     const code = params.get('code');
-console.log('Code && ID: ',code, order_id)
+
     // If order_id and code is found, update DB
     if (order_id && code) {
         console.log('Opdater DB...');
@@ -17,7 +17,6 @@ async function changesInProducts(id, code){
     // Fetching orders from DB
     const responsOrders = await fetch('./orders');
     const orders = await responsOrders.json();
-console.log('Orders: ', orders);
 
     let selectedOrder = null;
 
@@ -28,7 +27,6 @@ console.log('Orders: ', orders);
             continue;
         }
 
-console.log('ORDERS CODE, and THE URL CODE', order.code, code);
         if (order.code !== `"${code}"`){
             alert('Ordre er allerede behandlet');
             break;
@@ -36,44 +34,43 @@ console.log('ORDERS CODE, and THE URL CODE', order.code, code);
 
         // Save current order
         selectedOrder = order;
-console.log('id: ', id, "" + 'code: ', code); 
-        
         const shop_id = order.shop_id;
-console.log('\nthe ordered product before PARSE: ', order.products);
-        const orderProducts = JSON.parse(JSON.parse(order.products));
-console.log('the ordered product', orderProducts, 'Shop id: ' + shop_id );
+        const orderProducts = JSON.parse(JSON.parse(order.products)); // convert to an object
 
         // Changes from mail
         for (const orderProduct of orderProducts) {
-console.log('Type of orderProduct: ', typeof orderProduct);
-console.log('Current orderProduct:', orderProduct);
             const product_id = orderProduct.product_id; // The product;
             const change = orderProduct.amount; // Amount
             const price = orderProduct.price; // Price for the product
-console.log('Product ID: ', product_id);
-console.log('amaunt: ', change);
-console.log('Price: ', price);
 
             const responsShops = await fetch('./shop'); // Fetch products from the server
             const shops = await responsShops.json();
             const currentShop = shops.find(s => s.id === shop_id); // Find the shop
-console.log('Current shop: ', currentShop);
-
             const shopRevenue = currentShop.revenue;
-console.log('Current shop revenue: ' + shopRevenue);
             const responseProducts = await fetch('./products'); // Fetch products from the server
             const products = await responseProducts.json();
 
-
             // The database update "stock", "bought" og "revenue" based on the confirmation
-            console.log('All products: ', products);
-
             const product = products.find(p => p.id === product_id); // Find the products
             console.log('Current product: ', product);
             
+            // Skip to the next product in the order, if product is not found
             if (!product) {
                 console.error(`Produkt med ID ${product_id} ikke fundet`);
-                continue; // Skip to the next product in the order
+                continue; 
+            }
+
+            // Skip to the next product in the order, if product is out of stock
+            const diff = product.stock - change;
+            if(diff <= 0){
+                if (diff === 0){
+                    alert(`Det er den sidste af: ${product.product_name}, lager skal fyldes op.`);
+                } else if (product.stock > 0){
+                    alert(`Der er ikke nok på lager af: ${product.product_name}, lager skal fylde op.`);
+                } else{
+                    alert(`${product.product_name} er ikke på lager.\nKan ikke bekræfte afhentning af produktet`);
+                }
+                continue;
             }
 
             // Calc new values
@@ -81,15 +78,15 @@ console.log('Current shop revenue: ' + shopRevenue);
             const new_bought = product.bought + change;
             const new_revenue = shopRevenue + (change * price);
             
-            // See changes
+            /* See changes
             console.log("Before changes:", product);
             console.log("After changes:", {
                 stock: new_stock,
                 bought: new_bought,
                 revenue: new_revenue
-            });
+            });*/
 
-            console.log('\nSTOCK UPDATE, pro_id & new_stock: ', product_id, new_stock);
+            //console.log('\nSTOCK UPDATE, pro_id & new_stock: ', product_id, new_stock);
             // Update stock
             await fetch("./mail_stock", {
                 method: "POST",
@@ -100,7 +97,7 @@ console.log('Current shop revenue: ' + shopRevenue);
                     stock: new_stock })
             })
 
-            console.log('\nBOUGHT UPDATE, pro_id & new_bought: ', product_id, new_bought);
+            //console.log('\nBOUGHT UPDATE, pro_id & new_bought: ', product_id, new_bought);
             // Update bought
             await fetch("./mail_bought", {
                 method: "POST",
@@ -124,7 +121,6 @@ console.log('Current shop revenue: ' + shopRevenue);
         break;
     }
 
-console.log('SEE om der er noget: ', selectedOrder);
     // Delete the code
     if (selectedOrder){
         await fetch("./update_order", {
