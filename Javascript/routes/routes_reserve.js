@@ -73,12 +73,12 @@ router.post('/reserve_wares', async (req, res) => {
             named_cart[i] = [];
             for(let x = 0; x < cart_items[i].length; x++) {
                 const product_id = cart_items[i][x];
-                const product = await db_get("SELECT products.product_name FROM products WHERE products.id = ?",[product_id]);
+                const product = await db_get("SELECT products.product_name, products.price, products.discount FROM products WHERE products.id = ?",[product_id]);
                 // Insert the values in products
                 products.push({
                     product_id,
                     amount: 1,
-                    price: product.price
+                    price: (product.price - product.discount) 
                 });
                 named_cart[i].push(product.product_name);
             }

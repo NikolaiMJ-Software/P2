@@ -159,6 +159,7 @@ button:hover {
   align-items: flex-end;
   font-weight: bold;
   font-size: 16px;
+  width: 10vh;
 }
 
 .price-discounted {
