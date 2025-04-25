@@ -58,14 +58,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Set the product details into the page
         updateElement('product_name', product_name);
         /*updateElement('shop_id', shop_id);*/
-        updateElement('stock', stock);
+        updateElement('stock', stock === 0 ? "Ikke på lager" : `${stock} på lager`);
         //update price with the discount if applicaple
         let finalPrice = price;
         if (discount > 0 && discount < price) {
             finalPrice = (price - discount).toFixed(2);
         }
         updateElement('price', `${finalPrice}`);
-
+        updateElement('cart_button', stock === 0 ? "ikke på lager" : "Tilføj til kurv");
         updateElement('description', description);
         updateElement('discount', discount);
 
@@ -211,8 +211,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else if (clickX > (2 * buttonWidth) / 3 && quantity < maxStock) {
                 quantity++;
             }
-
+            if (stock > 0){
             quantityValue.textContent = quantity;
+            } else if (stock === 0){
+                quantityValue.textContent = quantity;
+            }
+
+            //cart button text
+            const carttext = document.getElementById('cart_button');
+            if (stock === 0){
+                carttext.textContent = "ikke på lager";
+            } else{
+                carttext.textContent = "Tilføj til kurv";
+            }
+
         });
 
         // === Fetch variants by parent_id
