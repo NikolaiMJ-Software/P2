@@ -1,5 +1,5 @@
 import { filters, sortStandart } from './filter.js';
-import { updateLastVisit } from './calculateDistance.js';
+import { updateLastVisit } from './calculate_distance.js';
 
 let currentCity = new URLSearchParams(window.location.search).get(`city`);
 document.getElementById("h1ProductPage").textContent = currentCity; //changes title of page to city

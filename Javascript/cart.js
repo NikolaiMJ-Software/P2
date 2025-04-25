@@ -2,7 +2,7 @@
 //The actual reservation is done server-side in routes_reserve.js
 
 //Function used to keep track since user was last active
-import { updateLastVisit } from './calculateDistance.js';
+import { updateLastVisit } from './calculate_distance.js';
 
 //Global array for imported product data
 let products = [];
