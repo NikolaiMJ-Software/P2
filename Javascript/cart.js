@@ -225,13 +225,16 @@ if(button != null) {
         //Checks cart if the added products + products in cart exceed store stock, if not, add to cart
         let cart = getCookie("products").split(",").map(Number);
         let currently_in_cart = cart.filter(val => val === product_id).length;
-        if(currently_in_cart + amount <= products[product_id-1].stock) {
+
+        if (products[product_id-1].stock === 0){
+            alert("Varen er ikke på lager");
+        }else if(currently_in_cart + amount <= products[product_id-1].stock && products[product_id-1].stock > 0) {
             for(let i = 0; i < amount; i++) {
                 add_to_cart(product_id);
             }
             alert("Din vare(er) er tilføjet til kurven");
             update_cart_button();
-        } else {
+        }else {
             alert("Du kan ikke tilføje flere varer til din kurv end der er antal på lager");
         }
     });
