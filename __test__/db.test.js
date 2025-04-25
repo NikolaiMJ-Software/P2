@@ -22,23 +22,36 @@ afterEach((done) => {
   // Close the DB after each test
   db.close(done);
 });
-
+//test
 test('should insert and retrieve a user', (done) => {
   const city = 'Aalborg';
   const image_path = 'images/Aalborg/test';
   const latitude = 12.1;
   const longitude = 5;
-  
+  //insertion test
   db.run('INSERT INTO cities (city, image_path, latitude, longitude) VALUES (?, ?, ?, ?)', [city, image_path, latitude, longitude], function(err) {
     expect(err).toBeNull();
-    
+    console.log("passed inserting in db");
+    //selection test
     db.get('SELECT * FROM cities WHERE city = ?', [city], (err, row) => {
       expect(err).toBeNull();
       expect(row.city).toBe(city);
       expect(row.image_path).toBe(image_path);
       expect(row.latitude).not.toBe(longitude);
       expect(row.longitude).not.toBe(latitude);
-      done();
+      console.log("passed selection in db");
+      //deletion test
+      db.run('DELETE FROM cities WHERE city = ?', [city], function(err) {
+        expect(err).toBeNull();
+        console.log("passed deleting in db");
+      });
+      //confirm deletion test
+      db.get('SELECT * FROM cities WHERE city = ?', [city], (err, row) => {
+        expect(err).toBeNull();
+        expect(row).toBeUndefined();
+        console.log("passed confirmed deletion");
+        done();
+      });
     });
   });
 });
