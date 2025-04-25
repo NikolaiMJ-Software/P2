@@ -1,4 +1,4 @@
-import { getTravelTime } from './calculateDistance.js';
+import { getTravelTime } from './calculate_distance.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     const filterButton = document.getElementById('filterButton');
