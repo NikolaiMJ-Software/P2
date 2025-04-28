@@ -80,7 +80,7 @@ router.post('/reserve_wares', async (req, res) => {
             }
 
             // Count the amount of products
-            count = {};
+            const count = {};
             for (let j = 0; j < cart_items[i].length; j++) {
                 const product_id = cart_items[i][j];
                 count[product_id] = (count[product_id] || 0) + 1;
