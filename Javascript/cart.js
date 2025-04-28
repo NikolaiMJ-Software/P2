@@ -2,7 +2,7 @@
 //The actual reservation is done server-side in routes_reserve.js
 
 //Function used to keep track since user was last active
-import { updateLastVisit } from './calculateDistance.js';
+import { updateLastVisit } from './calculate_distance.js';
 
 //Global array for imported product data
 let products = [];
@@ -225,13 +225,16 @@ if(button != null) {
         //Checks cart if the added products + products in cart exceed store stock, if not, add to cart
         let cart = getCookie("products").split(",").map(Number);
         let currently_in_cart = cart.filter(val => val === product_id).length;
-        if(currently_in_cart + amount <= products[product_id-1].stock) {
+
+        if (products[product_id-1].stock === 0){
+            alert("Varen er ikke på lager");
+        }else if(currently_in_cart + amount <= products[product_id-1].stock && products[product_id-1].stock > 0) {
             for(let i = 0; i < amount; i++) {
                 add_to_cart(product_id);
             }
             alert("Din vare(er) er tilføjet til kurven");
             update_cart_button();
-        } else {
+        }else {
             alert("Du kan ikke tilføje flere varer til din kurv end der er antal på lager");
         }
     });
@@ -251,6 +254,19 @@ if(button_reserve != null) {
                 alert("Ugyldig email");
                 return;
             }
+            //Checks if email is already used for an account
+            const email_account_response = await fetch('./email_status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email: user_email })
+            });
+            const email_account = await email_account_response.json();
+            if(email_account.exists) {
+                alert("Fejl: email er allerede brugt af en konto");
+                return;
+            }
+            
         }
 
         //Gets the cart, and sorts the products into sub-arrays based on which store they belong to

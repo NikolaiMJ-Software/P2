@@ -98,7 +98,7 @@ app.get('/searchpage', (req, res) => {
         console.log(`\nCity requested: ${city}`); 
         console.log("User:", req.user?.email);
         console.log("Admin:", req.user?.admin_user);
-        res.sendFile(path.join(__dirname, '../HTML/searchPage.html'));
+        res.sendFile(path.join(__dirname, '../HTML/search_page.html'));
     })
 });
 

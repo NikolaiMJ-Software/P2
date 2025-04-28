@@ -1,4 +1,4 @@
-import { updateLastVisit } from './calculateDistance.js';
+import { updateLastVisit } from './calculate_distance.js';
 
 const check_box = document.getElementById('shop_user');
 const city_select = document.getElementById('city');
