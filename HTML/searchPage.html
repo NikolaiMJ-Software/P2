@@ -91,11 +91,13 @@
 
     <!--barrel roll when "½" is clicked-->
     <script>
+      let bgIndex = 0;
       document.addEventListener("keydown", function (event) {
        if (event.key.toLowerCase() === "½") { 
         document.body.style.transition = "transform .5s ease-in-out";
         document.body.style.transform = "rotate(360deg)";
-        document.body.style.backgroundImage = "url('https://media1.tenor.com/m/0n2ZAU6ojusAAAAd/steve-minecraft-movie.gif')";
+        if(bgIndex==0){document.body.style.backgroundImage = "url('https://media1.tenor.com/m/0n2ZAU6ojusAAAAd/steve-minecraft-movie.gif')"; bgIndex++;}
+        else{document.body.style.backgroundImage = ""; bgIndex--;}
         document.body.style.backgroundRepeat = "repeat";
         setTimeout(() => {
             document.body.style.transition = "none";
