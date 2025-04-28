@@ -35,9 +35,9 @@ async function changesInProducts(id, code){
         // Save current order
         selectedOrder = order;
         const shop_id = order.shop_id;
-        console.log('\n\n\n\n\nCURRENT ORDER: ', order.products);
-        const orderProducts = JSON.parse(JSON.parse(order.products)); // convert to an object
-
+        const orderProducts = JSON.parse(order.products); // convert to an object
+        console.log('\n\n\n\nAFTER JSON: ', orderProducts);
+        
         // Changes from mail
         for (const orderProduct of orderProducts) {
             const product_id = orderProduct.product_id; // The product;
