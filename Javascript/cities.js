@@ -1,4 +1,4 @@
-import { getTravelTime, getCurrentPositionPromise } from './calculateDistance.js';
+import { getTravelTime, getCurrentPositionPromise } from './calculate_distance.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     getCurrentPositionPromise(); // Get users location

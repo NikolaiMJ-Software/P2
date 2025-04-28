@@ -1,4 +1,4 @@
-import { updateLastVisit } from './calculateDistance.js';
+import { updateLastVisit } from './calculate_distance.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     updateLastVisit(); // Update users last visit
