@@ -177,7 +177,7 @@ export function getCurrentPositionPromise() {
 }
 
 // Function to check if more than 5 minutes have passed
-function checkLastVisit() {
+export function checkLastVisit() {
     const lastVisit = localStorage.getItem("lastVisit");
     const now = Date.now();
 
