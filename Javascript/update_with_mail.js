@@ -36,13 +36,13 @@ async function changesInProducts(id, code){
         selectedOrder = order;
         const shop_id = order.shop_id;
 console.log('CURRENT ORDER', order.products);
-        const orderProducts = JSON.parse(order.products);
+        const orderProducts = JSON.parse(JSON.parse(order.products));
 console.log('AFTER JSON', orderProducts);
 
         // Changes from mail
-        for (const orderProductRaw of orderProducts) {
+        for (const orderProduct of orderProducts) {
             // If the elemet is a string, parse it to an object
-            const orderProduct = typeof orderProductRaw === 'string' ? JSON.parse(orderProductRaw) : orderProductRaw;
+            //const orderProduct = typeof orderProductRaw === 'string' ? JSON.parse(orderProductRaw) : orderProductRaw;
             const product_id = Number(orderProduct.product_id); // The product;
             const change = orderProduct.amount; // Amount
             const price = orderProduct.price; // Price for the product
