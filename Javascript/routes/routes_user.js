@@ -21,6 +21,22 @@ const db = new sqlite3.Database(db_path, (err) => {
     db.run("PRAGMA foreign_keys = ON;");
 });
 
+//Reciever function that checks if an email has an account connected to it
+router.post('/email_status', (req, res) => {
+    const { email } = req.body;
+    db.get(`SELECT * FROM users WHERE email = ?`, [email], (err, user) => {
+        if (err) {
+            console.error('Login error:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        if (!user) {
+            return res.json({ exists: false });
+        } else {
+            return res.json({ exists: true });
+        }
+    })
+});
+
 //allows user to login, by calling the /login
 router.post('/login', (req, res) => {
     //aquire email and password from the url

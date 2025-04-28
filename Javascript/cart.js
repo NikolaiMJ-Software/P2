@@ -254,6 +254,19 @@ if(button_reserve != null) {
                 alert("Ugyldig email");
                 return;
             }
+            //Checks if email is already used for an account
+            const email_account_response = await fetch('./email_status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email: user_email })
+            });
+            const email_account = await email_account_response.json();
+            if(email_account.exists) {
+                alert("Fejl: email er allerede brugt af en konto");
+                return;
+            }
+            
         }
 
         //Gets the cart, and sorts the products into sub-arrays based on which store they belong to
