@@ -35,13 +35,16 @@ async function changesInProducts(id, code){
         // Save current order
         selectedOrder = order;
         const shop_id = order.shop_id;
+console.log('CURRENT ORDER', order.products);
         const orderProducts = JSON.parse(order.products); // convert to an object
+console.log('AFTER JSON', orderProducts);
 
         // Changes from mail
         for (const orderProduct of orderProducts) {
             const product_id = Number(orderProduct.product_id); // The product;
             const change = orderProduct.amount; // Amount
             const price = orderProduct.price; // Price for the product
+console.log('ALL order information: ', product_id, change, price);
 
             const responsShops = await fetch('./shop'); // Fetch products from the server
             const shops = await responsShops.json();
@@ -49,7 +52,7 @@ async function changesInProducts(id, code){
             const shopRevenue = currentShop.revenue;
             const responseProducts = await fetch('./products'); // Fetch products from the server
             const products = await responseProducts.json();
-
+console.log('FROM DB: ', products);
             // The database update "stock", "bought" og "revenue" based on the confirmation
             const product = products.find(p => p.id === product_id); // Find the products
             console.log('Current product: ', product);
