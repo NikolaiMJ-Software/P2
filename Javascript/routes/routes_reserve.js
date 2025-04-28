@@ -65,29 +65,53 @@ router.post('/reserve_wares', async (req, res) => {
 
     let cart_items = Object.values(cart);
     let named_cart = [];
+    let totalOrder = [];
 
     try {
         //Creates a new cart array, where names are shown instead of id's
         for(let i = 0; i < cart_items.length; i++) {
             const products = [];
+            let shop_text = `\n`;
             named_cart[i] = [];
-            for(let x = 0; x < cart_items[i].length; x++) {
-                const product_id = cart_items[i][x];
+            totalOrder[i] = {
+                product: [],
+                amount: [],
+                price: []
+            }
+
+            // Count the amount of products
+            const count = {};
+            for (let j = 0; j < cart_items[i].length; j++) {
+                const product_id = cart_items[i][j];
+                count[product_id] = (count[product_id] || 0) + 1;
+            }
+
+            // Add relevant product information to totalOrder
+            const product_ids = Object.keys(count);
+            for (let j = 0; j < product_ids.length; j++) {
+                const product_id = product_ids[j];
                 const product = await db_get("SELECT products.product_name, products.price, products.discount FROM products WHERE products.id = ?",[product_id]);
+                const amount = count[product_id];
+                totalOrder[i].product.push(product.product_name);
+                totalOrder[i].amount.push(amount);
+                totalOrder[i].price.push(product.price - product.discount);
+
+                // Order text to shops
+                shop_text += `${product.product_name} x ${amount}\n`;
+                
                 // Insert the values in products
                 products.push({
                     product_id,
-                    amount: 1,
+                    amount,
                     price: (product.price - product.discount) 
                 });
-                named_cart[i].push(product.product_name);
             }
-        
+            
             // Define the shop_id based on cart
             const shopObj = await db_get("SELECT shop_id FROM products WHERE id = ?", [cart_items[i][0]]);
             const shop_id = shopObj.shop_id;
             
-            // Random generatet code, then make code, and products as a sting
+            // Random generatet code, and products as a string
             const code = crypto.randomUUID();
             const codeString = JSON.stringify(code);
             const orderProducts = JSON.stringify(products);
@@ -106,25 +130,29 @@ router.post('/reserve_wares', async (req, res) => {
             });
 
             // Insert the new id and code in the link, what would be send
-            const order = await response.json();
-            const url = `${baseUrl}/confirm?id=${order.id}&code=${code}`;
-        
+            const orderResponse = await response.json();
+            const url = `${baseUrl}/confirm?id=${orderResponse.id}&code=${code}`;
+
             //Sends an email to each store (each sub-array is only products from that store)
             const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
             await send_mail(
                 shop_mail.email,
                 `En bruger har reserveret varer hos din butik`,
-                `Brugeren med email ${user_email} fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}\n\n
-                Klik her for at bekræfte kundens afhæntning: ${url}`
+                `Brugeren med email ${user_email} fra Click&hent har reserveret følgende varer fra din butik: ${shop_text}\n\nKlik her for at bekræfte kundens afhæntning: ${url}`
             );
         }
-
+        
         //Generate a proper text-string for the email the user is getting
         let user_text = `Du har reserveret fra følgende butikker på Click&hent:\n`;
         for(let i = 0; i < cart_items.length; i++) {
             let shop_name = await db_get("SELECT shops.shop_name FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
             let shop_name_string = shop_name.shop_name
-            user_text += `${shop_name_string}:\n${named_cart[i]}\n`;
+            user_text += `\n${shop_name_string}:\n`;
+            
+            // Add all product and the amount
+            for (let j = 0; j < totalOrder[i].product.length; j++) {
+                user_text += `${totalOrder[i].product[j]} x ${totalOrder[i].amount[j]}\n`;
+            }
         }
 
         //Sends email to user that is reserving the wares
