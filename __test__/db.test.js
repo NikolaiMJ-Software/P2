@@ -31,7 +31,6 @@ test('should insert and retrieve a user', (done) => {
   //insertion test
   db.run('INSERT INTO cities (city, image_path, latitude, longitude) VALUES (?, ?, ?, ?)', [city, image_path, latitude, longitude], function(err) {
     expect(err).toBeNull();
-    console.log("passed inserting in db");
     //selection test
     db.get('SELECT * FROM cities WHERE city = ?', [city], (err, row) => {
       expect(err).toBeNull();
@@ -39,17 +38,14 @@ test('should insert and retrieve a user', (done) => {
       expect(row.image_path).toBe(image_path);
       expect(row.latitude).not.toBe(longitude);
       expect(row.longitude).not.toBe(latitude);
-      console.log("passed selection in db");
       //deletion test
       db.run('DELETE FROM cities WHERE city = ?', [city], function(err) {
         expect(err).toBeNull();
-        console.log("passed deleting in db");
       });
       //confirm deletion test
       db.get('SELECT * FROM cities WHERE city = ?', [city], (err, row) => {
         expect(err).toBeNull();
         expect(row).toBeUndefined();
-        console.log("passed confirmed deletion");
         done();
       });
     });

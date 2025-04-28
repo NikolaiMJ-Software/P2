@@ -1,4 +1,4 @@
-import { haversineDistanceM } from '../Javascript/calculateDistance.js';
+import { haversineDistanceM } from '../Javascript/calculate_distance.js';
 
 describe('haversineDistanceM', () => {
   it('returns 0 when positions are the same', () => {
