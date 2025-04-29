@@ -59,7 +59,7 @@ function db_get(query, params) {
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 minut
   max: 5, // max 5 requests per IP
-  message: "For mange anmodninger, prøv igen senere"
+  message: { error: "For mange anmodninger, prøv igen senere" }
 });
 
 //Reciever function for sending reservation emails for an entire cart (receives signal from cart.js)
