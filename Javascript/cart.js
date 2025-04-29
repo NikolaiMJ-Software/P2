@@ -101,10 +101,10 @@ function fill_table() {
             document.getElementById(product).textContent = amount;
 
             let product_price = parseInt(document.getElementById(product + "price").textContent);
-            product_price += products[product-1].price;
+            product_price += products[product-1].price - products[product-1].discount;
             document.getElementById(product + "price").textContent = product_price;
             
-            total_cost += products[product-1].price;
+            total_cost += products[product-1].price - products[product-1].discount;
             document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
         } else {
 
@@ -164,8 +164,8 @@ function fill_table() {
             //Creates and fills the fourth column in the row (price of product)
             let price_element = document.createElement("td");
             price_element.setAttribute("id", product + "price");
-            price_element.textContent = products[product-1].price;
-            total_cost += products[product-1].price;
+            price_element.textContent = products[product-1].price - products[product-1].discount;
+            total_cost += products[product-1].price - products[product-1].discount;
             row.appendChild(price_element);
 
             //Creates and fills the fifth column in the row (button to remove all instances of product from cart)
