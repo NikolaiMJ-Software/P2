@@ -364,10 +364,6 @@ body {
   color: goldenrod;
 }
 
-#text {
-  color: var(--primary-text);
-}
-
 .textarea-wrapper {
   width: 100%;
   display: flex;
@@ -404,6 +400,7 @@ dialog {
     overflow-x: hidden;
     word-wrap: break-word; 
     text-align: left;
+    color: var(--primary-text);
   }
   
   .comment-preview h3 {
