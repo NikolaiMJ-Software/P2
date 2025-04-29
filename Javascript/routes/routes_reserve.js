@@ -146,7 +146,22 @@ router.post('/reserve_wares', limiter, async (req, res) => {
             await send_mail(
                 shop_mail.email,
                 `En bruger har reserveret varer hos din butik`,
-                `Brugeren med email ${user_email} fra Click&hent har reserveret følgende varer fra din butik: ${shop_text}\n\nKlik her for at bekræfte kundens afhæntning: ${url}`
+                //`Brugeren med email ${user_email} fra Click&hent har reserveret følgende varer fra din butik: ${shop_text}\n\nKlik her for at bekræfte kundens afhæntning: ${url}`
+                `<!DOCTYPE html>
+                <html>
+                <body>
+                    <p>Brugeren med email <strong>${user_email}</strong> fra <strong>Click&hent</strong> har reserveret følgende varer fra din butik:</p>
+                    <ul>
+                        ${shop_text}
+                    </ul>
+                    <p>
+                        <a href="${url}" style="color: #0066cc; text-decoration: underline;">
+                            Klik her for at bekræfte kundens afhentning
+                        </a>
+                    </p>
+                </body>
+                </html>`,
+                { contentType: 'text/html' }
             );
         }
         
