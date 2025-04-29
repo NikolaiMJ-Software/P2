@@ -35,18 +35,13 @@ async function changesInProducts(id, code){
         // Save current order
         selectedOrder = order;
         const shop_id = order.shop_id;
-console.log('CURRENT ORDER', order.products);
         const orderProducts = JSON.parse(JSON.parse(order.products));
-console.log('AFTER JSON', orderProducts);
 
         // Changes from mail
         for (const orderProduct of orderProducts) {
-            // If the elemet is a string, parse it to an object
-            //const orderProduct = typeof orderProductRaw === 'string' ? JSON.parse(orderProductRaw) : orderProductRaw;
             const product_id = Number(orderProduct.product_id); // The product;
             const change = orderProduct.amount; // Amount
             const price = orderProduct.price; // Price for the product
-console.log('ALL order information: ', product_id, change, price);
 
             const responsShops = await fetch('./shop'); // Fetch products from the server
             const shops = await responsShops.json();
@@ -54,7 +49,7 @@ console.log('ALL order information: ', product_id, change, price);
             const shopRevenue = currentShop.revenue;
             const responseProducts = await fetch('./products'); // Fetch products from the server
             const products = await responseProducts.json();
-console.log('FROM DB: ', products);
+
             // The database update "stock", "bought" og "revenue" based on the confirmation
             const product = products.find(p => p.id === product_id); // Find the products
             console.log('Current product: ', product);
@@ -67,15 +62,16 @@ console.log('FROM DB: ', products);
 
             // Skip to the next product in the order, if product is out of stock
             const diff = product.stock - change;
-            if(diff <= 0){
-                if (diff === 0){
-                    alert(`Det er den sidste af: ${product.product_name}, lager skal fyldes op.`);
-                } else if (product.stock > 0){
-                    alert(`Der er ikke nok på lager af: ${product.product_name}, lager skal fylde op.`);
+            if(diff < 0){
+                if (product.stock > 0){
+                    alert(`Der er ikke nok på lager af: ${product.product_name}, lager skal fyldes op.`);
                 } else{
                     alert(`${product.product_name} er ikke på lager.\nKan ikke bekræfte afhentning af produktet`);
                 }
                 continue;
+            }
+            if (diff === 0){
+                alert(`Det er den sidste af: ${product.product_name}, lager skal fyldes op.`);
             }
 
             // Calc new values
