@@ -317,13 +317,14 @@ body {
 }
 
 .modal-content {
-  background: white;
+  background: var(--page-bg);
   padding: 20px;
   border-radius: 2px;
   width: 300px;
   position: relative;
   text-align: center;
   color: #6FAFB8;
+
 }
 
 #submit-rating {
