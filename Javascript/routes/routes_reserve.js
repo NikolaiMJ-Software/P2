@@ -25,13 +25,13 @@ const db = new sqlite3.Database(db_path, (err) => {
 });
 
 //Function to send an email
-async function send_mail(receiver, subject, text) {
+async function send_mail(receiver, subject, content, isHtml = false) {
     //struct for email data
     const mail_data = {
         to: receiver,
         from: 'clickoghent@gmail.com',
         subject: subject,
-        text: text,
+        [isHtml ? 'html' : 'text']: content
     };
 
     //Sends email and verifies whether it goes through
@@ -145,8 +145,7 @@ router.post('/reserve_wares', limiter, async (req, res) => {
             const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
             await send_mail(
                 shop_mail.email,
-                `En bruger har reserveret varer hos din butik`,
-                //`Brugeren med email ${user_email} fra Click&hent har reserveret følgende varer fra din butik: ${shop_text}\n\nKlik her for at bekræfte kundens afhæntning: ${url}`
+                "En bruger har reserveret varer hos din butik",
                 `<!DOCTYPE html>
                 <html>
                 <body>
@@ -161,7 +160,7 @@ router.post('/reserve_wares', limiter, async (req, res) => {
                     </p>
                 </body>
                 </html>`,
-                { contentType: 'text/html' }
+                true
             );
         }
         
@@ -181,7 +180,7 @@ router.post('/reserve_wares', limiter, async (req, res) => {
         //Sends email to user that is reserving the wares
         await send_mail(
             user_email,
-            `Du har reserveret varer på Click&hent`,
+            "Du har reserveret varer på Click&hent",
             user_text
         )
         return res.json({ success: cart_items });
