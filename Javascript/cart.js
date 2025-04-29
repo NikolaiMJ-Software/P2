@@ -164,7 +164,7 @@ function fill_table() {
             //Creates and fills the fourth column in the row (price of product)
             let price_element = document.createElement("td");
             price_element.setAttribute("id", product + "price");
-            price_element.textContent = products[product-1].price;
+            price_element.textContent = products[product-1].price - products[product-1].discount;
             total_cost += products[product-1].price - products[product-1].discount;
             row.appendChild(price_element);
 
