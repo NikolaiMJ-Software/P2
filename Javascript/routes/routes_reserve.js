@@ -151,7 +151,7 @@ router.post('/reserve_wares', limiter, async (req, res) => {
                 <body>
                     <p>Brugeren med email <strong>${user_email}</strong> fra <strong>Click&hent</strong> har reserveret følgende varer fra din butik:</p>
                     <ul>
-                        ${shop_text}
+                        ${shop_text.split('\n').filter(l => l.trim() !== '').map(l => `<li>${l}</li>`).join('')}
                     </ul>
                     <p>
                         <a href="${url}" style="color: #0066cc; text-decoration: underline;">
