@@ -172,7 +172,7 @@ db.serialize(() => {
         (1, 2, 'Eiffeltårnet', 1, 0, 1000900, 'Du skal selv hente den', 'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel1.jpg', 'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel2.webp',
         'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel3.jpg', 'Images/Aalborg/jerrys vare/Eiffeltårnet/Eiffel4.webp', 'Den er virkelig høj, og lavet af franskmænd', 20, NULL),
         
-        (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Black)', 100, 2, 9259, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
+        (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Black)', 100, 2, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
         'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black3.png',
         'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 240, NULL),
 
