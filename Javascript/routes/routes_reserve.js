@@ -7,6 +7,7 @@ import sqlite3 from 'sqlite3';
 import sgmail from '@sendgrid/mail';
 import path from 'path';
 import fs from 'fs';
+import rateLimit from 'express-rate-limit';
 const app = express();
 app.use(express.json());
 const router = express.Router();
@@ -54,8 +55,15 @@ function db_get(query, params) {
     });
 }
 
+// Prevent abuse or infinite loop calls on reservation email
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minut
+  max: 5, // max 5 requests per IP
+  message: { error: "For mange anmodninger, prøv igen senere" }
+});
+
 //Reciever function for sending reservation emails for an entire cart (receives signal from cart.js)
-router.post('/reserve_wares', async (req, res) => {
+router.post('/reserve_wares', limiter, async (req, res) => {
 
     //Gathers and converts data to be useful
     let { cart, user_email } = req.body;

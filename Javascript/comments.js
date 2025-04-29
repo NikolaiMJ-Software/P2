@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sanitizedInput = doc.body.textContent || doc.body.innerText;  // Get the text content, stripping out any HTML tags
 
     //allow only specific characters
-    return sanitizedInput.replace(/[^a-zA-Z0-9\s.,!?-]/g, ''); // Removes anything other than letters, numbers, and a few punctuation marks
+    return sanitizedInput.replace(/[^!-;=?-z\sæøåÆØÅ]/g, ''); // Removes anything other than letters, numbers, and a few punctuation marks
   }
 
   // Handle submission
