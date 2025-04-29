@@ -1,106 +1,5 @@
-//on page load this function is called
-document.addEventListener("DOMContentLoaded", async () =>{
-    //defining list of variables connected to elements in html
-    const product_list = document.getElementById("product_list");
-    const add_button = document.getElementById("add-button");
-    const add_panel = document.getElementById("product-modal");
-    const close_button = document.getElementById("modal-close");
-    const form = document.getElementById("product-form");
-    const update_panel = document.getElementById("update-product-modal");
-    const update_close_button = document.getElementById("update-modal-close");
-    const update_form = document.getElementById("update-form");
-    const parent_select = document.getElementById("parent-product");
-    const header = document.getElementById("header");
-    const shop_name = document.getElementById("shop-name");
-    const logo_panel = document.getElementById("logo-modal");
-    const logo_form = document.getElementById("logo-form");
-    const logo_close_button = document.getElementById("logo-modal-close");
-
-
-
-    //get shop name
-    const shop_name_res = await fetch("./shop_name");
-    const shop_info = await shop_name_res.json();
-    
-    // setup shop name and logo:
-    // Set shop name
-    shop_name.textContent = shop_info.shop_name;
-    // Set logo
-    const logo = document.getElementById("logo");
-    logo.src = shop_info.img_path;
-    //event listener for all button within the class header
-    header.addEventListener("click", async (e) => {
-        //checks if edit button is clicked and opens edit panel
-        if (e.target.classList.contains("edit-button")) {
-            //set the panel to visible
-            logo_panel.style.display = "block";
-        }
-    });
-
-    //close button for edit panel
-    logo_close_button.addEventListener("click", async (e) => {
-        //make edit panel invisible
-        logo_panel.style.display = "none";
-        //removes any data left in the panel
-        logo_form.reset();
-    });
-
-
-    //add event listener for the update form, loooking after submit button
-    logo_form.addEventListener("submit", async (e)=>{
-        e.preventDefault();
-        //takes all data from the form
-        const form_data = new FormData(logo_form);
-
-        //sent all the form data to the update_product route and await updates
-        const updateRes = await fetch("./update_logo",{
-            method: "POST",
-            body: form_data,
-        });
-        
-            //if product is update sent approval alert and reload page, if not alert update error
-            if (updateRes.ok) {
-                alert("Logo er blevet opdateret.");
-                location.reload();
-            } else {
-                alert("Kunne ikke opdatere logo.");
-            }
-
-    });
-
-    //get all products
-    const res = await fetch("./shop_products");
-    const products = await res.json();
-
-    //make a list of products which does and does not have a parent ID
-    const product_map = {};
-    //append all products without a parent ID, and create a children list for each
-    products.forEach(product => {
-        if (!product.parent_id) {
-            product_map[product.id] = { ...product, children: [] };
-        }
-    });
-    
-    //append all products with parent id to the designated parent product
-    products.forEach(product => {
-        if (product.parent_id && product_map[product.parent_id]) {
-            product_map[product.parent_id].children.push(product);
-        }
-    });
-
-    //call the product_list_create function for each parent and child in the list
-    Object.values(product_map).forEach(parent_product => {
-        const parent_card = product_list_create(parent_product);
-        product_list.appendChild(parent_card);
-    
-        parent_product.children.forEach(child => {
-            const child_card = product_list_create(child, true);
-            product_list.appendChild(child_card);
-        });
-    });
-
     //creates the product list, for both child and parent products
-    function product_list_create(product, is_child = false) {
+    export function product_list_create(product, is_child = false) {
         //define the list
         const list = document.createElement("div");
         //add html class product-card (defines its css)
@@ -226,7 +125,110 @@ document.addEventListener("DOMContentLoaded", async () =>{
         list.append(product_left, stock);
     
         return list;
-    }    
+    }  
+
+
+
+//on page load this function is called
+document.addEventListener("DOMContentLoaded", async () =>{
+    //defining list of variables connected to elements in html
+    const product_list = document.getElementById("product_list");
+    const add_button = document.getElementById("add-button");
+    const add_panel = document.getElementById("product-modal");
+    const close_button = document.getElementById("modal-close");
+    const form = document.getElementById("product-form");
+    const update_panel = document.getElementById("update-product-modal");
+    const update_close_button = document.getElementById("update-modal-close");
+    const update_form = document.getElementById("update-form");
+    const parent_select = document.getElementById("parent-product");
+    const header = document.getElementById("header");
+    const shop_name = document.getElementById("shop-name");
+    const logo_panel = document.getElementById("logo-modal");
+    const logo_form = document.getElementById("logo-form");
+    const logo_close_button = document.getElementById("logo-modal-close");
+
+
+
+    //get shop name
+    const shop_name_res = await fetch("./shop_name");
+    const shop_info = await shop_name_res.json();
+    
+    // setup shop name and logo:
+    // Set shop name
+    shop_name.textContent = shop_info.shop_name;
+    // Set logo
+    const logo = document.getElementById("logo");
+    logo.src = shop_info.img_path;
+    //event listener for all button within the class header
+    header.addEventListener("click", async (e) => {
+        //checks if edit button is clicked and opens edit panel
+        if (e.target.classList.contains("edit-button")) {
+            //set the panel to visible
+            logo_panel.style.display = "block";
+        }
+    });
+
+    //close button for edit panel
+    logo_close_button.addEventListener("click", async (e) => {
+        //make edit panel invisible
+        logo_panel.style.display = "none";
+        //removes any data left in the panel
+        logo_form.reset();
+    });
+
+
+    //add event listener for the update form, loooking after submit button
+    logo_form.addEventListener("submit", async (e)=>{
+        e.preventDefault();
+        //takes all data from the form
+        const form_data = new FormData(logo_form);
+
+        //sent all the form data to the update_product route and await updates
+        const updateRes = await fetch("./update_logo",{
+            method: "POST",
+            body: form_data,
+        });
+        
+            //if product is update sent approval alert and reload page, if not alert update error
+            if (updateRes.ok) {
+                alert("Logo er blevet opdateret.");
+                location.reload();
+            } else {
+                alert("Kunne ikke opdatere logo.");
+            }
+
+    });
+
+    //get all products
+    const res = await fetch("./shop_products");
+    const products = await res.json();
+
+    //make a list of products which does and does not have a parent ID
+    const product_map = {};
+    //append all products without a parent ID, and create a children list for each
+    products.forEach(product => {
+        if (!product.parent_id) {
+            product_map[product.id] = { ...product, children: [] };
+        }
+    });
+    
+    //append all products with parent id to the designated parent product
+    products.forEach(product => {
+        if (product.parent_id && product_map[product.parent_id]) {
+            product_map[product.parent_id].children.push(product);
+        }
+    });
+
+    //call the product_list_create function for each parent and child in the list
+    Object.values(product_map).forEach(parent_product => {
+        const parent_card = product_list_create(parent_product);
+        product_list.appendChild(parent_card);
+    
+        parent_product.children.forEach(child => {
+            const child_card = product_list_create(child, true);
+            product_list.appendChild(child_card);
+        });
+    });  
 
     //event listener when clicked for all buttons within the product list container
     product_list.addEventListener("click", async (e) => {
@@ -411,6 +413,3 @@ document.addEventListener("DOMContentLoaded", async () =>{
         console.error("Fejl ved hentning af parent produkter:", err);
     }
 });
-
-
-
