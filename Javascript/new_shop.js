@@ -61,7 +61,7 @@ let autocomplete;
 let map;
 let marker;
 
-function initAutocomplete() {
+export function initAutocomplete() {
     const input = document.getElementById("address");
     autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.setFields(["geometry", "formatted_address"]);
