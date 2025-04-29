@@ -400,14 +400,13 @@ dialog {
     overflow-x: hidden;
     word-wrap: break-word; 
     text-align: left;
-    color: var(--primary-text);
   }
   
   .comment-preview h3 {
     margin-bottom: 5px;
   }  
   .comment-list-text{
-    color: black;
+    color: var(--primary-text);
   }
   
   .average-stars {
