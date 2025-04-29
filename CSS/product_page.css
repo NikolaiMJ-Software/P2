@@ -364,6 +364,10 @@ body {
   color: goldenrod;
 }
 
+#text {
+  color: var(--primary-text);
+}
+
 .textarea-wrapper {
   width: 100%;
   display: flex;
