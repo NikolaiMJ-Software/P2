@@ -4,7 +4,7 @@ import path from 'path';
 import multer from 'multer';
 import fs from 'fs';
 import fse from 'fs-extra';
-import { send_mail, reserve_wares } from './routes_reserve.js';
+import { send_mail, reserve_wares, db_get } from './routes_reserve.js';
 
 // Set up Multer
 const upload = multer({ dest: 'uploads/' }); // or configure custom storage
@@ -64,7 +64,7 @@ async function authentication_email_maker(email, key){
     try {
         const row = await db_get(`SELECT * FROM authentication WHERE authentication.email = ?;`, [email]);
         if (!row) {
-            await db_run(`INSERT INTO authentication (email, key, time_stamp) VALUES (?, ?, ?)`, [email, key, getTime()]);
+            db.run(`INSERT INTO authentication (email, key, time_stamp) VALUES (?, ?, ?)`, [email, key, getTime()]);
             await send_mail(
                 email,
                 `Email autentificering`,
@@ -85,7 +85,7 @@ async function authentication_email_maker(email, key){
 export async function authenticate_email_checker(email, key){
     const row = await db_get(`SELECT * FROM authentication WHERE authentication.email = ? AND authentication.key = ?;`, [email, key]);
     if(row){
-        await db_run(`DELETE FROM authentication WHERE email = ?;`, [email]);
+        db.run(`DELETE FROM authentication WHERE email = ?;`, [email]);
         return true;
     }
     return false;
