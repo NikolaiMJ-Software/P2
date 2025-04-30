@@ -1,3 +1,45 @@
+  // Render star icons based on average
+  export function displayAverageRating(average, count) {
+    const container = document.getElementById('average-rating-display');
+    container.replaceChildren();
+
+    if (!average) {
+      container.textContent = '☆☆☆☆☆';
+      return;
+    }
+
+    // Calculate the number of full stars (meaning whole number part of the average)
+    const fullStars = Math.floor(average);
+
+    // If the decimal part of the average is 0.5 or more, show one half star
+    const hasHalf = average % 1 >= 0.5;
+    
+    // Add full star icons (★) equal to the number of whole stars
+    for (let i = 0; i < fullStars; i++) {
+      container.append('★');
+    }
+    
+    // add a halfstar (⯪) if average is above 0.5
+    if (hasHalf) container.append('⯪');
+    
+    // Add empty stars (☆) for the remaining stars to complete 5 total
+    for (let i = fullStars + (hasHalf ? 1 : 0); i < 5; i++) {
+      container.append('☆');
+    }
+    //show the average
+    container.append(` (${average})`);
+  }
+
+    // "sanitize" user input
+    export function sanitizeInput(input) {
+      // Create a temporary DOM element
+      const doc = new DOMParser().parseFromString('<!doctype html><body>' + input, 'text/html');
+      const sanitizedInput = doc.body.textContent || doc.body.innerText;  // Get the text content, stripping out any HTML tags
+  
+      //allow only specific characters
+      return sanitizedInput.replace(/[^!-;=?-z\sæøåÆØÅ]/g, ''); // Removes anything other than letters, numbers, and a few punctuation marks
+    }
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log("comments.js loaded");
 
@@ -161,16 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  // "sanitize" user input
-  function sanitizeInput(input) {
-    // Create a temporary DOM element
-    const doc = new DOMParser().parseFromString('<!doctype html><body>' + input, 'text/html');
-    const sanitizedInput = doc.body.textContent || doc.body.innerText;  // Get the text content, stripping out any HTML tags
-
-    //allow only specific characters
-    return sanitizedInput.replace(/[^a-zA-Z0-9\s.,!?-]/g, ''); // Removes anything other than letters, numbers, and a few punctuation marks
-  }
-
   // Handle submission
   submitBtn.addEventListener('click', () => {
     if (!isLoggedIn) {
@@ -276,38 +308,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(data => {
         displayAverageRating(data.average, data.count);
       });
-  }
-
-  // Render star icons based on average
-  function displayAverageRating(average, count) {
-    const container = document.getElementById('average-rating-display');
-    container.replaceChildren();
-
-    if (!average) {
-      container.textContent = '☆☆☆☆☆';
-      return;
-    }
-
-    // Calculate the number of full stars (meaning whole number part of the average)
-    const fullStars = Math.floor(average);
-
-    // If the decimal part of the average is 0.5 or more, show one half star
-    const hasHalf = average % 1 >= 0.5;
-    
-    // Add full star icons (★) equal to the number of whole stars
-    for (let i = 0; i < fullStars; i++) {
-      container.append('★');
-    }
-    
-    // add a halfstar (⯪) if average is above 0.5
-    if (hasHalf) container.append('⯪');
-    
-    // Add empty stars (☆) for the remaining stars to complete 5 total
-    for (let i = fullStars + (hasHalf ? 1 : 0); i < 5; i++) {
-      container.append('☆');
-    }
-    //show the average
-    container.append(` (${average})`);
   }
 
   fetchAverageRating();

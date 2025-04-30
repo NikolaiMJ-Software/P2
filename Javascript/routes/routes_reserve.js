@@ -7,6 +7,7 @@ import sqlite3 from 'sqlite3';
 import sgmail from '@sendgrid/mail';
 import path from 'path';
 import fs from 'fs';
+import rateLimit from 'express-rate-limit';
 const app = express();
 app.use(express.json());
 const router = express.Router();
@@ -24,13 +25,13 @@ const db = new sqlite3.Database(db_path, (err) => {
 });
 
 //Function to send an email
-async function send_mail(receiver, subject, text) {
+async function send_mail(receiver, subject, content, isHtml = false) {
     //struct for email data
     const mail_data = {
         to: receiver,
         from: 'clickoghent@gmail.com',
         subject: subject,
-        text: text,
+        [isHtml ? 'html' : 'text']: content
     };
 
     //Sends email and verifies whether it goes through
@@ -54,8 +55,15 @@ function db_get(query, params) {
     });
 }
 
+// Prevent abuse or infinite loop calls on reservation email
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minut
+  max: 5, // max 5 requests per IP
+  message: { error: "For mange anmodninger, prøv igen senere" }
+});
+
 //Reciever function for sending reservation emails for an entire cart (receives signal from cart.js)
-router.post('/reserve_wares', async (req, res) => {
+router.post('/reserve_wares', limiter, async (req, res) => {
 
     //Gathers and converts data to be useful
     let { cart, user_email } = req.body;
@@ -137,8 +145,22 @@ router.post('/reserve_wares', async (req, res) => {
             const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
             await send_mail(
                 shop_mail.email,
-                `En bruger har reserveret varer hos din butik`,
-                `Brugeren med email ${user_email} fra Click&hent har reserveret følgende varer fra din butik: ${shop_text}\n\nKlik her for at bekræfte kundens afhæntning: ${url}`
+                "En bruger har reserveret varer hos din butik",
+                `<!DOCTYPE html>
+                <html>
+                <body>
+                    <p>Brugeren med email <strong>${user_email}</strong> fra <strong>Click&hent</strong> har reserveret følgende varer fra din butik:</p>
+                    <ul>
+                        ${shop_text.split('\n').filter(l => l.trim() !== '').map(l => `<li>${l}</li>`).join('')}
+                    </ul>
+                    <p>
+                        <a href="${url}" style="color: #0066cc; text-decoration: underline;">
+                            Klik her for at bekræfte kundens afhentning
+                        </a>
+                    </p>
+                </body>
+                </html>`,
+                true
             );
         }
         
@@ -158,7 +180,7 @@ router.post('/reserve_wares', async (req, res) => {
         //Sends email to user that is reserving the wares
         await send_mail(
             user_email,
-            `Du har reserveret varer på Click&hent`,
+            "Du har reserveret varer på Click&hent",
             user_text
         )
         return res.json({ success: cart_items });
