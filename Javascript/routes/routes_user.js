@@ -62,9 +62,10 @@ router.post('/authenticate_email', async (req, res) => {
 //Makes an entry in the database for authentication if none exists, and sends corrosponding email
 async function authentication_email_maker(email, key){
     try {
+        const date = new Date();
         const row = await db_get(`SELECT * FROM authentication WHERE authentication.email = ?;`, [email]);
         if (!row) {
-            db.run(`INSERT INTO authentication (email, key, time_stamp) VALUES (?, ?, ?)`, [email, key, getTime()]);
+            db.run(`INSERT INTO authentication (email, key, time_stamp) VALUES (?, ?, ?)`, [email, key, date.getTime()]);
             await send_mail(
                 email,
                 `Email autentificering`,
