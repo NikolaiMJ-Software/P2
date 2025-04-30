@@ -44,7 +44,7 @@ export async function send_mail(receiver, subject, content, isHtml = false) {
 }
 
 //Async version of db.get
-function db_get(query, params) {
+export function db_get(query, params) {
     return new Promise((resolve, reject) => {
         db.get(query, params, (err, row) => {
             if (err) reject(err);
