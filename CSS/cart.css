@@ -1,6 +1,5 @@
 body {
     background-color: var(--page-bg);
-    color: var(--primary-text);
     font-family: 'Arial', 'Lucida Sans', sans-serif;
     margin: 0;
     padding: 30px;
@@ -22,10 +21,8 @@ body {
   }
   
   .product-name {
-    color: black; 
-    
+    color: black;  
   }
-  
 
   /* Cart Container */
   .cart-container {
