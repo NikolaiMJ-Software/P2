@@ -64,7 +64,7 @@ async function changesInProducts(id, code){
             const diff = product.stock - change;
             if(diff < 0){
                 if (product.stock > 0){
-                    alert(`Der er ikke nok på lager af: ${product.product_name}, lager skal fyldes op.`);
+                    alert(`${product.product_name} kan ikke blive afhentet, fordi der er ikke nok på lager.`);
                 } else{
                     alert(`${product.product_name} er ikke på lager.\nKan ikke bekræfte afhentning af produktet`);
                 }
