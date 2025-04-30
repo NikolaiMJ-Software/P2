@@ -41,6 +41,16 @@ db.serialize(() => {
         else console.log("Table 'cities' created with UNIQUE constraint.");
     });
 
+    db.run(`CREATE TABLE IF NOT EXISTS authentication (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        key INT,
+        email TEXT,
+        time_stamp INT
+        )`, (err) => {
+            if(err) console.log(err.message);
+            else console.log("Table authentication is created");
+        });
+
 
     db.run(`CREATE TABLE IF NOT EXISTS shops (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

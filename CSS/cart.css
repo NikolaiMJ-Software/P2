@@ -19,10 +19,6 @@ body {
   .top-buttons:hover {
     background-color: rgba(0, 0, 0, 0.05);
   }
-  
-  .product-name {
-    color: black;  
-  }
 
   /* Cart Container */
   .cart-container {
