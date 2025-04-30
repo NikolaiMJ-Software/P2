@@ -63,9 +63,9 @@
   <main class="products" id="productList"></main>
 
   <script type="module" src="./Javascript/shop_page.js"></script>
-  <script src="./Javascript/comments.js"></script>
-  <script src="./Javascript/theme.js"></script>
-  <script src="./Javascript/logout.js"></script>
+  <script type="module" src="./Javascript/comments.js"></script>
+  <script type="module" src="./Javascript/theme.js"></script>
+  <script type="module" src="./Javascript/logout.js"></script>
 
     <script>
       localStorage.currentPage = `./productlist?city=${new URLSearchParams(window.location.search).get("city")}&shop_id=${new URLSearchParams(window.location.search).get("shop_id")}`;
