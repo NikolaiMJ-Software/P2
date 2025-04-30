@@ -21,6 +21,12 @@ body {
     background-color: rgba(0, 0, 0, 0.05);
   }
   
+  .product-name {
+    color: black; 
+    
+  }
+  
+
   /* Cart Container */
   .cart-container {
     display: flex;
@@ -156,6 +162,7 @@ body {
     vertical-align: middle;
     text-align: center;
     padding: 0; /* Remove extra space */
+    
   }
   /* Responsive Adjustments */
   @media (max-width: 768px) {
