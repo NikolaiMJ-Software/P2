@@ -151,12 +151,14 @@ button {
   }
   
   .modal-content {
-    background: white;
+    background: var(--page-bg);
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 2px;
     width: 300px;
     position: relative;
     text-align: center;
+    color: #6FAFB8;
+  
   }
   
   #close-rating-modal {
@@ -165,6 +167,9 @@ button {
     top: 10px;
     cursor: pointer;
     font-size: 20px;
+    color: black;
+    border-left: none;
+    translate: 10px -15px;
   }
   
   #star-rating .star {
@@ -210,20 +215,36 @@ button {
     }
     
     #submit-rating {
-      margin-bottom: 10px;
+      color: #4A7E8F;
+      border: 2px solid #4A7E8F;
+      border-radius: 25px;
+      width: 42%;
+      line-height: 5px;
+    }
+    
+    #submit-rating:hover {
+      background-color: #4A7E8F;
+      color: var(--tertiary-text);
+    
     }
     
     .comment-preview {
       margin-top: 10px;
       max-height: 200px;
+      color: #6FAFB8;
       overflow-y: auto;
+      overflow-x: hidden;
+      word-wrap: break-word; 
       text-align: left;
     }
     
     .comment-preview h3 {
       margin-bottom: 5px;
     }  
-    
+    .comment-list-text{
+      color: var(--primary-text);
+    }
+
     .average-stars {
       font-size: 35px;
       color: goldenrod;

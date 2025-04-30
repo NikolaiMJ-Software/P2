@@ -1,0 +1,44 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--page-bg);
+    min-height: 90vh;
+}
+.message{
+    font-family: lucida;
+    color: var(--primary-text);
+}
+
+:root[data-theme="light"] {
+    --page-bg:WHITE ;
+    --primary-text:Black;
+    --secoundary-text: lightgrey;
+
+
+
+    --switch-bg: #c1c1c1;
+    --switch-circle-bg: #FFD371;
+    --switch-circle-position: 5px;
+    --icon-sun: #dfb041;
+    --icon-moon: #B1B0B5;
+    --form-bg: #eeeeee;
+    --form-ph: grey;
+
+}
+
+
+:root[data-theme="dark"] {
+    --page-bg:#383643;
+    --primary-text: white;
+    --secoundary-text: lightgrey;
+
+    --switch-bg: #49494c;
+    --switch-circle-bg: #7190FF;
+    --switch-circle-position: 55px;
+    --icon-sun: #545457;
+    --icon-moon: #DCE3FF;
+    --form-bg: #2B2A35;
+    --form-ph: grey;
+
+} 

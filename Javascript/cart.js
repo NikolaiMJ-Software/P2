@@ -8,7 +8,7 @@ import { updateLastVisit } from './calculate_distance.js';
 let products = [];
 
 //Function that adds a product to the cart
-function add_to_cart(product_id) {
+export function add_to_cart(product_id) {
 
     //Verify input of product_id
     product_id = parseInt(product_id);
@@ -29,7 +29,7 @@ function add_to_cart(product_id) {
 }
 
 //Function that removes a product from the cart
-function remove_from_cart(product_id) {
+export function remove_from_cart(product_id) {
 
     //Gets the current cart and finds index for specified product id
     let products = getCookie("products").split(",");
@@ -49,7 +49,7 @@ function remove_from_cart(product_id) {
 }
 
 //Updates cart button number that showcases amount of wares in cart
-function update_cart_button() {
+export function update_cart_button() {
     let length = getCookie("products").split(",").length;
     if(length === 1 && getCookie("products").split(",")[0] === "") {
         length = 0;
@@ -59,7 +59,7 @@ function update_cart_button() {
 }
 
 //Function to get a specific cookie (relevant for other functions) **taken from internet**
-function getCookie(cname) {
+export function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
@@ -101,10 +101,10 @@ function fill_table() {
             document.getElementById(product).textContent = amount;
 
             let product_price = parseInt(document.getElementById(product + "price").textContent);
-            product_price += products[product-1].price;
+            product_price += products[product-1].price - products[product-1].discount;
             document.getElementById(product + "price").textContent = product_price;
             
-            total_cost += products[product-1].price;
+            total_cost += products[product-1].price - products[product-1].discount;
             document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
         } else {
 
@@ -164,8 +164,8 @@ function fill_table() {
             //Creates and fills the fourth column in the row (price of product)
             let price_element = document.createElement("td");
             price_element.setAttribute("id", product + "price");
-            price_element.textContent = products[product-1].price;
-            total_cost += products[product-1].price;
+            price_element.textContent = products[product-1].price - products[product-1].discount;
+            total_cost += products[product-1].price - products[product-1].discount;
             row.appendChild(price_element);
 
             //Creates and fills the fifth column in the row (button to remove all instances of product from cart)

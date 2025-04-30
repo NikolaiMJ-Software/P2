@@ -35,11 +35,11 @@ async function changesInProducts(id, code){
         // Save current order
         selectedOrder = order;
         const shop_id = order.shop_id;
-        const orderProducts = JSON.parse(JSON.parse(order.products)); // convert to an object
+        const orderProducts = JSON.parse(JSON.parse(order.products));
 
         // Changes from mail
         for (const orderProduct of orderProducts) {
-            const product_id = orderProduct.product_id; // The product;
+            const product_id = Number(orderProduct.product_id); // The product;
             const change = orderProduct.amount; // Amount
             const price = orderProduct.price; // Price for the product
 
@@ -62,15 +62,16 @@ async function changesInProducts(id, code){
 
             // Skip to the next product in the order, if product is out of stock
             const diff = product.stock - change;
-            if(diff <= 0){
-                if (diff === 0){
-                    alert(`Det er den sidste af: ${product.product_name}, lager skal fyldes op.`);
-                } else if (product.stock > 0){
-                    alert(`Der er ikke nok på lager af: ${product.product_name}, lager skal fylde op.`);
+            if(diff < 0){
+                if (product.stock > 0){
+                    alert(`${product.product_name} kan ikke blive afhentet, fordi der er ikke nok på lager.`);
                 } else{
                     alert(`${product.product_name} er ikke på lager.\nKan ikke bekræfte afhentning af produktet`);
                 }
                 continue;
+            }
+            if (diff === 0){
+                alert(`Det er den sidste af: ${product.product_name}, lager skal fyldes op.`);
             }
 
             // Calc new values

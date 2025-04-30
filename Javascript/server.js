@@ -272,6 +272,12 @@ app.put('/comment', (req, res) => {
     if ((!product_id && !shop_id) || !name || !comment) {
         return res.status(400).json({ error: 'Missing product_id or shop_id, name, or comment' });
     }
+    if (rating > 5 || rating < 0){
+        return res.status(400).json({ error: 'Rating invalid' });
+    }
+    if (comment.length > 400){
+        return res.status(400).json({ error: 'Comment too long' });
+    }
 
     let queryField = product_id ? 'product_id' : 'shop_id';
     let queryValue = product_id || shop_id;

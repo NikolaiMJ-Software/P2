@@ -6,6 +6,7 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 import sgmail from '@sendgrid/mail';
 import path from 'path';
+import rateLimit from 'express-rate-limit';
 const app = express();
 app.use(express.json());
 const router = express.Router();
@@ -22,13 +23,13 @@ const db = new sqlite3.Database(db_path, (err) => {
 });
 
 //Function to send an email
-export async function send_mail(receiver, subject, text) {
+export async function send_mail(receiver, subject, content, isHtml = false) {
     //struct for email data
     const mail_data = {
         to: receiver,
         from: 'clickoghent@gmail.com',
         subject: subject,
-        text: text,
+        [isHtml ? 'html' : 'text']: content
     };
 
     //Sends email and verifies whether it goes through
@@ -52,8 +53,15 @@ function db_get(query, params) {
     });
 }
 
+// Prevent abuse or infinite loop calls on reservation email
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minut
+  max: 5, // max 5 requests per IP
+  message: { error: "For mange anmodninger, prøv igen senere" }
+});
+
 //Reciever function for sending reservation emails for an entire cart (receives signal from cart.js)
-router.post('/reserve_wares', async (req, res) => {
+router.post('/reserve_wares', limiter, async (req, res) => {
     let { cart } = req.body;
     let cart_items = Object.values(cart);
     let user_email;
@@ -69,29 +77,53 @@ router.post('/reserve_wares', async (req, res) => {
 export async function reserve_wares(cart_items, user_email) {
     //Gathers and converts data to be useful
     let named_cart = [];
+    let totalOrder = [];
 
     try {
         //Creates a new cart array, where names are shown instead of id's
         for(let i = 0; i < cart_items.length; i++) {
             const products = [];
+            let shop_text = `\n`;
             named_cart[i] = [];
-            for(let x = 0; x < cart_items[i].length; x++) {
-                const product_id = cart_items[i][x];
+            totalOrder[i] = {
+                product: [],
+                amount: [],
+                price: []
+            }
+
+            // Count the amount of products
+            const count = {};
+            for (let j = 0; j < cart_items[i].length; j++) {
+                const product_id = cart_items[i][j];
+                count[product_id] = (count[product_id] || 0) + 1;
+            }
+
+            // Add relevant product information to totalOrder
+            const product_ids = Object.keys(count);
+            for (let j = 0; j < product_ids.length; j++) {
+                const product_id = product_ids[j];
                 const product = await db_get("SELECT products.product_name, products.price, products.discount FROM products WHERE products.id = ?",[product_id]);
+                const amount = count[product_id];
+                totalOrder[i].product.push(product.product_name);
+                totalOrder[i].amount.push(amount);
+                totalOrder[i].price.push(product.price - product.discount);
+
+                // Order text to shops
+                shop_text += `${product.product_name} x ${amount}\n`;
+                
                 // Insert the values in products
                 products.push({
                     product_id,
-                    amount: 1,
+                    amount,
                     price: (product.price - product.discount) 
                 });
-                named_cart[i].push(product.product_name);
             }
-        
+            
             // Define the shop_id based on cart
             const shopObj = await db_get("SELECT shop_id FROM products WHERE id = ?", [cart_items[i][0]]);
             const shop_id = shopObj.shop_id;
             
-            // Random generatet code, then make code, and products as a sting
+            // Random generatet code, and products as a string
             const code = crypto.randomUUID();
             const codeString = JSON.stringify(code);
             const orderProducts = JSON.stringify(products);
@@ -110,31 +142,49 @@ export async function reserve_wares(cart_items, user_email) {
             });
 
             // Insert the new id and code in the link, what would be send
-            const order = await response.json();
-            const url = `${baseUrl}/confirm?id=${order.id}&code=${code}`;
-        
+            const orderResponse = await response.json();
+            const url = `${baseUrl}/confirm?id=${orderResponse.id}&code=${code}`;
+
             //Sends an email to each store (each sub-array is only products from that store)
             const shop_mail = await db_get("SELECT shops.email FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
             await send_mail(
                 shop_mail.email,
-                `En bruger har reserveret varer hos din butik`,
-                `Brugeren med email ${user_email} fra Click&hent har reserveret følgende varer fra din butik: ${named_cart[i]}\n\n
-                Klik her for at bekræfte kundens afhæntning: ${url}`
+                "En bruger har reserveret varer hos din butik",
+                `<!DOCTYPE html>
+                <html>
+                <body>
+                    <p>Brugeren med email <strong>${user_email}</strong> fra <strong>Click&hent</strong> har reserveret følgende varer fra din butik:</p>
+                    <ul>
+                        ${shop_text.split('\n').filter(l => l.trim() !== '').map(l => `<li>${l}</li>`).join('')}
+                    </ul>
+                    <p>
+                        <a href="${url}" style="color: #0066cc; text-decoration: underline;">
+                            Klik her for at bekræfte kundens afhentning
+                        </a>
+                    </p>
+                </body>
+                </html>`,
+                true
             );
         }
-
+        
         //Generate a proper text-string for the email the user is getting
         let user_text = `Du har reserveret fra følgende butikker på Click&hent:\n`;
         for(let i = 0; i < cart_items.length; i++) {
             let shop_name = await db_get("SELECT shops.shop_name FROM products JOIN shops ON products.shop_id = shops.id WHERE products.id = ?;", [cart_items[i][0]]);
             let shop_name_string = shop_name.shop_name
-            user_text += `${shop_name_string}:\n${named_cart[i]}\n`;
+            user_text += `\n${shop_name_string}:\n`;
+            
+            // Add all product and the amount
+            for (let j = 0; j < totalOrder[i].product.length; j++) {
+                user_text += `${totalOrder[i].product[j]} x ${totalOrder[i].amount[j]}\n`;
+            }
         }
 
         //Sends email to user that is reserving the wares
         await send_mail(
             user_email,
-            `Du har reserveret varer på Click&hent`,
+            "Du har reserveret varer på Click&hent",
             user_text
         )
         return true;
