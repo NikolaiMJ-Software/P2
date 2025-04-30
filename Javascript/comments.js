@@ -1,5 +1,5 @@
   // Render star icons based on average
-  export function displayAverageRating(average, count) {
+  export function displayAverageRating(average) {
     const container = document.getElementById('average-rating-display');
     container.replaceChildren();
 
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch(id)
       .then(res => res.json())
       .then(data => {
-        displayAverageRating(data.average, data.count);
+        displayAverageRating(data.average);
       });
   }
 
