@@ -6,14 +6,12 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 import sgmail from '@sendgrid/mail';
 import path from 'path';
-import fs from 'fs';
 const app = express();
 app.use(express.json());
 const router = express.Router();
 
-//Locates api.txt for SendGrid API key (THIS ONLY WORKS ON OFFICIAL SERVER SINCE API KEY IS PRIVATE)
-let key = fs.readFileSync(path.join(process.cwd(), `api.txt`)).toString();
-sgmail.setApiKey(key);
+//API key for SendGrid (THIS IS ONLY PRESENT ON OFFICIAL SERVER SINCE API KEY IS PRIVATE)
+sgmail.setApiKey();
 
 //Makes a copy of the database, with directions to the data from db_path
 const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
@@ -24,7 +22,7 @@ const db = new sqlite3.Database(db_path, (err) => {
 });
 
 //Function to send an email
-async function send_mail(receiver, subject, text) {
+export async function send_mail(receiver, subject, text) {
     //struct for email data
     const mail_data = {
         to: receiver,
@@ -56,14 +54,20 @@ function db_get(query, params) {
 
 //Reciever function for sending reservation emails for an entire cart (receives signal from cart.js)
 router.post('/reserve_wares', async (req, res) => {
-
-    //Gathers and converts data to be useful
-    let { cart, user_email } = req.body;
-    if(!user_email) {
-        user_email = req.user.email;
-    }
-
+    let { cart } = req.body;
     let cart_items = Object.values(cart);
+    let user_email;
+    if(req.user){
+        user_email = req.user.email;
+    } else{
+        return res.json({ success: false })
+    }
+    let result = await reserve_wares(cart_items, user_email);
+    return res.json({ success: result })
+});
+
+export async function reserve_wares(cart_items, user_email) {
+    //Gathers and converts data to be useful
     let named_cart = [];
 
     try {
@@ -133,12 +137,12 @@ router.post('/reserve_wares', async (req, res) => {
             `Du har reserveret varer på Click&hent`,
             user_text
         )
-        return res.json({ success: cart_items });
+        return true;
     } catch (err) {
         console.error("Fejl i ordreproces:", err);
-        return res.status(500).json({ error: "Der opstod en fejl under reservationen." });
+        return false;
     }
-});
+}
 
 //Exports router. functions to be available in server.js
 export default router;

@@ -245,6 +245,22 @@ const button_reserve = document.getElementById("Confirm_button");
 if(button_reserve != null) {
     button_reserve.addEventListener("click", async () => {
 
+        //Gets the cart, and sorts the products into sub-arrays based on which store they belong to
+        let cart = getCookie("products").split(",").map(Number);
+        if (cart.length === 0) {
+            alert("Kurven er tom!");
+            return;
+        }
+        let sorted_cart = {};
+        for (let i = 0; i < cart.length; i++) {
+            let product_id = cart[i];
+            let shop_id = products[product_id-1].shop_id;
+            if (!sorted_cart[shop_id]) {
+                sorted_cart[shop_id] = [];
+            }
+            sorted_cart[shop_id].push(product_id);
+        }
+
         //Asks user for a reservation email if user is not logged in
         let user_email = null;
         const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -266,23 +282,36 @@ if(button_reserve != null) {
                 alert("Fejl: email er allerede brugt af en konto");
                 return;
             }
-            
-        }
 
-        //Gets the cart, and sorts the products into sub-arrays based on which store they belong to
-        let cart = getCookie("products").split(",").map(Number);
-        if (cart.length === 0) {
-            alert("Kurven er tom!");
-            return;
-        }
-        let sorted_cart = {};
-        for (let i = 0; i < cart.length; i++) {
-            let product_id = cart[i];
-            let shop_id = products[product_id-1].shop_id;
-            if (!sorted_cart[shop_id]) {
-                sorted_cart[shop_id] = [];
+            //Sends signal to server to generate email verification key
+            const generate_key_response = await fetch('./generate_key', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email: user_email })
+            });
+            const generated_key = await generate_key_response.json();
+            if(!generated_key.success){
+                console.log("Kunne ikke generere nøgle til din email, hvis du lige har genereret en nøgle, så vendt 5 minutter og prøv igen");
+                return;
             }
-            sorted_cart[shop_id].push(product_id);
+
+            //
+            let key = prompt("Indtast den nøgle der er blevet sendt til din email. Der kan gå nogle minutter før den ankommer.", "Din kode");
+            const response_1 = await fetch('./authenticate_email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email: user_email, key: key, cart: sorted_cart })
+            });
+            const auth_response = await response_1.json();
+            console.log(auth_response);
+            if(auth_response.success){
+                alert("Du har nu reserveret dine varer, check din email");
+                return;
+            }
+            alert("Kunne ikke reservere varen, da autentiseringen ikke gik igennem");
+            return;
         }
     
         //Sends the sorted cart server-side for it to send reservation email (see routes_reserve.js for server-side)
@@ -291,14 +320,19 @@ if(button_reserve != null) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({ cart: sorted_cart, user_email: user_email })
+            body: JSON.stringify({ cart: sorted_cart })
         });
-        console.log(response.json());
-        alert("Du har nu reserveret dine varer, check din email");
-        document.cookie = `products=;path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
-        const table_body = document.querySelector("#cart tbody");
-        table_body.replaceChildren();
-        fill_table();
+        const reserve_response = await response.json();
+        console.log(reserve_response);
+        if (reserve_response.success) {
+          alert("Du har nu reserveret dine varer, check din email");
+          document.cookie = `products=;path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
+          const table_body = document.querySelector("#cart tbody");
+          table_body.replaceChildren();
+          fill_table();
+        } else {
+          alert("Reservationen fejlede, prøv igen senere.");
+        }
     });
 }
 
