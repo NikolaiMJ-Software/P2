@@ -4,7 +4,7 @@ import path from 'path';
 import multer from 'multer';
 import fs from 'fs';
 import fse from 'fs-extra';
-import { send_mail, reserve_wares } from './routes_reserve';
+import { send_mail, reserve_wares } from './routes_reserve.js';
 
 // Set up Multer
 const upload = multer({ dest: 'uploads/' }); // or configure custom storage
