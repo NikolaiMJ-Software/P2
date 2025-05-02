@@ -195,7 +195,12 @@ db.serialize(() => {
             
             (1, 1, 'Samsung Galaxy S25 Ultra 5G smartphone (Titanium Silver)', 93, 0, 9499, 'Denne Samsung Galaxy S25 Ultra 5G smarphone er fyldt med banebrydende teknologier og AI, hvilket vil løfte din mobil-oplevelse. Den har en 6,9" Dynamic AMOLED 2x-skærm, en Snapdragon Elite 8-processor og et 200MP hovedkamera',
             'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver3.png',
-            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4)`, (err) => {
+            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4),
+            
+            (1, 1, 'Vincents telefon', 93, 0, 9499, 'Denne telefon ligner en Samsung Galaxy, men den er faktisk en iPhone',
+            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver1.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver2.png', 'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/variant_titanium_silver/titanium_silver3.png',
+            'Images/Aalborg/Måneby/Samsung_Galaxy_S25_Ultra_5G_smartphone_(Titanium Black)/titanium_black4.png', '6.9" QHD+ Dynamic AMOLED-skærm, 200+50+50+10 MP kamerasystem 5.000mAh batteri, trådløs opladning', 0, 4),]
+            `, (err) => {
             if (err) console.error('Error inserting data:', err.message);
             else console.log('product inserted.');
     });
