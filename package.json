@@ -2,17 +2,12 @@
   "type": "module",
   "dependencies": {
     "@sendgrid/mail": "^8.1.5",
-    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
     "express-session": "^1.18.1",
     "fs-extra": "^11.3.0",
-    "mailjet": "^0.0.1",
     "multer": "^1.4.5-lts.2",
     "node-fetch": "^3.3.2",
-    "node-mailjet": "^6.0.8",
-    "nodemailer": "^6.10.0",
-    "resend": "^4.1.2",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {

@@ -4,6 +4,7 @@ import path from 'path';
 import multer from 'multer';
 import fs from 'fs';
 import fse from 'fs-extra';
+import { send_mail, reserve_wares, db_get } from './routes_reserve.js';
 
 // Set up Multer
 const upload = multer({ dest: 'uploads/' }); // or configure custom storage
@@ -36,6 +37,60 @@ router.post('/email_status', (req, res) => {
         }
     })
 });
+
+//Reciever functions to authenticate emails
+router.post('/generate_key', async (req, res) => {
+    let { email } = req.body;
+    const key = parseInt(Math.floor(Math.random() * 900000) + 100000)
+    let success = await authentication_email_maker(email, key);
+    return res.json({ success: success });
+});
+router.post('/authenticate_email', async (req, res) => {
+    let { email, key, cart } = req.body;
+    let success = await authenticate_email_checker(email, key);
+    if(!success){
+        return res.json({ success });
+    }
+    if(!cart){
+        return res.json({ success });
+    }
+    let cart_items = Object.values(cart);
+    await reserve_wares(cart_items, email);
+    return res.json({ success });
+});
+
+//Makes an entry in the database for authentication if none exists, and sends corrosponding email
+async function authentication_email_maker(email, key){
+    try {
+        const date = new Date();
+        const row = await db_get(`SELECT * FROM authentication WHERE authentication.email = ?;`, [email]);
+        if (!row) {
+            db.run(`INSERT INTO authentication (email, key, time_stamp) VALUES (?, ?, ?)`, [email, key, date.getTime()]);
+            await send_mail(
+                email,
+                `Email autentificering`,
+                `Der er sendt en autentificerings mail til denne email, da der er forsøgt at oprette en konto eller reservere varer med denne email. 
+                For at autentificere denne email, skal du indsætte følgende kode på Click&Hent: ${key}`
+            );
+            return true;
+        } else {
+            return false;
+        }
+      } catch (err) {
+        console.error("Database error:", err);
+        return false;
+      }
+}
+
+//Checks whether a authentication database entry exists
+export async function authenticate_email_checker(email, key){
+    const row = await db_get(`SELECT * FROM authentication WHERE authentication.email = ? AND authentication.key = ?;`, [email, key]);
+    if(row){
+        db.run(`DELETE FROM authentication WHERE email = ?;`, [email]);
+        return true;
+    }
+    return false;
+}
 
 //allows user to login, by calling the /login
 router.post('/login', (req, res) => {

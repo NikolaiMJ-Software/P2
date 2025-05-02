@@ -352,6 +352,15 @@ app.get('/orders', (req, res) => {
     });
 });
 
+//Clears authentication data older than 5 minutes every minute
+function fn60sec() {
+    const now = new Date().getTime()
+    db.run(`DELETE FROM authentication WHERE time_stamp < ?`, [now - 300 * 1000]);
+}
+fn60sec();
+setInterval(fn60sec, 60*1000);
+
+
 app.get('/confirm', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/confirm.html'));
 });

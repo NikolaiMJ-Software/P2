@@ -104,8 +104,6 @@ button {
 .productName{
     display: inline-block;
     position: absolute;
-    text-transform: capitalize;
-    text-decoration: underline;
     font-weight: bold;
     font-size: 18px;
     top: 52%;
