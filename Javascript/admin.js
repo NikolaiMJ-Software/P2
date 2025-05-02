@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         shops.style = "" //show this page
 
         //Add search bar to page
-        let shopSearch = document.getElementById("shopFunctions");
+        let shopSearch = document.getElementById("shopSearch");
         shopSearch.innerHTML = ``
         shopSearch.appendChild(createSearch())
 
