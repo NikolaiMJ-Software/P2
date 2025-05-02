@@ -109,7 +109,7 @@ export async function reserve_wares(cart_items, user_email) {
                 totalOrder[i].price.push(product.price - product.discount);
 
                 // Order text to shops
-                shop_text += `${product.product_name} x ${amount}\n`;
+                shop_text += `${product.product_name} x ${amount}, á ${product.price - product.discount}kr. pr. stk.\n`;
                 
                 // Insert the values in products
                 products.push({
@@ -177,7 +177,7 @@ export async function reserve_wares(cart_items, user_email) {
             
             // Add all product and the amount
             for (let j = 0; j < totalOrder[i].product.length; j++) {
-                user_text += `${totalOrder[i].product[j]} x ${totalOrder[i].amount[j]}\n`;
+                user_text += `${totalOrder[i].product[j]} x ${totalOrder[i].amount[j]}, á ${totalOrder[i].price[j]}kr. pr. stk.\n`;
             }
         }
 

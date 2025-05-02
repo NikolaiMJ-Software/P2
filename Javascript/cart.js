@@ -296,7 +296,7 @@ if(button_reserve != null) {
                 return;
             }
 
-            //
+            //Asks for the key sent over email before and verifies with server
             let key = prompt("Indtast den nøgle der er blevet sendt til din email. Der kan gå nogle minutter før den ankommer.", "Din kode");
             const response_1 = await fetch('./authenticate_email', {
                 method: 'POST',
@@ -306,8 +306,14 @@ if(button_reserve != null) {
             });
             const auth_response = await response_1.json();
             console.log(auth_response);
+
+            //If verification was successful, email would also have been sent
             if(auth_response.success){
                 alert("Du har nu reserveret dine varer, check din email");
+                document.cookie = `products=;path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
+                const table_body = document.querySelector("#cart tbody");
+                table_body.replaceChildren();
+                fill_table();
                 return;
             }
             alert("Kunne ikke reservere varen, da autentiseringen ikke gik igennem");

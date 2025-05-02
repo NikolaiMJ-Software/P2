@@ -136,7 +136,6 @@ async function changesInProducts(id, code){
             })
         });
     }
-    
 
     // Add "task complete" to users webpage
     const h1 = document.createElement("h1");
