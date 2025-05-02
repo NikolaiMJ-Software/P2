@@ -330,6 +330,15 @@ document.addEventListener("DOMContentLoaded", async () =>{
             return;
         }
 
+        //make sure discount does not exceed price
+        const price = parseFloat(document.getElementById("update-product-price").value);
+        const discount = parseFloat(document.getElementById("update-product-discount").value) || 0;
+    
+        if (discount > price) {
+            alert("Rabat må ikke være større end prisen.");
+            return;
+        }
+
         //append id to the form_data
         form_data.append("id", product_id);
 
@@ -369,6 +378,15 @@ document.addEventListener("DOMContentLoaded", async () =>{
     //wait for subit button click in the add product form/panel
     form.addEventListener("submit", async (e)=>{
         e.preventDefault();
+
+        //make sure discount does not exceed price
+        const price = parseFloat(document.getElementById("product-price").value);
+        const discount = parseFloat(document.getElementById("product-discount").value) || 0;
+    
+        if (discount > price) {
+            alert("Rabat må ikke være større end prisen.");
+            return;
+        }
 
         //define all data in the form
         const form_data = new FormData(form);
