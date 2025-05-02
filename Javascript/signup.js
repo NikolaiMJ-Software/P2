@@ -30,19 +30,35 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        //sent signup data to backend route singup
-        const response = await fetch('./signup', {
+        //Generate authetication key and email for account
+        const generate_key_response = await fetch('./generate_key', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password, shop_id })
+            credentials: 'include',
+            body: JSON.stringify({ email: email })
         });
+        const generated_key = await generate_key_response.json();
+        if(!generated_key.success){
+            alert("Kunne ikke generere nøgle til din email, hvis du lige har genereret en nøgle, så vendt 5 minutter og prøv igen");
+            return;
+        }
+
+        //Sends authenticates email and logs signup data if verification goes through
+        let key = prompt("Indtast den nøgle der er blevet sendt til din email. Der kan gå nogle minutter før den ankommer.", "Din kode");
+        const response_signup = await fetch('./authenticate_email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ email: email, key: key, name: name, password: password, shop_id: shop_id })
+        });
+        const auth_response = await response_signup.json();
+        console.log(auth_response);
 
         //if account is created, change to login page, if not sent error
-        if (response.ok) {
+        if (auth_response.success == true) {
             window.location.href = './login';
         } else {
-            const error_text = await response.text();
-            error_message.textContent = error_text;
+            error_message.textContent = auth_response.success;
         }
     });
 });

@@ -46,17 +46,20 @@ router.post('/generate_key', async (req, res) => {
     return res.json({ success: success });
 });
 router.post('/authenticate_email', async (req, res) => {
-    let { email, key, cart } = req.body;
-    let success = await authenticate_email_checker(email, key);
-    if(!success){
-        return res.json({ success });
+    let { email, key, cart, name, password, shop_id } = req.body;
+    let authenticated = await authenticate_email_checker(email, key);
+    if(!authenticated){
+        return res.json({ success: authenticated });
     }
+    //If it doesn't have associated cart, its a signup request
     if(!cart){
-        return res.json({ success });
+        let signed_up = signup(name, email, password, shop_id);
+        return res.json({ success: signed_up });
     }
+    //otherwise its a reserve request
     let cart_items = Object.values(cart);
-    await reserve_wares(cart_items, email);
-    return res.json({ success });
+    let reserved = await reserve_wares(cart_items, email);
+    return res.json({ success: reserved });
 });
 
 //Makes an entry in the database for authentication if none exists, and sends corrosponding email
@@ -128,31 +131,24 @@ router.post('/login', (req, res) => {
 });
 
 //function to signup users
-router.post('/signup', (req, res)=>{
-    //aquire name, email and password from the url
-    const {name, email, password, shop_id} = req.body;
+function signup(name, email, password, shop_id) {
     //if any are missing, a fail message will be printed
     if (!name || !email || !password){
-        return res.status(400).send("Du skal oplyse alle informationer");
+        return "Fejl med givet data, har du indskrevet navn email og password?";
     }
     //insert the different values in the db
-    db.run(
-        `INSERT INTO users (name, email, password, shop_id) VALUES (?, ?, ?, ?)`,
-        [name, email, password, shop_id],
-        (err) =>{
-            //if any mails are already in the db, the process would be aborted
-            if(err){
-                if(err.message.includes('UNIQUE constraint failed')){
-                    return res.status(409).send("Din email er allerede i brug");
-                }
-                console.error('Singup error', err.message);
-                return res.status(500).send("Database error");
+    db.run(`INSERT INTO users (name, email, password, shop_id) VALUES (?, ?, ?, ?)`,[name, email, password, shop_id],(err) =>{
+        //if any mails are already in the db, the process would be aborted
+        if(err){
+            if(err.message.includes('UNIQUE constraint failed')){
+                return "Konto med givent email findes allerede";
             }
-            //redirect the page to login page
-            return res.redirect("./login");
+            console.error('Singup error', err.message);
+            return "Fejl i database";
         }
-    );
-});
+        return true;
+    });
+}
 
 //route to logout
 router.get('/logout', (req, res)=>{

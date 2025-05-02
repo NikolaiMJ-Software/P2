@@ -316,7 +316,7 @@ if(button_reserve != null) {
                 fill_table();
                 return;
             }
-            alert("Kunne ikke reservere varen, da autentiseringen ikke gik igennem");
+            alert("Kunne ikke reservere varen, da autentiseringen fejlede");
             return;
         }
     
