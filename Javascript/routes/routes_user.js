@@ -48,7 +48,7 @@ router.post('/generate_key', async (req, res) => {
 router.post('/authenticate_email', async (req, res) => {
     let { email, key, cart, name, password, shop_id } = req.body;
     let authenticated = await authenticate_email_checker(email, key);
-    if(!authenticated === true){
+    if(authenticated !== true){
         return res.json({ success: authenticated });
     }
     //If it doesn't have associated cart, its a signup request

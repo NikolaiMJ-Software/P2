@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({ email: email })
         });
         const generated_key = await generate_key_response.json();
-        if(!generated_key.success === true){
+        if(generated_key.success !== true){
             alert("Kunne ikke generere nøgle til din email, hvis du lige har genereret en nøgle, så vendt 5 minutter og prøv igen");
             return;
         }
