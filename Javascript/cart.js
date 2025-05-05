@@ -291,7 +291,7 @@ if(button_reserve != null) {
                 body: JSON.stringify({ email: user_email })
             });
             const generated_key = await generate_key_response.json();
-            if(!generated_key.success == true){
+            if(!generated_key.success === true){
                 alert("Kunne ikke generere nøgle til din email, hvis du lige har genereret en nøgle, så vendt 5 minutter og prøv igen");
                 return;
             }
@@ -314,7 +314,7 @@ if(button_reserve != null) {
                 console.log(auth_response);
     
                 //If verification was successful, email would also have been sent
-                if(auth_response.success){
+                if(auth_response.success === true){
                     auth_box.style.display = "none";
                     input.value = "";
                     alert("Du har nu reserveret dine varer, check din email");

@@ -48,7 +48,7 @@ router.post('/generate_key', async (req, res) => {
 router.post('/authenticate_email', async (req, res) => {
     let { email, key, cart, name, password, shop_id } = req.body;
     let authenticated = await authenticate_email_checker(email, key);
-    if(!authenticated == true){
+    if(!authenticated === true){
         return res.json({ success: authenticated });
     }
     //If it doesn't have associated cart, its a signup request
@@ -86,7 +86,7 @@ async function authentication_email_maker(email, key){
 }
 
 //Checks whether a authentication database entry exists
-export async function authenticate_email_checker(email, key){
+async function authenticate_email_checker(email, key){
     const row = await db_get(`SELECT * FROM authentication WHERE authentication.email = ? AND authentication.key = ?;`, [email, key]);
     if(row){
         db.run(`DELETE FROM authentication WHERE email = ?;`, [email]);
