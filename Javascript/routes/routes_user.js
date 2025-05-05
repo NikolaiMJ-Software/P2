@@ -51,17 +51,12 @@ router.post('/authenticate_email', async (req, res) => {
     if(!authenticated){
         return res.json({ success: authenticated });
     }
-    console.log("successful authentication");
     //If it doesn't have associated cart, its a signup request
     if(!cart){
-        console.log("successfully checked that cart was not present");
-        console.log(name + " " + email + " " + password + " " + shop_id);
         let signed_up = await signup(name, email, password, shop_id);
-        console.log("signed up status: " + signed_up);
         return res.json({ success: signed_up });
     }
     //otherwise its a reserve request
-    console.log("Cart was present");
     let cart_items = Object.values(cart);
     let reserved = await reserve_wares(cart_items, email);
     return res.json({ success: reserved });
