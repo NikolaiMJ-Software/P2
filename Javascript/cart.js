@@ -300,7 +300,8 @@ if(button_reserve != null) {
             let auth_box = document.getElementById("authentication_box");
             auth_box.style.display = "flex";
             document.getElementById("auth_submit").onclick = async function() {
-                let key = document.querySelector("#authentication_box input").value;
+                let input = document.querySelector("#authentication_box input");
+                let key = input.value;
 
                 //Asks for the key sent over email before and verifies with server
                 const response_1 = await fetch('./authenticate_email', {
@@ -315,6 +316,7 @@ if(button_reserve != null) {
                 //If verification was successful, email would also have been sent
                 if(auth_response.success){
                     auth_box.style.display = "none";
+                    input.value = "";
                     alert("Du har nu reserveret dine varer, check din email");
                     document.cookie = `products=;path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
                     const table_body = document.querySelector("#cart tbody");
@@ -325,6 +327,7 @@ if(button_reserve != null) {
 
                 //Makes alert if reservation was unsuccessful
                 auth_box.style.display = "none";
+                input.value = "";
                 alert("Kunne ikke reservere varen, da autentiseringen fejlede");
                 return;
             }
