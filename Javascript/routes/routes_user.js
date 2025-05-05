@@ -55,6 +55,7 @@ router.post('/authenticate_email', async (req, res) => {
     //If it doesn't have associated cart, its a signup request
     if(!cart){
         console.log("successfully checked that cart was not present");
+        console.log(name + " " + email + " " + password + " " + shop_id);
         let signed_up = signup(name, email, password, shop_id);
         console.log("signed up status: " + signed_up);
         return res.json({ success: signed_up });
@@ -147,7 +148,7 @@ function signup(name, email, password, shop_id) {
             if(err.message.includes('UNIQUE constraint failed')){
                 return "Konto med givent email findes allerede";
             }
-            console.error('Singup error', err.message);
+            console.error('Signup error', err.message);
             return "Fejl i database";
         }
         return true;
