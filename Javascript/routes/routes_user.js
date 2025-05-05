@@ -55,6 +55,7 @@ router.post('/authenticate_email', async (req, res) => {
     //If it doesn't have associated cart, its a signup request
     if(!cart){
         console.log("successfully checked that cart was not present");
+        console.log(name + " " + email + " " + password + " " + shop_id);
         let signed_up = await signup(name, email, password, shop_id);
         console.log("signed up status: " + signed_up);
         return res.json({ success: signed_up });
