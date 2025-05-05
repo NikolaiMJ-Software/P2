@@ -297,7 +297,8 @@ if(button_reserve != null) {
             }
 
             //Makes the authentication box visible
-            document.getElementById("authentication_box").style.display = "flex";
+            let auth_box = document.getElementById("authentication_box");
+            auth_box.style.display = "flex";
             document.getElementById("auth_submit").onclick = async function() {
                 let key = document.querySelector("#authentication_box input").value;
 
@@ -313,7 +314,7 @@ if(button_reserve != null) {
     
                 //If verification was successful, email would also have been sent
                 if(auth_response.success){
-                    document.getElementById("authentication_box").style.display = "initial";
+                    auth_box.style.display = "none";
                     alert("Du har nu reserveret dine varer, check din email");
                     document.cookie = `products=;path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
                     const table_body = document.querySelector("#cart tbody");
@@ -323,7 +324,7 @@ if(button_reserve != null) {
                 }
 
                 //Makes alert if reservation was unsuccessful
-                document.getElementById("authentication_box").style.display = "initial";
+                auth_box.style.display = "none";
                 alert("Kunne ikke reservere varen, da autentiseringen fejlede");
                 return;
             }
