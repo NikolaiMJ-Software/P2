@@ -55,7 +55,7 @@ router.post('/authenticate_email', async (req, res) => {
     //If it doesn't have associated cart, its a signup request
     if(!cart){
         console.log("successfully checked that cart was not present");
-        let signed_up = signup(name, email, password, shop_id);
+        let signed_up = await signup(name, email, password, shop_id);
         console.log("signed up status: " + signed_up);
         return res.json({ success: signed_up });
     }
@@ -135,22 +135,26 @@ router.post('/login', (req, res) => {
 });
 
 //function to signup users
-function signup(name, email, password, shop_id) {
+async function signup(name, email, password, shop_id) {
     //if any are missing, a fail message will be printed
     if (!name || !email || !password){
         return "Fejl med givet data, har du indskrevet navn email og password?";
     }
     //insert the different values in the db
-    db.run(`INSERT INTO users (name, email, password, shop_id) VALUES (?, ?, ?, ?)`,[name, email, password, shop_id],(err) =>{
-        //if any mails are already in the db, the process would be aborted
-        if(err){
-            if(err.message.includes('UNIQUE constraint failed')){
-                return "Konto med givent email findes allerede";
-            }
-            console.error('Singup error', err.message);
-            return "Fejl i database";
-        }
-        return true;
+    return new Promise((resolve, reject) => {
+        db.run(`INSERT INTO users (name, email, password, shop_id) VALUES (?, ?, ?, ?)`,
+            [name, email, password, shop_id],
+            (err) => {
+                //if any mails are already in the db, the process would be aborted
+                if (err) {
+                    if (err.message.includes('UNIQUE constraint failed')) {
+                        return resolve("Konto med givent email findes allerede");
+                    }
+                    console.error('Signup error', err.message);
+                    return resolve("Fejl i database");
+                }
+                return resolve(true);
+            });
     });
 }
 
