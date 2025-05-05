@@ -48,7 +48,7 @@ router.post('/generate_key', async (req, res) => {
 router.post('/authenticate_email', async (req, res) => {
     let { email, key, cart, name, password, shop_id } = req.body;
     let authenticated = await authenticate_email_checker(email, key);
-    if(!authenticated){
+    if(!authenticated == true){
         return res.json({ success: authenticated });
     }
     //If it doesn't have associated cart, its a signup request
@@ -77,11 +77,11 @@ async function authentication_email_maker(email, key){
             );
             return true;
         } else {
-            return false;
+            return "Email allerede i brug";
         }
       } catch (err) {
         console.error("Database error:", err);
-        return false;
+        return "Database fejl";
       }
 }
 
@@ -92,7 +92,7 @@ export async function authenticate_email_checker(email, key){
         db.run(`DELETE FROM authentication WHERE email = ?;`, [email]);
         return true;
     }
-    return false;
+    return "Ukorrekt email/nøgle til autentisering";
 }
 
 //allows user to login, by calling the /login
