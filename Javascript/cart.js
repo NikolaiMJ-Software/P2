@@ -313,20 +313,21 @@ if(button_reserve != null) {
     
                 //If verification was successful, email would also have been sent
                 if(auth_response.success){
+                    document.getElementById("authentication_box").style.display = "initial";
                     alert("Du har nu reserveret dine varer, check din email");
                     document.cookie = `products=;path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
                     const table_body = document.querySelector("#cart tbody");
                     table_body.replaceChildren();
                     fill_table();
-                    document.getElementById("authentication_box").style.display = "none";
                     return;
                 }
 
                 //Makes alert if reservation was unsuccessful
+                document.getElementById("authentication_box").style.display = "initial";
                 alert("Kunne ikke reservere varen, da autentiseringen fejlede");
-                document.getElementById("authentication_box").style.display = "none";
                 return;
             }
+            return;
         }
     
         //Sends the sorted cart server-side for it to send reservation email (see routes_reserve.js for server-side)
