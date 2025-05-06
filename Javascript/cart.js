@@ -291,32 +291,46 @@ if(button_reserve != null) {
                 body: JSON.stringify({ email: user_email })
             });
             const generated_key = await generate_key_response.json();
-            if(!generated_key.success){
+            if(generated_key.success !== true){
                 alert("Kunne ikke generere nøgle til din email, hvis du lige har genereret en nøgle, så vendt 5 minutter og prøv igen");
                 return;
             }
 
-            //Asks for the key sent over email before and verifies with server
-            let key = prompt("Indtast den nøgle der er blevet sendt til din email. Der kan gå nogle minutter før den ankommer.", "Din kode");
-            const response_1 = await fetch('./authenticate_email', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ email: user_email, key: key, cart: sorted_cart })
-            });
-            const auth_response = await response_1.json();
-            console.log(auth_response);
+            //Makes the authentication box visible
+            let auth_box = document.getElementById("authentication_box");
+            auth_box.style.display = "flex";
+            document.getElementById("auth_submit").onclick = async function() {
+                let input = document.querySelector("#authentication_box input");
+                let key = input.value;
 
-            //If verification was successful, email would also have been sent
-            if(auth_response.success){
-                alert("Du har nu reserveret dine varer, check din email");
-                document.cookie = `products=;path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
-                const table_body = document.querySelector("#cart tbody");
-                table_body.replaceChildren();
-                fill_table();
+                //Asks for the key sent over email before and verifies with server
+                const response_1 = await fetch('./authenticate_email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ email: user_email, key: key, cart: sorted_cart })
+                });
+                const auth_response = await response_1.json();
+                console.log(auth_response);
+    
+                //If verification was successful, email would also have been sent
+                if(auth_response.success === true){
+                    auth_box.style.display = "none";
+                    input.value = "";
+                    alert("Du har nu reserveret dine varer, check din email");
+                    document.cookie = `products=;path=/; domain=cs-25-sw-2-06.p2datsw.cs.aau.dk;`;
+                    const table_body = document.querySelector("#cart tbody");
+                    table_body.replaceChildren();
+                    fill_table();
+                    return;
+                }
+
+                //Makes alert if reservation was unsuccessful
+                auth_box.style.display = "none";
+                input.value = "";
+                alert("Kunne ikke reservere varen, da autentiseringen fejlede");
                 return;
             }
-            alert("Kunne ikke reservere varen, da autentiseringen fejlede");
             return;
         }
     

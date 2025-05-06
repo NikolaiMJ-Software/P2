@@ -38,27 +38,36 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({ email: email })
         });
         const generated_key = await generate_key_response.json();
-        if(!generated_key.success){
+        if(generated_key.success !== true){
             alert("Kunne ikke generere nøgle til din email, hvis du lige har genereret en nøgle, så vendt 5 minutter og prøv igen");
             return;
         }
 
-        //Sends authenticates email and logs signup data if verification goes through
-        let key = prompt("Indtast den nøgle der er blevet sendt til din email. Der kan gå nogle minutter før den ankommer.", "Din kode");
-        const response_signup = await fetch('./authenticate_email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ email: email, key: key, name: name, password: password, shop_id: shop_id })
-        });
-        const auth_response = await response_signup.json();
-        console.log(auth_response);
+        //Makes the authentication box visible
+        let auth_box = document.getElementById("authentication_box");
+        auth_box.style.display = "flex";
+        document.getElementById("auth_submit").onclick = async function() {
+            let input = document.querySelector("#authentication_box input");
+            let key = input.value;
 
-        //if account is created, change to login page, if not sent error
-        if (auth_response.success == true) {
-            window.location.href = './login';
-        } else {
-            error_message.textContent = auth_response.success;
+            //Sends authenticates email and logs signup data if verification goes through
+            const response_signup = await fetch('./authenticate_email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email: email, key: key, name: name, password: password, shop_id: shop_id })
+            });
+            const auth_response = await response_signup.json();
+            console.log(auth_response);
+    
+            //if account is created, change to login page, if not sent error
+            if (auth_response.success === true) {
+                window.location.href = './login';
+            } else {
+                auth_box.style.display = "none";
+                input.value = "";
+                error_message.textContent = auth_response.success;
+            }
         }
     });
 });

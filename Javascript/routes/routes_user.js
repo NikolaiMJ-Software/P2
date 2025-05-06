@@ -48,20 +48,15 @@ router.post('/generate_key', async (req, res) => {
 router.post('/authenticate_email', async (req, res) => {
     let { email, key, cart, name, password, shop_id } = req.body;
     let authenticated = await authenticate_email_checker(email, key);
-    if(!authenticated){
+    if(authenticated !== true){
         return res.json({ success: authenticated });
     }
-    console.log("successful authentication");
     //If it doesn't have associated cart, its a signup request
     if(!cart){
-        console.log("successfully checked that cart was not present");
-        console.log(name + " " + email + " " + password + " " + shop_id);
         let signed_up = await signup(name, email, password, shop_id);
-        console.log("signed up status: " + signed_up);
         return res.json({ success: signed_up });
     }
     //otherwise its a reserve request
-    console.log("Cart was present");
     let cart_items = Object.values(cart);
     let reserved = await reserve_wares(cart_items, email);
     return res.json({ success: reserved });
@@ -82,22 +77,22 @@ async function authentication_email_maker(email, key){
             );
             return true;
         } else {
-            return false;
+            return "Email allerede i brug";
         }
       } catch (err) {
         console.error("Database error:", err);
-        return false;
+        return "Database fejl";
       }
 }
 
 //Checks whether a authentication database entry exists
-export async function authenticate_email_checker(email, key){
+async function authenticate_email_checker(email, key){
     const row = await db_get(`SELECT * FROM authentication WHERE authentication.email = ? AND authentication.key = ?;`, [email, key]);
     if(row){
         db.run(`DELETE FROM authentication WHERE email = ?;`, [email]);
         return true;
     }
-    return false;
+    return "Ukorrekt email/nøgle til autentisering";
 }
 
 //allows user to login, by calling the /login
