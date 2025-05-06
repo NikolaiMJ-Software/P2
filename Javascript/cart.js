@@ -279,7 +279,7 @@ if(button_reserve != null) {
             });
             const email_account = await email_account_response.json();
             if(email_account.exists) {
-                alert("Fejl: email er allerede brugt af en konto");
+                alert("Fejl: email er allerede registreret i systemet");
                 return;
             }
 
@@ -292,7 +292,7 @@ if(button_reserve != null) {
             });
             const generated_key = await generate_key_response.json();
             if(generated_key.success !== true){
-                alert("Kunne ikke generere nøgle til din email, enten er emailen bannet, eller så har du lige sendt en email");
+                alert("Kunne ikke generere nøgle til din email, enten er emailen bannet, eller så har du lige sendt en email. Vent 5 minutter og prøv igen");
                 return;
             }
 
