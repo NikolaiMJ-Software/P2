@@ -62,6 +62,7 @@ db.serialize(() => {
         longitude REAL,
         revenue,
         FOREIGN KEY(city_id) REFERENCES cities(id)
+        ON DELETE CASCADE
     )`);
 
     db.run(`CREATE TABLE IF NOT EXISTS products (
@@ -81,9 +82,9 @@ db.serialize(() => {
     specifications TEXT,
     discount REAL,
     parent_id INTEGER,
-    FOREIGN KEY(shop_id) REFERENCES shops(id),
-    FOREIGN KEY(city_id) REFERENCES cities(id),
-    FOREIGN KEY(parent_id) REFERENCES products(id)
+    FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE,
+    FOREIGN KEY(city_id) REFERENCES cities(id) ON DELETE CASCADE,
+    FOREIGN KEY(parent_id) REFERENCES products(id) ON DELETE CASCADE
     )`);
         
     db.run(`CREATE TABLE private (
@@ -103,7 +104,7 @@ db.serialize(() => {
         shop_id INTEGER,
         admin_user INTEGER DEFAULT 0,
         banned INTEGER DEFAULT 0,
-        FOREIGN KEY(shop_id) REFERENCES shops(id)
+        FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE SET NULL
     )`, (err) => {
         if (err) console.error("Error creating table:", err.message);
         else console.log("Table 'users' created.");
@@ -118,9 +119,9 @@ db.serialize(() => {
         comment TEXT,
         rating INTEGER,
         timestamp INTEGER,
-        FOREIGN KEY(user_email) REFERENCES users(email),
-        FOREIGN KEY(product_id) REFERENCES products(id),
-        FOREIGN KEY(shop_id) REFERENCES shops(id)
+        FOREIGN KEY(user_email) REFERENCES users(email) ON DELETE CASCADE,
+        FOREIGN KEY(product_id) REFERENCES products(id) ON DELETE CASCADE,
+        FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE
     )`, (err) => {
         if (err) console.error("Error creating table 'comments':", err.message);
         else console.log("Table 'comments' created.");
@@ -132,7 +133,7 @@ db.serialize(() => {
         shop_id INTEGER,
         products TEXT,
         code TEXT,
-        FOREIGN KEY(shop_id) REFERENCES shops(id)
+        FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE
     )`, (err) => {
         if (err) console.error("Error creating table:", err.message);
         else console.log("Table 'orders' created with UNIQUE constraint.");
