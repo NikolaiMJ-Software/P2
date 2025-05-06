@@ -148,7 +148,7 @@ router.post(`/ban-user`, (req, res) => {
 
     if (!email) {
         return res.status(400).json({ error: 'Email is required' });
-    } else if (email == "admin"){
+    } else if (email === "admin"){
         return res.status(403).send("Nej.");
     }
 
