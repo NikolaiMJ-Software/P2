@@ -42,7 +42,7 @@ router.post('/email_status', (req, res) => {
 router.post('/generate_key', async (req, res) => {
     let { email } = req.body;
     const banned = await db_get(`SELECT users.banned FROM users WHERE users.email = ?;`, [email]);
-    if(banned) {
+    if(banned.banned) {
         return res.json({ success: "Bruger er bannet fra Click&hent" })
     }
     const key = parseInt(Math.floor(Math.random() * 900000) + 100000)
@@ -106,7 +106,7 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     //Check whether email is banned
     const banned = await db_get(`SELECT users.banned FROM users WHERE users.email = ?;`, [email]);
-    if(banned) {
+    if(banned.banned) {
         return res.status(400).json("Bruger er bannet fra Click&hent");
     }
     //if Email or password is not defined the following error message will be printed
