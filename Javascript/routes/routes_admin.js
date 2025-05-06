@@ -50,7 +50,7 @@ router.post('/delete_user', (req, res) => {
         if (err){
             return res.status(500).send("Databasefejl");
         }
-        res.send("Shop slettet")
+        res.send("Bruger slettet")
     })
 })
 
