@@ -292,7 +292,7 @@ if(button_reserve != null) {
             });
             const generated_key = await generate_key_response.json();
             if(generated_key.success !== true){
-                alert("Kunne ikke generere nøgle til din email, hvis du lige har genereret en nøgle, så vendt 5 minutter og prøv igen");
+                alert("Kunne ikke generere nøgle til din email, enten er emailen bannet, eller så har du lige sendt en email");
                 return;
             }
 

@@ -41,12 +41,17 @@ router.post('/email_status', (req, res) => {
 //Reciever functions to authenticate emails
 router.post('/generate_key', async (req, res) => {
     let { email } = req.body;
+    const banned = await db_get(`SELECT users.banned FROM users WHERE users.email = ?;`, [email]);
+    if(banned) {
+        return res.json({ success: "Bruger er bannet fra Click&hent" })
+    }
     const key = parseInt(Math.floor(Math.random() * 900000) + 100000)
     let success = await authentication_email_maker(email, key);
     return res.json({ success: success });
 });
 router.post('/authenticate_email', async (req, res) => {
     let { email, key, cart, name, password, shop_id } = req.body;
+    //Check if key and email fits database entry
     let authenticated = await authenticate_email_checker(email, key);
     if(authenticated !== true){
         return res.json({ success: authenticated });
@@ -96,16 +101,20 @@ async function authenticate_email_checker(email, key){
 }
 
 //allows user to login, by calling the /login
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     //aquire email and password from the url
     const { email, password } = req.body;
-    
+    //Check whether email is banned
+    const banned = await db_get(`SELECT users.banned FROM users WHERE users.email = ?;`, [email]);
+    if(banned) {
+        return res.status(400).json("Bruger er bannet fra Click&hent");
+    }
     //if Email or password is not defined the following error message will be printed
     if (!email || !password) {
         return res.status(400).json('Email og password er nødvendig');
     }
     //find all information on a user from table users
-    db.get(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, password], (err, user) => {
+    await db_get(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, password], (err, user) => {
         //if there is a server error the following message will be printed
         if (err) {
             console.error('Login error:', err);
