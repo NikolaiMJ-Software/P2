@@ -102,42 +102,41 @@ async function authenticate_email_checker(email, key){
 
 //allows user to login, by calling the /login
 router.post('/login', async (req, res) => {
-    //aquire email and password from the url
     const { email, password } = req.body;
-    //Check whether email is banned
-    const banned = await db_get(`SELECT users.banned FROM users WHERE users.email = ?;`, [email]);
-    if(banned.banned) {
-        return res.status(400).json("Bruger er bannet fra Click&hent");
-    }
-    //if Email or password is not defined the following error message will be printed
+
+    // Check for missing fields
     if (!email || !password) {
         return res.status(400).json('Email og password er nødvendig');
     }
-    //find all information on a user from table users
-    await db_get(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, password], (err, user) => {
-        //if there is a server error the following message will be printed
-        if (err) {
-            console.error('Login error:', err);
-            return res.status(500).json({ error: 'Internal server error' });
+
+    try {
+        // Check if user is banned
+        const banned = await db_get(`SELECT banned FROM users WHERE email = ?`, [email]);
+        if (banned && banned.banned) {
+            return res.status(400).json("Bruger er bannet fra Click&hent");
         }
-        //if email or password is not valid, the following error will be printed
+
+        // Check if user exists and password matches
+        const user = await db_get(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, password]);
         if (!user) {
             return res.status(401).send("Ugyldig email eller password");
         }
-        //save 4 variables as session variables, which all routes has acces to
+
+        // Set session variables
         req.session.user = {
             email: user.email,
             shop_id: user.shop_id,
             name: user.name,
             admin_user: user.admin_user
-        };//saving session user as a cookie
+        };
 
-        //redirect to main page
-        return res.redirect(`/`);
+        return res.redirect('/');
+    } catch (err) {
+        console.error('Login error:', err.message);
+        return res.status(500).json({ error: 'Internal server error' });
     }
-);
-    
 });
+
 
 //function to signup users
 async function signup(name, email, password, shop_id) {
