@@ -333,6 +333,11 @@ document.addEventListener("DOMContentLoaded", async () =>{
         //make sure discount does not exceed price
         const price = parseFloat(document.getElementById("update-product-price").value);
         const discount = parseFloat(document.getElementById("update-product-discount").value) || 0;
+
+        if (price < 0) {
+            alert("Pris må ikke være mindre end 0.");
+            return;
+        }
     
         if (discount > price) {
             alert("Rabat må ikke være større end prisen.");
@@ -382,6 +387,11 @@ document.addEventListener("DOMContentLoaded", async () =>{
         //make sure discount does not exceed price
         const price = parseFloat(document.getElementById("product-price").value);
         const discount = parseFloat(document.getElementById("product-discount").value) || 0;
+
+        if (price < 0) {
+            alert("Pris må ikke være mindre end 0.");
+            return;
+        }
     
         if (discount > price) {
             alert("Rabat må ikke være større end prisen.");
