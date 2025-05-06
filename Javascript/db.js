@@ -102,6 +102,7 @@ db.serialize(() => {
         password TEXT,
         shop_id INTEGER,
         admin_user INTEGER DEFAULT 0,
+        banned INTEGER DEFAULT 0,
         FOREIGN KEY(shop_id) REFERENCES shops(id)
     )`, (err) => {
         if (err) console.error("Error creating table:", err.message);

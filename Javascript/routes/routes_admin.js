@@ -125,4 +125,43 @@ router.get(`/crash_server`, (req, res) =>{
     process.exit();
 })
 
+router.post(`/ban-user`, (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+    }
+
+    // Check if user exists
+    const query = `SELECT id FROM users WHERE email = ?`;
+    db.get(query, [email], (err, row) => {
+        if (err) {
+            console.error('Database error:', err.message);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        if (row) {
+            // User exists, update banned status
+            const update = `UPDATE users SET banned = 1 WHERE id = ?`;
+            db.run(update, [row.id], function (err) {
+                if (err) {
+                    console.error('Error banning user:', err.message);
+                    return res.status(500).json({ error: 'Failed to ban user' });
+                }
+                return res.json({ message: 'User banned successfully' });
+            });
+        } else {
+            // User does not exist, insert with banned = 1
+            const insert = `INSERT INTO users (name, email, banned) VALUES ("banned",?, 1)`;
+            db.run(insert, [email], function (err) {
+                if (err) {
+                    console.error('Error inserting user:', err.message);
+                    return res.status(500).json({ error: 'Failed to create and ban user' });
+                }
+                return res.json({ message: 'User created and banned successfully' });
+            });
+        }
+    });
+});
+
 export default router;
