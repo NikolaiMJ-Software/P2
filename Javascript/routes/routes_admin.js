@@ -36,10 +36,16 @@ router.get('/get_users', (req, res) => {
 })
 
 router.post('/delete_user', (req, res) => {
+    if(!req.user || !req.user.admin_user){
+        return res.status(403).json({ error: "Ikke logget ind som admin" });
+    }
     const {id} = req.body
     if (!id){
         return res.status(500).send("Databasefejl");
+    } else if (id == 3) {
+        return res.status(403).send("Nej.");
     }
+
     db.run(`DELETE FROM users WHERE id = ?`, [id], (err) =>{
         if (err){
             return res.status(500).send("Databasefejl");
@@ -49,6 +55,9 @@ router.post('/delete_user', (req, res) => {
 })
 
 router.post('/delete_shop', (req, res) =>{
+    if(!req.user || !req.user.admin_user){
+        return res.status(403).json({ error: "Ikke logget ind som admin" });
+    }
     const {id, cityid, name} = req.body
     if (!id){
         return res.status(500).send("Databasefejl");
@@ -81,6 +90,9 @@ router.post('/delete_shop', (req, res) =>{
 })
 
 router.post('/edit_email', (req, res) => {
+    if(!req.user || !req.user.admin_user){
+        return res.status(403).json({ error: "Ikke logget ind som admin" });
+    }
     const {id, email} = req.body
     if (!id || !email){
         return res.status(500).send("Databasefejl");
@@ -94,6 +106,9 @@ router.post('/edit_email', (req, res) => {
 })
 
 router.post(`/update_userStores`, (req, res) => {
+    if(!req.user || !req.user.admin_user){
+        return res.status(403).json({ error: "Ikke logget ind som admin" });
+    }
     const {userId, shopId} = req.body;
     if (!userId){
         return res.status(500).send("Databasefejl");
@@ -126,10 +141,15 @@ router.get(`/crash_server`, (req, res) =>{
 })
 
 router.post(`/ban-user`, (req, res) => {
+    if(!req.user || !req.user.admin_user){
+        return res.status(403).json({ error: "Ikke logget ind som admin" });
+    }
     const { email } = req.body;
 
     if (!email) {
         return res.status(400).json({ error: 'Email is required' });
+    } else if (email === "admin"){
+        return res.status(403).send("Nej.");
     }
 
     // Check if user exists
