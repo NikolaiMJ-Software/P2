@@ -279,7 +279,7 @@ if(button_reserve != null) {
             });
             const email_account = await email_account_response.json();
             if(email_account.exists) {
-                alert("Fejl: email er allerede brugt af en konto");
+                alert("Fejl: email er allerede registreret i systemet");
                 return;
             }
 
