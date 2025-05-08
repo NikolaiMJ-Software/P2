@@ -1,6 +1,7 @@
 body {
     background: var(--page-bg);
     color: var(--primary-text);
+    margin: 0;
 }
 
 @media (max-width: 1800px) {
@@ -22,7 +23,7 @@ body {
 footer {
     margin-top: 10px;
     background-color: black;
-    padding: 10px;
+    padding: 20px;
     text-align: center;
     color: var(--secoundary-text);
 }
@@ -184,7 +185,7 @@ button {
     max-width: 946px;
     box-sizing: border-box;
     translate: 640px 0px;
-    height: 200vh;
+    height: 160%;
   }
 
 .advertButton{
