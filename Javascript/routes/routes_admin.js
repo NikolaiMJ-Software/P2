@@ -36,19 +36,28 @@ router.get('/get_users', (req, res) => {
 })
 
 router.post('/delete_user', (req, res) => {
+    if(!req.user || !req.user.admin_user){
+        return res.status(403).json({ error: "Ikke logget ind som admin" });
+    }
     const {id} = req.body
     if (!id){
         return res.status(500).send("Databasefejl");
+    } else if (id == 3) {
+        return res.status(403).send("Nej.");
     }
+
     db.run(`DELETE FROM users WHERE id = ?`, [id], (err) =>{
         if (err){
             return res.status(500).send("Databasefejl");
         }
-        res.send("Shop slettet")
+        res.send("Bruger slettet")
     })
 })
 
 router.post('/delete_shop', (req, res) =>{
+    if(!req.user || !req.user.admin_user){
+        return res.status(403).json({ error: "Ikke logget ind som admin" });
+    }
     const {id, cityid, name} = req.body
     if (!id){
         return res.status(500).send("Databasefejl");
@@ -81,6 +90,9 @@ router.post('/delete_shop', (req, res) =>{
 })
 
 router.post('/edit_email', (req, res) => {
+    if(!req.user || !req.user.admin_user){
+        return res.status(403).json({ error: "Ikke logget ind som admin" });
+    }
     const {id, email} = req.body
     if (!id || !email){
         return res.status(500).send("Databasefejl");
@@ -94,6 +106,9 @@ router.post('/edit_email', (req, res) => {
 })
 
 router.post(`/update_userStores`, (req, res) => {
+    if(!req.user || !req.user.admin_user){
+        return res.status(403).json({ error: "Ikke logget ind som admin" });
+    }
     const {userId, shopId} = req.body;
     if (!userId){
         return res.status(500).send("Databasefejl");
@@ -124,5 +139,49 @@ router.get(`/crash_server`, (req, res) =>{
     console.log("Server is closing now")
     process.exit();
 })
+
+router.post(`/ban-user`, (req, res) => {
+    if(!req.user || !req.user.admin_user){
+        return res.status(403).json({ error: "Ikke logget ind som admin" });
+    }
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+    } else if (email === "admin"){
+        return res.status(403).send("Nej.");
+    }
+
+    // Check if user exists
+    const query = `SELECT id FROM users WHERE email = ?`;
+    db.get(query, [email], (err, row) => {
+        if (err) {
+            console.error('Database error:', err.message);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        if (row) {
+            // User exists, update banned status
+            const update = `UPDATE users SET banned = 1 WHERE id = ?`;
+            db.run(update, [row.id], function (err) {
+                if (err) {
+                    console.error('Error banning user:', err.message);
+                    return res.status(500).json({ error: 'Failed to ban user' });
+                }
+                return res.json({ message: 'User banned successfully' });
+            });
+        } else {
+            // User does not exist, insert with banned = 1
+            const insert = `INSERT INTO users (name, email, banned) VALUES ("banned",?, 1)`;
+            db.run(insert, [email], function (err) {
+                if (err) {
+                    console.error('Error inserting user:', err.message);
+                    return res.status(500).json({ error: 'Failed to create and ban user' });
+                }
+                return res.json({ message: 'User created and banned successfully' });
+            });
+        }
+    });
+});
 
 export default router;

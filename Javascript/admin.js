@@ -318,3 +318,37 @@ function shopTable(){
         shopTable.appendChild(tableRow)
     });
 }
+
+document.getElementById("ban-button").addEventListener("click", () => {
+    const email = document.getElementById("ban-email").value.trim();
+
+    //variable which checks if mails are valid
+    const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    //test mail, if not valid sent error
+    if (!email_regex.test(email)) {
+        alert("Ugyldig email.");
+        return;
+    }
+
+    // Example: Send ban request to server (you need backend handling for this)
+    fetch(`./ban-user`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+    })
+    .then(res => {
+        if (res.ok) {
+            alert(`User with email ${email} has been banned.`);
+            document.getElementById("ban-email").value = '';
+        } else {
+            alert("Failed to ban user.");
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("An error occurred while banning the user.");
+    });
+});

@@ -154,6 +154,22 @@ router.post("/add_product", upload.fields(
     const shop_id = req.user?.shop_id;
     const parent_id_value = parent_id ? parseInt(parent_id) : null;
 
+    //make sure nummerical values stays nummerical values
+    const parsed_price = parseFloat(price);
+    const parsed_stock = parseInt(stock, 10);
+    const parsed_discount = parseFloat(discount);
+    
+    if (isNaN(parsed_price) || parsed_price < 0) {
+        return res.status(400).send("Pris skal være et gyldigt tal ≥ 0.");
+    }
+    if (isNaN(parsed_stock) || parsed_stock < 0) {
+        return res.status(400).send("Lager skal være et gyldigt heltal ≥ 0.");
+    }
+    if (isNaN(parsed_discount) || parsed_discount < 0 || parsed_discount > parsed_price) {
+        return res.status(400).send("Rabat skal være mellem 0 og prisen.");
+    }
+    
+
     //if user not logged in and have no shop id, acces denied
     if (!req.user || !req.user.shop_id) {
         return res.status(403).send("Ikke autoriseret");
@@ -244,6 +260,21 @@ router.post("/update_product", upload.fields([
     //defining different variable, which came from the fron end code and user login
     const {id, "update-name": name, "update-stock": stock, "update-price": price, "update-discount": discount, "update-description": description, "update-specifications": specifications} = req.body; 
     const shop_id = req.user.shop_id;
+
+    //make sure nummerical values stays nummerical values
+    const parsed_price = parseFloat(price);
+    const parsed_stock = parseInt(stock, 10);
+    const parsed_discount = parseFloat(discount);
+    
+    if (isNaN(parsed_price) || parsed_price < 0) {
+        return res.status(400).send("Pris skal være et gyldigt tal ≥ 0.");
+    }
+    if (isNaN(parsed_stock) || parsed_stock < 0) {
+        return res.status(400).send("Lager skal være et gyldigt heltal ≥ 0.");
+    }
+    if (isNaN(parsed_discount) || parsed_discount < 0 || parsed_discount > parsed_price) {
+        return res.status(400).send("Rabat skal være mellem 0 og prisen.");
+    }
 
     //if values are missing, function cannot proceed
     if(!id || !name || !stock || !price){

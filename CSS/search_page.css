@@ -1,7 +1,7 @@
 body {
     background: var(--page-bg);
     color: var(--primary-text);
-    min-height: 2000px;
+    margin: 0;
 }
 
 @media (max-width: 1800px) {
@@ -20,11 +20,18 @@ body {
     }
 }
 
+footer {
+    margin-top: 10px;
+    background-color: black;
+    padding: 20px;
+    text-align: center;
+    color: var(--secoundary-text);
+}
+
 .productHeader{
     display: flex;
     flex-direction: column;
     align-items: center;
-    translate: 0px 100px;
 }
 
 form {
@@ -74,7 +81,6 @@ button {
     align-items: flex-start;
     max-width: 952px;
     margin: auto;
-    translate: 0px 150px;
 }
 
 .product{
@@ -174,13 +180,12 @@ button {
 
 .advert {
     position: absolute;
-    top: 503px;
     left: 50%;
     transform: translateX(-50%);
     max-width: 946px;
     box-sizing: border-box;
     translate: 640px 0px;
-    height: 200vh;
+    height: 160%;
   }
 
 .advertButton{
