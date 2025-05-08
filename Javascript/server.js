@@ -95,7 +95,7 @@ app.get('/searchpage', (req, res) => {
                 res.status(500).json({ error: err.message });
             }    
             if (!row[0]){
-                res.status(404).json({ error: 'City ikke sat up' });
+                res.status(404).json({ error: 'By har ikke nogle produkter endnu' });
                 return;
             }
             console.log(`\nCity requested: ${city}`); 

@@ -52,14 +52,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // Redirect to new page when clicking button (only Aalborg)
                 cityButton.onclick = () => {
-                    if (matchingCity.city.toLowerCase() === 'aalborg') {
+                    if (matchingCity) {
                         if(email){
                             window.location.href = `./searchpage?email=${encodeURIComponent(email)}&city=${encodeURIComponent(matchingCity.city)}`;
                         }else{
                             window.location.href = `./searchpage?city=${encodeURIComponent(matchingCity.city)}`;
                         }
-                    } else {
-                        alert("Byen er ikke sat op endnu.");
                     }
                 };
 
@@ -86,14 +84,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const matchingCity = cities.find(city => city.city.toLowerCase() === searchValue);
 
             // Redirect if city is found (only Aalborg)
-            if (matchingCity.city.toLowerCase() === 'aalborg') {
+            if (matchingCity) {
                 if(email){
                     window.location.href = `./searchpage?email=${encodeURIComponent(email)}&city=${encodeURIComponent(matchingCity.city)}`;
                 }else{
                     window.location.href = `./searchpage?city=${encodeURIComponent(matchingCity.city)}`;
                 }
-            } else {
-                alert("Byen er ikke sat op endnu.");
             }
         });
 
