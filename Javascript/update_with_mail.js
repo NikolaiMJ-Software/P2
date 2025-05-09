@@ -25,8 +25,8 @@ console.log('ALL USERS:',users);
     // Update DB based on the order
     for (const user of users){
         // Go to the next order, if order_id and code don't match
-console.log('code lige nu + code i DB: ', code, user.code);
-        if (user.code !== code) {
+console.log('code lige nu + code i DB: ', code, JSON.parse(user.code));
+        if (JSON.parse(user.code) !== code) {
             continue;
         }
 
