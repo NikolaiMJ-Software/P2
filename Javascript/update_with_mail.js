@@ -24,10 +24,8 @@ async function changesInUsers(shop_id, code){
 
     // Update DB based on the order
     for (const user of users){
-        // Go to the next order, if order_id and code don't match
-
+        // Check if the code matches the user, if not, skip/block if code is 0
         if (JSON.parse(user.code) !== code) {
-console.log('DB code: ',user.code);
             if (user.code == 0){
                 alert('Bruger kan ikke skifte butik, eller har allerede skiftet.');
                 break;
