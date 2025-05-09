@@ -21,7 +21,7 @@ async function changesInUsers(shop_id, code){
     // Fetching users from DB
     const responsUsers = await fetch('./get_users');
     const users = await responsUsers.json();
-
+console.log('ALL USERS:',users);
     // Update DB based on the order
     for (const user of users){
         // Go to the next order, if order_id and code don't match
