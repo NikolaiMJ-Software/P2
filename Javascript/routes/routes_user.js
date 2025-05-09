@@ -151,7 +151,7 @@ async function signup(name, email, password, shop_id) {
 
     //insert the different values in the db
     return new Promise((resolve, reject) => {
-        db.run(`INSERT INTO users (name, email, password, code) VALUES (?, ?, ?, ?, ?)`,[name, email, password, codeString],
+        db.run(`INSERT INTO users (name, email, password, code) VALUES (?, ?, ?, ?)`,[name, email, password, codeString],
             (err) => {
                 //if any mails are already in the db, the process would be aborted
                 if (err) {
