@@ -43,7 +43,7 @@ async function changesInUsers(shop_id, code){
 
         if(respons.ok){
             const h1 = document.createElement("h1");
-            h1.textContent = "Bruger er nu forbundet butikken, nu må du lukke vinduet";
+            h1.textContent = "Bruger er nu forbundet butikken, lukker automatisk (5 sek).";
             document.getElementById("message").appendChild(h1);
             userUpdated = true;
         } else {
@@ -58,7 +58,7 @@ async function changesInUsers(shop_id, code){
 
     setTimeout(() => {
         window.close();
-    }, 3000); // 3000 ms = 3 sek
+    }, 5000); // 5 sec
 }
 
 async function changesInProducts(id, code){
@@ -177,10 +177,10 @@ async function changesInProducts(id, code){
 
     // Add "task complete" to users webpage
     const h1 = document.createElement("h1");
-    h1.textContent = "Det er blevent rigisteret, nu må du lukke vinduet";
+    h1.textContent = "Det er blevent rigisteret, lukker automatisk (5 sek)";
     document.getElementById("message").appendChild(h1);
 
     setTimeout(() => {
         window.close();
-    }, 3000); // 3000 ms = 3 sek
+    }, 5000); // 5 sec
 }
