@@ -172,7 +172,18 @@ async function signup(name, email, password, shop_id) {
                     send_mail(
                         shop_email,
                         `Bruger prøver at forbinde til din butik på Click&hent`,
-                        `Bruger med email ${email} prøver at forbinde til din butik, klik på linket herunder for at tillade dem adgang\n\n ${url}`
+                        `<!DOCTYPE html>
+                        <html>
+                        <body>
+                            <p>Brugeren med email <strong>${email}</strong> prøver at forbinde til din butik</p>
+                            <p>
+                                <a href="${url}" style="color: #0066cc; text-decoration: underline;">
+                                    Klik her for at tillade dem adgang
+                                </a>
+                            </p>
+                        </body>
+                        </html>`,
+                        true
                     );
                 }
                 return resolve(true);
