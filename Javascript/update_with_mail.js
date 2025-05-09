@@ -30,7 +30,7 @@ async function changesInUsers(shop_id, code){
             continue;
         }
 
-        if (user.code === "0"){
+        if (user.code == 0){
             alert('Bruger kan ikke skifte butik, eller har allerede skiftet.');
             break;
         }
