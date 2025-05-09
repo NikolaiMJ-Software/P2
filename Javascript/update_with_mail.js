@@ -30,7 +30,7 @@ console.log('code lige nu + code i DB: ', code, JSON.parse(user.code));
             continue;
         }
 
-        if (user.code !== `"0"`){
+        if (user.code === `"0"`){
             alert('Bruger kan ikke skifte butik');
             break;
         }
