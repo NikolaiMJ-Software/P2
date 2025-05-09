@@ -41,8 +41,8 @@ router.post('/email_status', (req, res) => {
 //Reciever functions to authenticate emails
 router.post('/generate_key', async (req, res) => {
     let { email } = req.body;
-    const banned = await db_get(`SELECT users.banned FROM users WHERE users.email = ?;`, [email]);
-    if(banned.banned) {
+    const banned = await db_get(`SELECT banned FROM users WHERE email = ?;`, [email]);
+    if(banned && banned.banned) {
         return res.json({ success: "Bruger er bannet fra Click&hent" })
     }
     const key = parseInt(Math.floor(Math.random() * 900000) + 100000)
@@ -112,7 +112,7 @@ router.post('/login', async (req, res) => {
     try {
         // Check if user is banned
         const banned = await db_get(`SELECT banned FROM users WHERE email = ?`, [email]);
-        if (banned && banned.banned) {
+        if (banned && banned.banne) {
             return res.status(400).json("Bruger er bannet fra Click&hent");
         }
 

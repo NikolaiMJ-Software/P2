@@ -42,7 +42,7 @@ button {
 
 }
 
-#h1ProductPage {
+#h1store_page {
     text-align: center;
     font-family: Lucida;
     font-size: 96px;
@@ -101,7 +101,6 @@ button {
 .productName{
     position: absolute;
     text-transform: capitalize;
-    text-decoration: underline;
     font-weight: bold;
     font-size: 18px;
     top: 52%;

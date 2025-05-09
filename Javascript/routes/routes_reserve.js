@@ -55,7 +55,7 @@ export function db_get(query, params) {
 
 // Prevent abuse or infinite loop calls on reservation email
 const limiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minut
+  windowMs: 60 * 60 * 1000, // 1 hour
   max: 5, // max 5 requests per IP
   message: { error: "For mange anmodninger, prøv igen senere" }
 });

@@ -90,15 +90,19 @@ app.get('/searchpage', (req, res) => {
             res.status(404).json({ error: 'City not found' });
             return;
         }
-        if (rows[0].city !== "Aalborg"){
-            res.status(404).json({ error: 'City not sat up' });
-            return;
-        }
-
-        console.log(`\nCity requested: ${city}`); 
-        console.log("User:", req.user?.email);
-        console.log("Admin:", req.user?.admin_user);
-        res.sendFile(path.join(__dirname, '../HTML/search_page.html'));
+        db.all(`SELECT * FROM products WHERE city_id = ?`, [rows[0].id], (err, row) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+            }    
+            if (!row[0]){
+                res.status(404).json({ error: 'By har ikke nogle produkter endnu' });
+                return;
+            }
+            console.log(`\nCity requested: ${city}`); 
+            console.log("User:", req.user?.email);
+            console.log("Admin:", req.user?.admin_user);
+            res.sendFile(path.join(__dirname, '../HTML/search_page.html'));
+        })
     })
 });
 

@@ -101,12 +101,25 @@ city_select.addEventListener('change', async () => {
 });
 
 //function that loads cities
+
 async function load_cities(){
+    // Remove all existing options
+    while (city_select.firstChild) {
+        city_select.removeChild(city_select.firstChild);
+    }
+
+    // Optionally, re-add a default placeholder
+    const default_option = document.createElement('option');
+    default_option.value = '';
+    default_option.textContent = 'Vælg by';
+    city_select.appendChild(default_option);
+
     //fetches back end data from the get cities route
     const res = await fetch('./get_cities');
     const cities = await res.json();
 
     //goes over all cities from backend, and appends them to city selector
+    city_select.innerHTML = `<option value="">By</option>`;
     cities.forEach(city => {
         const option = document.createElement('option'); //create option
         option.value = city.id; //give city option its city id
@@ -117,11 +130,24 @@ async function load_cities(){
 
 //function to load stores, with a city id as input
 async function load_stores(city_id){
+
+    // Remove all existing options
+    while (store_select.firstChild) {
+        store_select.removeChild(store_select.firstChild);
+    }
+
+    // Optionally, re-add a default placeholder
+    const default_option = document.createElement('option');
+    default_option.value = '';
+    default_option.textContent = 'Butik';
+    store_select.appendChild(default_option);
+
     //fetch stores with specific city id from back end
     const res = await fetch(`./get_stores?city_id=${encodeURIComponent(city_id)}`);
     const stores = await res.json();
 
     //append each store to the store selector
+    store_select.innerHTML = `<option value="">Butik</option>`;
     stores.forEach(store => {
         const option = document.createElement('option'); //create store option
         option.value = store.id; //set store id

@@ -18,18 +18,31 @@ button {
 
 /* Body Styling */
 body {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
     background: var(--page-bg);
     color: var(--primary-text);
-  }
+}
+
+footer {
+  margin: 0;
+  background-color: black;
+  padding: 10px;
+  text-align: center;
+  color: var(--footer-text);
+}
+
+footer p, h3 {
+  margin: 16px;
+  font-family: Lucida, serif;
+}
 
 /* Main Row Layout */
 .row {
+  margin-top: 1%;
+  margin-left: 10%;
+  margin-right: 10%;
     display: flex;
     align-items: flex-start;
-    gap: 40px;
+    gap: 5%;
     flex-wrap: nowrap;
     align-items: flex-start;
   }
@@ -37,11 +50,13 @@ body {
 
 /* Product Image */
 .product-image {
-    flex: 45%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  max-width: 40%;
+  flex: 1;
+  gap: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .product-image img {
@@ -73,8 +88,9 @@ body {
 }
 
 .product-var img {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
+    
     /*border: 2px solid transparent;*/
     /*border: 1px solid #4A7E8F;*/
     box-shadow: 0 3px 8px #6FAFB8;
@@ -89,9 +105,9 @@ body {
 
 /* Main Product Details */
 .main {
-    flex: 1;
-    min-width: 700px;
-  }
+  flex: 1;
+  min-width: 700px;
+}
 
 /* Store Name */
 .store-name {
@@ -394,6 +410,7 @@ dialog {
   }
   
   .comment-preview {
+    min-height: 200px;
     margin-top: 10px;
     max-height: 200px;
     color: #6FAFB8;
@@ -428,6 +445,7 @@ dialog {
     --page-bg:WHITE ;
     --primary-text:Black ;
     --secoundary-text: rgb(92, 89, 89);
+    --footer-text: lightgrey;
     --tertiary-text: white;
 
 
@@ -447,6 +465,7 @@ dialog {
     --page-bg:#383643;
     --primary-text: WHITE ;
     --secoundary-text: lightgrey;
+    --footer-text: lightgrey;
     --tertiary-text: white;
 
     --switch-bg: #49494c;

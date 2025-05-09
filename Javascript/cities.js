@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const cityButtons = [];
 
-
         const loader = document.getElementById("loader");
         loader.style.display = "block"; // Start loader
         
@@ -24,13 +23,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         let travelTimes = await getTravelTime('cities');
         loader.style.display = "none"; // Hide loader
         travelTimes = travelTimes.map(item => ({ city: item.name, time: item.time })); // Convert "name" to "city"
-       
+
         // If travelTimes is empty the cities priority will be taken from the server
         if (travelTimes.length === 0) {
             alert("Du valgte at sige NEJ til GPS, så byerne vil blive vist som de ligger på serveren.");
             travelTimes = cities.map(city => ({ city: city.city }));
         }
         
+        // Find product in cities
+        const resProducts = await fetch('./products'); // Fetch cities from the server
+        const products = await resProducts.json();
+        const sortedCitire = products.map(product => product.city_id);
+        const productsInCities = [...new Set(sortedCitire)];
+
         travelTimes.forEach(cityData => {
             const matchingCity = cities.find(city => city.city === cityData.city);
 
@@ -50,16 +55,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 }
 
-                // Redirect to new page when clicking button (only Aalborg)
+                // Redirect to new page when clicking button (only cities with products)
                 cityButton.onclick = () => {
-                    if (matchingCity.city.toLowerCase() === 'aalborg') {
+                    if (matchingCity && productsInCities.includes(matchingCity.id)) {
                         if(email){
                             window.location.href = `./searchpage?email=${encodeURIComponent(email)}&city=${encodeURIComponent(matchingCity.city)}`;
                         }else{
                             window.location.href = `./searchpage?city=${encodeURIComponent(matchingCity.city)}`;
                         }
                     } else {
-                        alert("Byen er ikke sat op endnu.");
+                        alert('Byen er ikke sat op endnu.');
                     }
                 };
 
@@ -86,14 +91,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const matchingCity = cities.find(city => city.city.toLowerCase() === searchValue);
 
             // Redirect if city is found (only Aalborg)
-            if (matchingCity.city.toLowerCase() === 'aalborg') {
+            if (matchingCity) {
                 if(email){
                     window.location.href = `./searchpage?email=${encodeURIComponent(email)}&city=${encodeURIComponent(matchingCity.city)}`;
                 }else{
                     window.location.href = `./searchpage?city=${encodeURIComponent(matchingCity.city)}`;
                 }
-            } else {
-                alert("Byen er ikke sat op endnu.");
             }
         });
 
