@@ -32,7 +32,6 @@ async function changesInUsers(shop_id, code){
             }
             continue;
         }
-        
 
         const respons = await fetch(`./update_userStores`, {
             method: "POST",
@@ -121,15 +120,6 @@ async function changesInProducts(id, code){
             const new_bought = product.bought + change;
             const new_revenue = shopRevenue + (change * price);
             
-            /* See changes
-            console.log("Before changes:", product);
-            console.log("After changes:", {
-                stock: new_stock,
-                bought: new_bought,
-                revenue: new_revenue
-            });*/
-
-            //console.log('\nSTOCK UPDATE, pro_id & new_stock: ', product_id, new_stock);
             // Update stock
             await fetch("./mail_stock", {
                 method: "POST",
@@ -140,7 +130,6 @@ async function changesInProducts(id, code){
                     stock: new_stock })
             })
 
-            //console.log('\nBOUGHT UPDATE, pro_id & new_bought: ', product_id, new_bought);
             // Update bought
             await fetch("./mail_bought", {
                 method: "POST",
