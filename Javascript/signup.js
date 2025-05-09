@@ -101,6 +101,7 @@ city_select.addEventListener('change', async () => {
 });
 
 //function that loads cities
+
 async function load_cities(){
     // Remove all existing options
     while (city_select.firstChild) {
@@ -118,6 +119,7 @@ async function load_cities(){
     const cities = await res.json();
 
     //goes over all cities from backend, and appends them to city selector
+    city_select.innerHTML = `<option value="">By</option>`;
     cities.forEach(city => {
         const option = document.createElement('option'); //create option
         option.value = city.id; //give city option its city id
@@ -145,6 +147,7 @@ async function load_stores(city_id){
     const stores = await res.json();
 
     //append each store to the store selector
+    store_select.innerHTML = `<option value="">Butik</option>`;
     stores.forEach(store => {
         const option = document.createElement('option'); //create store option
         option.value = store.id; //set store id

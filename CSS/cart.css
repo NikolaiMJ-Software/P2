@@ -2,8 +2,17 @@ body {
     background-color: var(--page-bg);
     font-family: 'Arial', 'Lucida Sans', sans-serif;
     margin: 0;
-    padding: 30px;
   }
+
+  footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    background-color: black;
+    padding: 10px;
+    text-align: center;
+    color: var(--secoundary-text);
+}
   
   /* Top Navigation Buttons */
   .top-buttons {
@@ -25,6 +34,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    padding: 30px;
     gap: 30px;
     margin-top: 40px;
   }
