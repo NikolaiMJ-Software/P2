@@ -29,7 +29,7 @@ async function changesInUsers(shop_id, code){
         if (JSON.parse(user.code) !== code) {
             continue;
         }
-
+console.log('DB code: ',user.code);
         if (user.code == 0){
             alert('Bruger kan ikke skifte butik, eller har allerede skiftet.');
             break;
@@ -71,7 +71,7 @@ async function changesInProducts(id, code){
         }
 
         if (order.code !== `"${code}"`){
-            alert('Ordre er allerede behandlet');
+            alert('Ordre er allerede behandlet.');
             break;
         }
 
@@ -109,7 +109,7 @@ async function changesInProducts(id, code){
                 if (product.stock > 0){
                     alert(`${product.product_name} kan ikke blive afhentet, fordi der er ikke nok på lager.`);
                 } else{
-                    alert(`${product.product_name} er ikke på lager.\nKan ikke bekræfte afhentning af produktet`);
+                    alert(`${product.product_name} er ikke på lager.\nKan ikke bekræfte afhentning af produktet.`);
                 }
                 continue;
             }
