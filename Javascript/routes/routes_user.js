@@ -137,6 +137,15 @@ router.post('/login', async (req, res) => {
     }
 });
 
+//helper function to get shop email as a Promise
+function getShopEmail(shop_id) {
+    return new Promise((resolve, reject) => {
+        db.get(`SELECT email FROM shops WHERE id = ?`, [shop_id], (err, row) => {
+            if (err) return reject(err);
+            resolve(row ? row.email : null);
+        });
+    });
+}
 
 //function to signup users
 async function signup(name, email, password, shop_id) {
@@ -145,50 +154,61 @@ async function signup(name, email, password, shop_id) {
         return "Fejl med givet data, har du indskrevet navn email og password?";
     }
 
-    // Random generatet code
+    //random generatet code
     const code = crypto.randomUUID();
     const codeString = JSON.stringify(code);
 
-    //insert the different values in the db
-    return new Promise((resolve, reject) => {
-        db.run(`INSERT INTO users (name, email, password, code) VALUES (?, ?, ?, ?)`,[name, email, password, codeString],
-            (err) => {
-                //if any mails are already in the db, the process would be aborted
-                if (err) {
-                    if (err.message.includes('UNIQUE constraint failed')) {
-                        return resolve("Konto med givent email findes allerede");
+    try {
+        //insert user into the database
+        await new Promise((resolve, reject) => {
+            db.run(
+                `INSERT INTO users (name, email, password, code) VALUES (?, ?, ?, ?)`,
+                [name, email, password, codeString],
+                (err) => {
+                    if (err) {
+                        if (err.message.includes('UNIQUE constraint failed')) {
+                            return resolve("Konto med givent email findes allerede");
+                        }
+                        console.error('Signup error', err.message);
+                        return resolve("Fejl i database");
                     }
-                    console.error('Signup error', err.message);
-                    return resolve("Fejl i database");
+                    resolve(true);
                 }
-                //if connecting to shop, send validation email to the shop
-                if(shop_id !== 0) {
-                    
-                    // Insert the shop_id and code in the link
-                    const baseUrl = "https://cs-25-sw-2-06.p2datsw.cs.aau.dk/node0";
-                    const url = `${baseUrl}/confirm?shop_id=${shop_id}&code=${code}`;
+            );
+        });
 
-                    let shop_email = db.get(`SELECT email FROM shops WHERE id = ?` [shop_id]);
-                    send_mail(
-                        shop_email,
-                        `Bruger prøver at forbinde til din butik på Click&hent`,
-                        `<!DOCTYPE html>
-                        <html>
-                        <body>
-                            <p>Brugeren med email <strong>${email}</strong> prøver at forbinde til din butik</p>
-                            <p>
-                                <a href="${url}" style="color: #0066cc; text-decoration: underline;">
-                                    Klik her for at tillade dem adgang
-                                </a>
-                            </p>
-                        </body>
-                        </html>`,
-                        true
-                    );
-                }
-                return resolve(true);
-            });
-    });
+        //if connecting to a shop, send validation email
+        if (shop_id !== 0) {
+            const shop_email = await getShopEmail(shop_id);
+            if (shop_email) {
+                const baseUrl = "https://cs-25-sw-2-06.p2datsw.cs.aau.dk/node0";
+                const url = `${baseUrl}/confirm?shop_id=${shop_id}&code=${code}`;
+
+                await send_mail(
+                    shop_email,
+                    `Bruger prøver at forbinde til din butik på Click&hent`,
+                    `<!DOCTYPE html>
+                    <html>
+                    <body>
+                        <p>Brugeren med email <strong>${email}</strong> prøver at forbinde til din butik</p>
+                        <p>
+                            <a href="${url}" style="color: #0066cc; text-decoration: underline;">
+                                Klik her for at tillade dem adgang
+                            </a>
+                        </p>
+                    </body>
+                    </html>`,
+                    true
+                );
+            }
+        }
+
+        return true;
+
+    } catch (err) {
+        console.error('Signup process failed:', err);
+        return "Fejl under signup-processen";
+    }
 }
 
 //route to logout
