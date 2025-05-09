@@ -21,11 +21,11 @@ async function changesInUsers(shop_id, code){
     // Fetching users from DB
     const responsUsers = await fetch('./get_users');
     const users = await responsUsers.json();
-console.log('ALL USERS:',users);
+
     // Update DB based on the order
     for (const user of users){
         // Go to the next order, if order_id and code don't match
-console.log('code lige nu + code i DB: ', code, JSON.parse(user.code));
+
         if (JSON.parse(user.code) !== code) {
             continue;
         }
@@ -35,7 +35,6 @@ console.log('code lige nu + code i DB: ', code, JSON.parse(user.code));
             break;
         }
 
-console.log('shop_id lige nu: ',shop_id);
         const respons = await fetch(`./update_userStores`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
