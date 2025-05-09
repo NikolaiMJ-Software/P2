@@ -126,7 +126,7 @@ router.post(`/update_userStores`, (req, res) => {
             res.send("Shop opdateret")
         })
     } else if (code == "0") {
-        db.run(`UPDATE users SET shop_id = ? code = ? WHERE id = ?`, [shopId, code, userId], (err) =>{
+        db.run(`UPDATE users SET shop_id = ?, code = ? WHERE id = ?`, [shopId, code, userId], (err) =>{
             if (err){
                 return res.status(500).send("Databasefejl");
             }
