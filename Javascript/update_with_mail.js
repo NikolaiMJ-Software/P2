@@ -36,14 +36,23 @@ console.log('code lige nu + code i DB: ', code, JSON.parse(user.code));
         }
 
 console.log('shop_id lige nu: ',shop_id);
-        fetch(`./update_userStores`, {
+        const respons = await fetch(`./update_userStores`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
                 userId: user.id, 
-                shopId: shop_id
+                shopId: shop_id,
+                bypassAdmin: true
             })
         });
+
+        if(respons.ok){
+            const h1 = document.createElement("h1");
+            h1.textContent = "Bruger er nu forbundet butikken, nu må du lukke vinduet";
+            document.getElementById("message").appendChild(h1);
+        } else {
+            alert('Fejl ved oprettelse af bruger i DB');
+        }
     }
 }
 

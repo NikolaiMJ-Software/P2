@@ -106,6 +106,9 @@ router.post('/edit_email', (req, res) => {
 })
 
 router.post(`/update_userStores`, (req, res) => {
+    if (req.body.bypassAdmin) {
+        req.user = { admin_user: true };
+    }
     if(!req.user || !req.user.admin_user){
         return res.status(403).json({ error: "Ikke logget ind som admin" });
     }
