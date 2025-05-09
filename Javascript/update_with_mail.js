@@ -28,7 +28,7 @@ async function changesInUsers(shop_id, code){
 
         if (JSON.parse(user.code) !== code) {
 console.log('DB code: ',user.code);
-            if (user.code === 0){
+            if (user.code == 0){
                 alert('Bruger kan ikke skifte butik, eller har allerede skiftet.');
                 break;
             }
