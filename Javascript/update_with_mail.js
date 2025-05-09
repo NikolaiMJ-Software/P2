@@ -21,17 +21,13 @@ async function changesInUsers(shop_id, code){
     // Fetching users from DB
     const responsUsers = await fetch('./get_users');
     const users = await responsUsers.json();
+    let userUpdated = false;
 
     // Update DB based on the order
     for (const user of users){
-        // Check if the code matches the user, if not, skip/block if code is 0
-console.log('DB code + code', user.code, code);
-
+        // Check if the code matches the user, if not skip
         if (JSON.parse(user.code) !== code) {
             continue;
-        } else if (user.code == 0){
-            alert('Bruger kan ikke skifte butik, eller har allerede skiftet.');
-            break;
         }
 
         const respons = await fetch(`./update_userStores`, {
@@ -48,12 +44,21 @@ console.log('DB code + code', user.code, code);
         if(respons.ok){
             const h1 = document.createElement("h1");
             h1.textContent = "Bruger er nu forbundet butikken, nu må du lukke vinduet";
-            document.getElementById("message").appendChild(h1);
+            messageDiv.appendChild(h1);
+            userUpdated = true;
         } else {
             alert('Fejl ved opdater bruger i DB.');
         }
         break;
     }
+
+    if (!userUpdated){
+        alert('Bruger har allerede skiftet butik.');
+    }
+
+    setTimeout(() => {
+        window.close();
+    }, 3000); // 3000 ms = 3 sek
 }
 
 async function changesInProducts(id, code){
@@ -174,4 +179,8 @@ async function changesInProducts(id, code){
     const h1 = document.createElement("h1");
     h1.textContent = "Det er blevent rigisteret, nu må du lukke vinduet";
     document.getElementById("message").appendChild(h1);
+
+    setTimeout(() => {
+        window.close();
+    }, 3000); // 3000 ms = 3 sek
 }
