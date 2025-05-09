@@ -44,7 +44,7 @@ async function changesInUsers(shop_id, code){
         if(respons.ok){
             const h1 = document.createElement("h1");
             h1.textContent = "Bruger er nu forbundet butikken, nu må du lukke vinduet";
-            messageDiv.appendChild(h1);
+            document.getElementById("message").appendChild(h1);
             userUpdated = true;
         } else {
             alert('Fejl ved opdater bruger i DB.');
