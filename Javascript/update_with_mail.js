@@ -51,6 +51,7 @@ async function changesInUsers(shop_id, code){
         } else {
             alert('Fejl ved oprettelse af bruger i DB.');
         }
+        break;
     }
 }
 
