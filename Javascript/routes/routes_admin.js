@@ -26,7 +26,7 @@ router.get('/admin', (req, res) => {
 })
 
 router.get('/get_users', (req, res) => {
-    db.all(`SELECT id, email, name, shop_id FROM users WHERE admin_user != 1 ORDER BY id ASC`, (err, rows) => {
+    db.all(`SELECT id, email, name, shop_id, code FROM users WHERE admin_user != 1 ORDER BY id ASC`, (err, rows) => {
         if(err){
             res.status(500).json({ error: err.message });
             return;
