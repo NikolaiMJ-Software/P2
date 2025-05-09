@@ -146,8 +146,7 @@ async function signup(name, email, password, shop_id) {
     }
     //insert the different values in the db
     return new Promise((resolve, reject) => {
-        db.run(`INSERT INTO users (name, email, password, shop_id) VALUES (?, ?, ?, ?)`,
-            [name, email, password, shop_id],
+        db.run(`INSERT INTO users (name, email, password, shop_id) VALUES (?, ?, ?, ?)`,[name, email, password, 0],
             (err) => {
                 //if any mails are already in the db, the process would be aborted
                 if (err) {
@@ -156,6 +155,15 @@ async function signup(name, email, password, shop_id) {
                     }
                     console.error('Signup error', err.message);
                     return resolve("Fejl i database");
+                }
+                //if connecting to shop, send validation email to the shop
+                if(shop_id !== 0) {
+                    let shop_email = db.get(`SELECT email FROM shops WHERE id = ?` [shop_id]);
+                    send_mail(
+                        shop_email,
+                        `Bruger prøver at forbinde til din butik på Click&hent`,
+                        `Bruger med email ${email} prøver at forbinde til din butik, klik på linket herunder for at tillade dem adgang`
+                    );
                 }
                 return resolve(true);
             });
