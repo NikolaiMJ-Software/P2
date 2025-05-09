@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('Opdater bruger DB...');
         await changesInUsers(shop_id, code);
     } else {
-        console.error('order_id eller code ikke fundet i URL');
+        console.error('order_id/shop_id eller code ikke fundet i URL');
     }
 });
 
@@ -27,9 +27,9 @@ async function changesInUsers(shop_id, code){
         // Go to the next order, if order_id and code don't match
 
         if (JSON.parse(user.code) !== code) {
+console.log('DB code: ',user.code);
             continue;
         }
-console.log('DB code: ',user.code);
         if (user.code == 0){
             alert('Bruger kan ikke skifte butik, eller har allerede skiftet.');
             break;
