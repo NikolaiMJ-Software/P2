@@ -144,9 +144,14 @@ async function signup(name, email, password, shop_id) {
     if (!name || !email || !password){
         return "Fejl med givet data, har du indskrevet navn email og password?";
     }
+
+    // Random generatet code
+    const code = crypto.randomUUID();
+    const codeString = JSON.stringify(code);
+
     //insert the different values in the db
     return new Promise((resolve, reject) => {
-        db.run(`INSERT INTO users (name, email, password, shop_id) VALUES (?, ?, ?, ?)`,[name, email, password, 0],
+        db.run(`INSERT INTO users (name, email, password, shop_id, code) VALUES (?, ?, ?, ?)`,[name, email, password, 0, codeString],
             (err) => {
                 //if any mails are already in the db, the process would be aborted
                 if (err) {
@@ -158,11 +163,16 @@ async function signup(name, email, password, shop_id) {
                 }
                 //if connecting to shop, send validation email to the shop
                 if(shop_id !== 0) {
+                    
+                    // Insert the shop_id and code in the link
+                    const baseUrl = "https://cs-25-sw-2-06.p2datsw.cs.aau.dk/node0";
+                    const url = `${baseUrl}/confirm?shop_id=${shop_id}&code=${code}`;
+
                     let shop_email = db.get(`SELECT email FROM shops WHERE id = ?` [shop_id]);
                     send_mail(
                         shop_email,
                         `Bruger prøver at forbinde til din butik på Click&hent`,
-                        `Bruger med email ${email} prøver at forbinde til din butik, klik på linket herunder for at tillade dem adgang`
+                        `Bruger med email ${email} prøver at forbinde til din butik, klik på linket herunder for at tillade dem adgang\n\n ${url}`
                     );
                 }
                 return resolve(true);

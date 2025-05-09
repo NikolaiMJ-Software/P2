@@ -104,6 +104,7 @@ db.serialize(() => {
         shop_id INTEGER,
         admin_user INTEGER DEFAULT 0,
         banned INTEGER DEFAULT 0,
+        code TEXT DEFAULT "0",
         FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE SET NULL
     )`, (err) => {
         if (err) console.error("Error creating table:", err.message);

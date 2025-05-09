@@ -1,17 +1,51 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Collect the code and id from URL
     const params = new URLSearchParams(window.location.search);
-    const order_id = Number(params.get('id'));
+    const id = Number(params.get('id'));
     const code = params.get('code');
+    const shop_id = params.get('shop_id');
 
     // If order_id and code is found, update DB
-    if (order_id && code) {
-        console.log('Opdater DB...');
-        await changesInProducts(order_id, code);
+    if (code && id) {
+        console.log('Opdater produkt DB...');
+        await changesInProducts(id, code);
+    } else if (shop_id && code) {
+        console.log('Opdater bruger DB...');
+        await changesInUsers(shop_id, code);
     } else {
         console.error('order_id eller code ikke fundet i URL');
     }
 });
+
+async function changesInUsers(shop_id, code){
+    // Fetching users from DB
+    const responsUsers = await fetch('./get_users');
+    const users = await responsUsers.json();
+
+    // Update DB based on the order
+    for (const user of users){
+        // Go to the next order, if order_id and code don't match
+console.log('code lige nu + code i DB: ', code, user.code);
+        if (user.code !== code) {
+            continue;
+        }
+
+        if (user.code !== `"0"`){
+            alert('Bruger kan ikke skifte butik');
+            break;
+        }
+
+console.log('shop_id lige nu: ',shop_id);
+        fetch(`./update_userStores`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                userId: user.id, 
+                shopId: shop_id
+            })
+        });
+    }
+}
 
 async function changesInProducts(id, code){
     // Fetching orders from DB
