@@ -30,8 +30,8 @@ async function changesInUsers(shop_id, code){
             continue;
         }
 
-        if (user.code === `"0"`){
-            alert('Bruger kan ikke skifte butik');
+        if (user.code === "0"){
+            alert('Bruger kan ikke skifte butik, eller har allerede skiftet.');
             break;
         }
 
@@ -41,6 +41,7 @@ async function changesInUsers(shop_id, code){
             body: JSON.stringify({ 
                 userId: user.id, 
                 shopId: shop_id,
+                code: "0",
                 bypassAdmin: true
             })
         });
@@ -50,7 +51,7 @@ async function changesInUsers(shop_id, code){
             h1.textContent = "Bruger er nu forbundet butikken, nu må du lukke vinduet";
             document.getElementById("message").appendChild(h1);
         } else {
-            alert('Fejl ved oprettelse af bruger i DB');
+            alert('Fejl ved oprettelse af bruger i DB.');
         }
     }
 }
