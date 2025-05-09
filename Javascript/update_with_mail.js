@@ -28,11 +28,10 @@ async function changesInUsers(shop_id, code){
 console.log('DB code + code', user.code, code);
 
         if (JSON.parse(user.code) !== code) {
-            if (user.code == 0){
-                alert('Bruger kan ikke skifte butik, eller har allerede skiftet.');
-                break;
-            }
             continue;
+        } else if (user.code == 0){
+            alert('Bruger kan ikke skifte butik, eller har allerede skiftet.');
+            break;
         }
 
         const respons = await fetch(`./update_userStores`, {
@@ -51,7 +50,7 @@ console.log('DB code + code', user.code, code);
             h1.textContent = "Bruger er nu forbundet butikken, nu må du lukke vinduet";
             document.getElementById("message").appendChild(h1);
         } else {
-            alert('Fejl ved oprettelse af bruger i DB.');
+            alert('Fejl ved opdater bruger i DB.');
         }
         break;
     }
