@@ -1,17 +1,65 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Collect the code and id from URL
     const params = new URLSearchParams(window.location.search);
-    const order_id = Number(params.get('id'));
+    const id = Number(params.get('id'));
     const code = params.get('code');
+    const shop_id = params.get('shop_id');
 
     // If order_id and code is found, update DB
-    if (order_id && code) {
-        console.log('Opdater DB...');
-        await changesInProducts(order_id, code);
+    if (code && id) {
+        console.log('Opdater produkt DB...');
+        await changesInProducts(id, code);
+    } else if (shop_id && code) {
+        console.log('Opdater bruger DB...');
+        await changesInUsers(shop_id, code);
     } else {
-        console.error('order_id eller code ikke fundet i URL');
+        console.error('order_id/shop_id eller code ikke fundet i URL');
     }
 });
+
+async function changesInUsers(shop_id, code){
+    // Fetching users from DB
+    const responsUsers = await fetch('./get_users');
+    const users = await responsUsers.json();
+    let userUpdated = false;
+
+    // Update DB based on the order
+    for (const user of users){
+        // Check if the code matches the user, if not skip
+        if (JSON.parse(user.code) !== code) {
+            continue;
+        }
+
+        const respons = await fetch(`./update_userStores`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                userId: user.id, 
+                shopId: shop_id,
+                code: "0",
+                bypassAdmin: true
+            })
+        });
+
+        if(respons.ok){
+            const h1 = document.createElement("h1");
+            h1.textContent = "Bruger er nu forbundet butikken, lukker automatisk (5 sek).";
+            document.getElementById("message").appendChild(h1);
+            userUpdated = true;
+        } else {
+            alert('Fejl ved opdater bruger i DB.');
+        }
+        break;
+    }
+
+    if (!userUpdated){
+        alert('Bruger har allerede skiftet butik.');
+    }
+
+    setTimeout(() => {
+        window.close();
+    }, 5000); // 5 sec
+}
 
 async function changesInProducts(id, code){
     // Fetching orders from DB
@@ -28,7 +76,7 @@ async function changesInProducts(id, code){
         }
 
         if (order.code !== `"${code}"`){
-            alert('Ordre er allerede behandlet');
+            alert('Ordre er allerede behandlet.');
             break;
         }
 
@@ -66,7 +114,7 @@ async function changesInProducts(id, code){
                 if (product.stock > 0){
                     alert(`${product.product_name} kan ikke blive afhentet, fordi der er ikke nok på lager.`);
                 } else{
-                    alert(`${product.product_name} er ikke på lager.\nKan ikke bekræfte afhentning af produktet`);
+                    alert(`${product.product_name} er ikke på lager.\nKan ikke bekræfte afhentning af produktet.`);
                 }
                 continue;
             }
@@ -79,15 +127,6 @@ async function changesInProducts(id, code){
             const new_bought = product.bought + change;
             const new_revenue = shopRevenue + (change * price);
             
-            /* See changes
-            console.log("Before changes:", product);
-            console.log("After changes:", {
-                stock: new_stock,
-                bought: new_bought,
-                revenue: new_revenue
-            });*/
-
-            //console.log('\nSTOCK UPDATE, pro_id & new_stock: ', product_id, new_stock);
             // Update stock
             await fetch("./mail_stock", {
                 method: "POST",
@@ -98,7 +137,6 @@ async function changesInProducts(id, code){
                     stock: new_stock })
             })
 
-            //console.log('\nBOUGHT UPDATE, pro_id & new_bought: ', product_id, new_bought);
             // Update bought
             await fetch("./mail_bought", {
                 method: "POST",
@@ -139,6 +177,10 @@ async function changesInProducts(id, code){
 
     // Add "task complete" to users webpage
     const h1 = document.createElement("h1");
-    h1.textContent = "Det er blevent rigisteret, nu må du lukke vinduet";
+    h1.textContent = "Det er blevent rigisteret, lukker automatisk (5 sek)";
     document.getElementById("message").appendChild(h1);
+
+    setTimeout(() => {
+        window.close();
+    }, 5000); // 5 sec
 }

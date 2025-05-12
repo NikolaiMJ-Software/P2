@@ -26,7 +26,7 @@ router.get('/admin', (req, res) => {
 })
 
 router.get('/get_users', (req, res) => {
-    db.all(`SELECT id, email, name, shop_id FROM users WHERE admin_user != 1 ORDER BY id ASC`, (err, rows) => {
+    db.all(`SELECT id, email, name, shop_id, code FROM users WHERE admin_user != 1 ORDER BY id ASC`, (err, rows) => {
         if(err){
             res.status(500).json({ error: err.message });
             return;
@@ -106,10 +106,13 @@ router.post('/edit_email', (req, res) => {
 })
 
 router.post(`/update_userStores`, (req, res) => {
+    if (req.body.bypassAdmin) {
+        req.user = { admin_user: true };
+    }
     if(!req.user || !req.user.admin_user){
         return res.status(403).json({ error: "Ikke logget ind som admin" });
     }
-    const {userId, shopId} = req.body;
+    const {userId, shopId, code} = req.body;
     if (!userId){
         return res.status(500).send("Databasefejl");
     }
@@ -122,7 +125,14 @@ router.post(`/update_userStores`, (req, res) => {
             }
             res.send("Shop opdateret")
         })
-    } else{
+    } else if (code == "0") {
+        db.run(`UPDATE users SET shop_id = ?, code = ? WHERE id = ?`, [shopId, code, userId], (err) =>{
+            if (err){
+                return res.status(500).send("Databasefejl");
+            }
+            res.send("Shop opdateret")
+        })
+    } else {
         db.run(`UPDATE users SET shop_id = ? WHERE id = ?`, [shopId, userId], (err) =>{
             if (err){
                 return res.status(500).send("Databasefejl");

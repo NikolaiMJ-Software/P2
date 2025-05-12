@@ -2,8 +2,24 @@ body {
   background: var(--page-bg);
   font-family: 'Arial', 'Lucida Sans', sans-serif;
   margin: 0;
-  padding: 20px;
   color: #333;
+}
+
+footer {
+  margin-top: 3vh;
+  background-color: black;
+  padding: 20px;
+  text-align: center;
+  color: var(--secoundary-text);
+  p, h3 {
+    font-family: "Lucida", serif;
+      margin: 16px;
+  }
+}
+
+.main-body{
+  min-height: 100vh;
+  padding: 20px
 }
 
 #header {
