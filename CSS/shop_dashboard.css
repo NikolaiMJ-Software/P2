@@ -12,6 +12,7 @@ footer {
   text-align: center;
   color: var(--secoundary-text);
   p, h3 {
+    font-family: "Lucida", serif;
       margin: 16px;
   }
 }
