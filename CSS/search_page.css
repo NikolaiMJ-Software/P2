@@ -81,6 +81,7 @@ button {
     align-items: flex-start;
     max-width: 952px;
     margin: auto;
+    min-height: var(--page-height);
 }
 
 .product{
@@ -185,7 +186,7 @@ button {
     max-width: 946px;
     box-sizing: border-box;
     translate: 640px 0px;
-    height: 160%;
+    height: var(--page-height);
   }
 
 .advertButton{
@@ -280,7 +281,7 @@ progress {
     --icon-moon: #B1B0B5;
     --form-bg: #eeeeee;
     --form-ph: grey;
-
+    --page-height: 180vh;
 }
 
 
@@ -296,6 +297,7 @@ progress {
     --icon-moon: #DCE3FF;
     --form-bg: #2B2A35;
     --form-ph: grey;
+    --page-height: 180vh;
 
 } 
 

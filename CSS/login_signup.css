@@ -25,6 +25,17 @@ section {
     justify-content: center;
 }
 
+footer {
+    margin-top: 10px;
+    background-color: black;
+    padding: 20px;
+    text-align: center;
+    color: var(--secoundary-text);
+    p, h3 {
+        margin: 16px;
+    }
+}
+
 .container {
     width: 400px;
     display: flex;
