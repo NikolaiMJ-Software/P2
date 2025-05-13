@@ -367,6 +367,12 @@ footer {
   translate: 10px -15px;
 }
 
+
+.comment-stars {
+  font-size: 18px;
+  color: goldenrod;
+}
+
 #star-rating .star {
   font-size: 28px;
   cursor: pointer;

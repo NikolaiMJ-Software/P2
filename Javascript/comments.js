@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const commentInput = document.getElementById('user-comment');
   const modal = document.getElementById('rating-modal');
 
-  const openBtn = document.getElementById('open-rating-popup');
   const closeBtn = document.getElementById('close-rating-modal');
   const avgStars = document.getElementById('average-rating-display');
 
@@ -70,41 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const maxChars = 400;
 
   // Open popup
-  openBtn?.addEventListener('click', () => {
-    if (!isLoggedIn) {
-      alert("Du skal være logget ind for at kunne anmelde eller kommentere");
-      return;
-    }
-    if (hasCommented) {
-      if (confirm("Du har allerede skrevet en kommentar til dette produkt. Vil du opdatere den?")) {
-        // Pre-fill comment box and stars
-        const previousComment = allComments.find(c => c.email === userEmail);
-        if (previousComment) {
-          commentInput.value = previousComment.comment;
-
-          // Update char count display
-          charCountDisplay.textContent = `${previousComment.comment.length} / ${maxChars} tegn`;
-          charCountDisplay.style.color = previousComment.comment.length > maxChars ? 'red' : '';
-          selectedRating = previousComment.rating;
-
-          stars.forEach(s => {
-            const val = parseInt(s.dataset.value);
-            s.classList.toggle('selected', val <= selectedRating);
-          });
-        }
-
-        modal.style.display = 'flex';
-      }
-      return;
-    }
-    modal.style.display = 'flex';
-  });
-
   avgStars?.addEventListener('click', () => {
+    modal.style.display = 'flex';
+  
     if (!isLoggedIn) {
-      alert("Du skal være logget ind for at kunne anmelde eller kommentere");
+      alert("Du er ikke logget ind. Du kan stadig læse kommentarer, men ikke skrive nogen.");
       return;
     }
+  
     if (hasCommented) {
       if (confirm("Du har allerede skrevet en kommentar til dette produkt. Vil du opdatere den?")) {
         // Pre-fill comment box and stars
@@ -116,18 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
           charCountDisplay.textContent = `${previousComment.comment.length} / ${maxChars} tegn`;
           charCountDisplay.style.color = previousComment.comment.length > maxChars ? 'red' : '';
           selectedRating = previousComment.rating;
-
+  
           stars.forEach(s => {
             const val = parseInt(s.dataset.value);
             s.classList.toggle('selected', val <= selectedRating);
           });
         }
-
-        modal.style.display = 'flex';
+      } else {
+        return;
       }
-      return;
     }
-    modal.style.display = 'flex';
   });
 
   // Close popup
@@ -171,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
           name.textContent = c.name;
 
           const starsSpan = document.createElement('span');
-          starsSpan.className = 'average-stars';
+          starsSpan.className = 'comment-stars';
           let starsHTML = '';
           let rating = Math.min(c.rating || 0, 5); // cap at 5
           const full = Math.floor(rating);
@@ -264,6 +234,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isLoggedIn) {
         userName = data.name;
         userEmail = data.email;
+      }
+      const ratingInputArea = document.getElementById('rating-input-area');
+      if (!isLoggedIn && ratingInputArea) {
+        ratingInputArea.style.display = 'none';
       }
       loadComments(); // Call after checking login
     });
