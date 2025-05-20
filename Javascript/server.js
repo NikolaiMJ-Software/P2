@@ -90,10 +90,14 @@ app.get('/searchpage', (req, res) => {
             res.status(404).json({ error: 'City not found' });
             return;
         }
+
+        //Check if the city has any products before redirecting
         db.all(`SELECT * FROM products WHERE city_id = ?`, [rows[0].id], (err, row) => {
             if (err) {
                 res.status(500).json({ error: err.message });
-            }    
+            }  
+
+            //If city has no products, send error
             if (!row[0]){
                 res.status(404).json({ error: 'By har ikke nogle produkter endnu' });
                 return;
@@ -369,14 +373,13 @@ app.get('/confirm', (req, res) => {
     res.sendFile(path.join(__dirname, '../HTML/confirm.html'));
 });
 
+//Additional routes 
 app.use('/', reserve_router);
-
 app.use('/', shop_dashboard_router);
-
 app.use('/', mail_update_router);
-
 app.use('/', admin_router);
 
+//Start the server
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });

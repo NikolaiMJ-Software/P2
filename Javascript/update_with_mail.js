@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('Opdater bruger DB...');
         await changesInUsers(shop_id, code);
     } else {
-        console.error('order_id eller code ikke fundet i URL');
+        console.error('order_id/shop_id eller code ikke fundet i URL');
     }
 });
 
@@ -21,30 +21,47 @@ async function changesInUsers(shop_id, code){
     // Fetching users from DB
     const responsUsers = await fetch('./get_users');
     const users = await responsUsers.json();
-console.log('ALL USERS:',users);
+    let userUpdated = false;
+
     // Update DB based on the order
     for (const user of users){
-        // Go to the next order, if order_id and code don't match
-console.log('code lige nu + code i DB: ', code, user.code);
-        if (user.code !== code) {
+        // Check if the code matches the user, if not skip
+        if (JSON.parse(user.code) !== code) {
             continue;
         }
 
-        if (user.code !== `"0"`){
-            alert('Bruger kan ikke skifte butik');
-            break;
-        }
-
-console.log('shop_id lige nu: ',shop_id);
-        fetch(`./update_userStores`, {
+        // Update user profile code to 0, and a shop_id
+        const respons = await fetch(`./update_userStores`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
                 userId: user.id, 
-                shopId: shop_id
+                shopId: shop_id,
+                code: "0",
+                bypassAdmin: true
             })
         });
+
+        // Notify the shop owner if is has been completet
+        if(respons.ok){
+            const h1 = document.createElement("h1");
+            h1.textContent = "Bruger er nu forbundet butikken, lukker automatisk (5 sek).";
+            document.getElementById("message").appendChild(h1);
+            userUpdated = true;
+        } else {
+            alert('Fejl ved opdater bruger i DB.');
+        }
+        break;
     }
+
+    if (!userUpdated){
+        alert('Bruger har allerede skiftet butik.');
+    }
+
+    // Close the window after 5 sec
+    setTimeout(() => {
+        window.close();
+    }, 5000); // 5 sec
 }
 
 async function changesInProducts(id, code){
@@ -62,7 +79,7 @@ async function changesInProducts(id, code){
         }
 
         if (order.code !== `"${code}"`){
-            alert('Ordre er allerede behandlet');
+            alert('Ordre er allerede behandlet.');
             break;
         }
 
@@ -100,10 +117,11 @@ async function changesInProducts(id, code){
                 if (product.stock > 0){
                     alert(`${product.product_name} kan ikke blive afhentet, fordi der er ikke nok på lager.`);
                 } else{
-                    alert(`${product.product_name} er ikke på lager.\nKan ikke bekræfte afhentning af produktet`);
+                    alert(`${product.product_name} er ikke på lager.\nKan ikke bekræfte afhentning af produktet.`);
                 }
                 continue;
             }
+            // Notify the shop owner if it was the last product in stock
             if (diff === 0){
                 alert(`Det er den sidste af: ${product.product_name}, lager skal fyldes op.`);
             }
@@ -113,15 +131,6 @@ async function changesInProducts(id, code){
             const new_bought = product.bought + change;
             const new_revenue = shopRevenue + (change * price);
             
-            /* See changes
-            console.log("Before changes:", product);
-            console.log("After changes:", {
-                stock: new_stock,
-                bought: new_bought,
-                revenue: new_revenue
-            });*/
-
-            //console.log('\nSTOCK UPDATE, pro_id & new_stock: ', product_id, new_stock);
             // Update stock
             await fetch("./mail_stock", {
                 method: "POST",
@@ -132,7 +141,6 @@ async function changesInProducts(id, code){
                     stock: new_stock })
             })
 
-            //console.log('\nBOUGHT UPDATE, pro_id & new_bought: ', product_id, new_bought);
             // Update bought
             await fetch("./mail_bought", {
                 method: "POST",
@@ -173,6 +181,11 @@ async function changesInProducts(id, code){
 
     // Add "task complete" to users webpage
     const h1 = document.createElement("h1");
-    h1.textContent = "Det er blevent rigisteret, nu må du lukke vinduet";
+    h1.textContent = "Det er blevent rigisteret, lukker automatisk (5 sek)";
     document.getElementById("message").appendChild(h1);
+
+    // Close the window after 5 sec
+    setTimeout(() => {
+        window.close();
+    }, 5000); // 5 sec
 }

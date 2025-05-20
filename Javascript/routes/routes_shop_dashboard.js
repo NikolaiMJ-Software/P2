@@ -23,6 +23,7 @@ const db = new sqlite3.Database(db_path, (err) => {
 
 //Multer storage and file handling
 const storage = multer.diskStorage({
+    //manages images, and places them in a temp folder, until new dir is found
     destination: function (req, file, cb){
 
         const dir = path.join(process.cwd(), '.', 'Images', 'temp');

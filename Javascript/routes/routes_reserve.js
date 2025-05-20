@@ -56,7 +56,7 @@ export function db_get(query, params) {
 //Limits emails an IP can send per hour to prevent flooding
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5, // max 5 requests per IP
+  max: 5, // max 5 requests per computer
   message: { error: "For mange anmodninger, prøv igen senere" }
 });
 

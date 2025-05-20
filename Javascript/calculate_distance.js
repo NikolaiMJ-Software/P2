@@ -1,17 +1,16 @@
-//const API_KEY = "AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ"; // Replace with yours Google API-key
 const url = "https://routes.googleapis.com/directions/v2:computeRoutes"; // The URL for using the API
 let travelTimesCities = [];
 let travelTimesShops = [];
 
 export async function getTravelTime(destination) {  
     try {
-        // Fetch shops and cities from the server
+        // Fetch shops and cities from the server, and convert to JSON
         const responseShop = await fetch('./shop');
         const response = await fetch('./cities');
-        // Converter to json
         const shops = await responseShop.json();
         const cities = await response.json();
 
+        // Set destination to the requested
         if(destination === 'shops'){
             destination = shops;
         } else if(destination === 'cities') {
@@ -21,14 +20,13 @@ export async function getTravelTime(destination) {
         // Get user's position, if it's too old it will get a new one 
         let position;
         if (checkLastVisit()){
-            console.log("More than 5 minutes have passed, resetting coordinates.");
-            console.log('The position was to old, calc new travel time.');
+            console.log("Mere end 5 minutter er gået, beregner ny position.");
+            // "position" is the first return from one of the functions
             position = await Promise.race([
                 getWatchPositionPromise(),
                 getCurrentPositionPromise()
             ]);
         } else {
-            console.log('Still time:')
             position = await getWatchPositionPromise();
         }
         updateLastVisit(); // Update users last visit
@@ -36,7 +34,6 @@ export async function getTravelTime(destination) {
         // Check if the user's position has change
         if(checkPosition(position)){
             // Calc new travel times
-            console.log('Starting calc new traveltimes');
             let travelTimes = calcTravelTimes(position, destination);
 
             // Save new travel times to the corresponding input
@@ -50,13 +47,10 @@ export async function getTravelTime(destination) {
         } else {
             // Return last saved sorted lists 
             if(destination === cities && travelTimesCities.length !== 0 ){
-                console.log('Return saved traveltimes: cities');
                 return travelTimesCities;
             } else if(destination === shops && travelTimesShops.length !== 0){
-                console.log('Return saved traveltimes: shops');
                 return travelTimesShops;
             } else{
-                console.log('No existing list calc new:');
                 let newTravelTimes = calcTravelTimes(position, destination);
 
                 // Save new travel times to the corresponding input
@@ -90,15 +84,15 @@ export async function calcTravelTimes(position, destination){
 
         // Prepare and send requests for multiple destination simultaneously
         const travelTimePromises = destination.map((place) => {
-            return calcDistance(userLat, userLon, place.latitude, place.longitude, API_KEY) // Return promise
-            .then((time) => {
-            if (time) {
-                travelTimes.push({ name: place.city || place.shop_name, ...(place.shop_name && { id: place.id }), time: parseInt(time) });
-            } else {
-                console.error(`Ingen rute fundet: ${place.city || place.shop_name}`);
-            }
-            completed++;
-            progressBar.value = (completed / destination.length) * 100; // Update progress bar
+            return calcDistance(userLat, userLon, place.latitude, place.longitude, API_KEY).then((time) => {
+                if (time) {
+                    // Depending on the return creat travelTimes "name" as city, or the shop_name and id
+                    travelTimes.push({ name: place.city || place.shop_name, ...(place.shop_name && { id: place.id }), time: parseInt(time) });
+                } else {
+                    console.error(`Ingen rute fundet: ${place.city || place.shop_name}`);
+                }
+                completed++;
+                progressBar.value = (completed / destination.length) * 100; // Update progress bar
             });
         });
         
@@ -141,9 +135,6 @@ export async function calcDistance(userLat, userLon, destLat, destLon, API_KEY){
             body: JSON.stringify(requestBody)
         });
         const data = await response.json();
-        /* Debugging - check the return data
-        console.log(data);
-        */
 
         // Remove "s" from duration, and return the time it take for traveling from one point to another in "sec"
         const duration = data.routes[0].duration;
@@ -161,17 +152,17 @@ export function getCurrentPositionPromise() {
             (position) => {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
+
                 // Store the position in localStorage
                 localStorage.setItem("newLat", position.coords.latitude);
                 localStorage.setItem("newLon", position.coords.longitude);
-                console.log("Stored position in localStorage:", position.coords.latitude, position.coords.longitude);
                 resolve({ coords: { latitude: lat, longitude: lon } });
             },
             (error) => {
                 console.error("Fejl ingen potition:", error);
                 reject(error);
             },
-            { enableHighAccuracy: false }
+            { enableHighAccuracy: false } // Fast GPS, but less accurate
         );
     });
 }
@@ -199,7 +190,6 @@ export function checkLastVisit() {
 
 // Function to update the last visit timestamp
 export function updateLastVisit() {
-    console.log('Last visit: ', Date.now());
     localStorage.setItem("lastVisit", Date.now());
 }
 
@@ -212,7 +202,7 @@ export function getWatchPositionPromise() {
 
         const isTooOld = checkLastVisit();
         if (!isTooOld && lastLat && lastLon) {
-            console.log("Using last known position:", lastLat, lastLon);
+            console.log("Bruger sidste kendt potition:", lastLat, lastLon);
             resolve({ coords: { latitude: parseFloat(lastLat), longitude: parseFloat(lastLon) } });
         }
 
@@ -226,7 +216,8 @@ export function getWatchPositionPromise() {
                 localStorage.setItem("newLat", position.coords.latitude);
                 localStorage.setItem("newLon", position.coords.longitude);
                 
-                console.log("Updated background location:", position.coords.latitude, position.coords.longitude);
+                console.log("Opdater lokation:", position.coords.latitude, position.coords.longitude);
+                // Return the position if is to old
                 if (isTooOld){
                     resolve({ coords: { latitude: lat, longitude: lon } });
                 }
@@ -244,8 +235,7 @@ export function getWatchPositionPromise() {
         // Automatically clear watch after 5 minutes to save battery
         setTimeout(() => {
             navigator.geolocation.clearWatch(watchId);
-            console.log("Stopped watching position to save battery.");
-            }, 5 * 60 * 1000); // 5 min
+        }, 5 * 60 * 1000); // 5 minutes
     });
 }
 
@@ -285,22 +275,20 @@ export function checkPosition(position) {
     const lastLat = parseFloat(localStorage.getItem("lastLat"));
     const lastLon = parseFloat(localStorage.getItem("lastLon"));
 
+    // If the user has a last knowend position, check if it have move more than 10 meters with haversine formular
     if (!isNaN(lastLat) && !isNaN(lastLon)) {
         const distance = haversineDistanceM(lastLat, lastLon, newLat, newLon);
-        console.log(`Moved: ${distance.toFixed(2)} meters`);
-        
         if (distance > 10) {
-            console.log("User has moved more than 10 meters.");
+            console.log("Brugeren har bevæget sig mere end 10 meter.");
             // Update stored position
             savePosition(position);
             return true;
-
         } else {
-            console.log("User is within 10 meters.");
+            console.log("Brugeren er inden for 10 meter.");
             return false;
         }
     } else {
-        console.log("User has no previous location.");
+        console.log("Brugeren har ingen tidligere lokation.");
         // Update stored position
         savePosition(position);
         return true;

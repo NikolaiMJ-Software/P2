@@ -11,16 +11,18 @@ const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
 // Makes a new database with data from the current database (which can be interacted with)
 const db = new sqlite3.Database(db_path, (err) => {
     if (err) return console.error('Mail_update DB error:', err.message);
-    console.log('Connected to SQLite database (Mail_update router).');
+    console.log('Connected to SQLite database (mail_update router).');
     db.run("PRAGMA foreign_keys = ON;");
 });
 
-
+// Code for the password
 const VALIDPASSWORD = '1234';
 
+// Function to check request body's password
 function checkPassword (req, res, next){
     const { password } = req.body;
 
+    // If password is not valid = error, else continue with next
     if (!password || password !== VALIDPASSWORD) {
         return res.status(401).json({ message: 'Ugyldigt password' })
     }
@@ -28,12 +30,15 @@ function checkPassword (req, res, next){
     next();
 }
 
+// Update stock in DB, for a product
 router.post('/mail_stock', checkPassword, (req, res) => {
     const { id, stock } = req.body;
 
     if (id === undefined || stock === undefined) {
         return res.status(400).json({ message: 'Både stock og id skal sendes' });
     }
+    
+    // Update only if the requested stock is positive or 0
     if(stock >= 0){
         db.run(`UPDATE products SET stock = ? WHERE id = ?`, [stock, id], function (err) {
             if (err){
@@ -45,6 +50,7 @@ router.post('/mail_stock', checkPassword, (req, res) => {
     }
 });
 
+// Update the amount of product bought
 router.post('/mail_bought', checkPassword, (req, res) => {
     const { bought, id } = req.body;
 
@@ -52,7 +58,7 @@ router.post('/mail_bought', checkPassword, (req, res) => {
         return res.status(400).json({ message: 'Både bought og id skal sendes' });
     }
 
-    // Lounce quest
+    // Update only if the requested bought is positive or 0
     if (bought >= 0){
         db.run(`UPDATE products SET bought = ? WHERE id = ?`, [bought, id], function (err) {
             if (err){
@@ -64,6 +70,7 @@ router.post('/mail_bought', checkPassword, (req, res) => {
     }
 });
 
+// Update the revenue of a shop
 router.post('/mail_revenue', checkPassword, (req, res) => {
     const { revenue, shop_id } = req.body;
 
@@ -71,7 +78,7 @@ router.post('/mail_revenue', checkPassword, (req, res) => {
         return res.status(400).json({ message: 'Både revenue og shop_id skal sendes' });
     }
 
-    // Lounce quest
+    // Update only if the requested revenue is positive or 0
     if (revenue >= 0){
         db.run(`UPDATE shops SET revenue = ? WHERE id = ?`, [revenue, shop_id], function (err) {
             if (err){
@@ -83,6 +90,7 @@ router.post('/mail_revenue', checkPassword, (req, res) => {
     }
 });
 
+// Insert the requested order in the DB, and return the newest id
 router.post('/mail_order', checkPassword, (req, res) => {
     const { shop_id, products, code } = req.body;
 
@@ -100,6 +108,7 @@ router.post('/mail_order', checkPassword, (req, res) => {
     });
 });
 
+// Update the code in the requested order to null
 router.post('/update_order', checkPassword, (req, res) => {
     const { id, shop_id, products, code } = req.body;
 
@@ -107,11 +116,10 @@ router.post('/update_order', checkPassword, (req, res) => {
         return res.status(400).json({ message: 'Mangler id, shop_id eller produkter' });
     }
 
+    // If the requested order is "" set to null, else not changes
     const finalCode = code === "" ? null : code;
 
-    const sql = `UPDATE orders SET shop_id = ?, products = ?, code = ? WHERE id = ?`;
-
-    db.run(sql, [shop_id, products, finalCode, id], function (err) {
+    db.run(`UPDATE orders SET shop_id = ?, products = ?, code = ? WHERE id = ?`, [shop_id, products, finalCode, id], function (err) {
         if (err) {
             return res.status(500).json({ message: "Databasefejl ved opdatering" });
         } else {
@@ -119,6 +127,5 @@ router.post('/update_order', checkPassword, (req, res) => {
         }
     });
 });
-
 
 export default router;

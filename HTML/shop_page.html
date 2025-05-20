@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Click & Hent</title>
     <link rel="stylesheet" type="text/css" href="./CSS/shop_page.css">
+    <link rel="icon" type="image/png" href="./Images/logo.png">
 </head>
 <body>
   <div class="theme-switcher">
@@ -40,6 +41,7 @@
   <div id="rating-modal" style="display: none;">
     <div class="modal-content">
       <button id="close-rating-modal" style="float: right;">&times;</button>
+      <div id="rating-input-area">
       <h2>Bedøm denne butik</h2>
       <div id="star-rating">
         <span class="star" data-value="1">&#9734;</span>
@@ -54,12 +56,14 @@
         <div id="comment-char-count">0 / 400 tegn</div>
     </div>
       <button id="submit-rating">Indsend</button>
+    </div>
       <div class="comment-preview">
         <h3>Alle kommentarer</h3>
-        <ul id="comments-list"></ul>
+        <ul class="comment-list-text" id="comments-list"></ul>
       </div>
   </div>
 </div>
+
   <main class="products" id="productList"></main>
 
   <script type="module" src="./Javascript/shop_page.js"></script>
@@ -70,5 +74,10 @@
     <script>
       localStorage.currentPage = `./productlist?city=${new URLSearchParams(window.location.search).get("city")}&shop_id=${new URLSearchParams(window.location.search).get("shop_id")}`;
     </script>
+    <footer>
+      <h3>Kontakt os</h3>
+      <p>mail: clickoghent@gmail.com</p>
+      <p>adresse: Selma Lagerløfs Vej 300</p>
+    </footer>
 </body>
 </html>

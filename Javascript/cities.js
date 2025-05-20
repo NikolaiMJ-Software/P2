@@ -1,8 +1,10 @@
 import { getTravelTime, getCurrentPositionPromise } from './calculate_distance.js';
 
+//on page start load the following:
 document.addEventListener('DOMContentLoaded', async () => {
     getCurrentPositionPromise(); // Get users location
     try {
+        //tries to fetch cities and make city buttons
         const response = await fetch('./cities'); // Fetch cities from the server
         const cities = await response.json();
         const container = document.getElementById('city-buttons'); // Target div
@@ -14,6 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const email = urlParams.get('email');
 
+        //make empty list of city buttons
         const cityButtons = [];
 
         const loader = document.getElementById("loader");
@@ -74,8 +77,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
+        //function that finds cities based on input in searchbar
         searchInput.addEventListener('input', () => {
+            //values in searchbar set to lower case
             const searchValue = searchInput.value.toLowerCase();
+            //only shows city buttons matching search input
             cityButtons.forEach(button => {
                 if (button.dataset.city.includes(searchValue)) {
                     button.style.display = 'flex'; // Show matching cities
@@ -85,12 +91,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
+        //function that waits for a submit on the searchbar
         searchForm.addEventListener('submit', (event) => {
             event.preventDefault();
+            //checks if any city matches search, if it does, then go to matching city
             const searchValue = searchInput.value.trim().toLowerCase();
             const matchingCity = cities.find(city => city.city.toLowerCase() === searchValue);
 
-            // Redirect if city is found (only Aalborg)
+            // Redirect if city is found
             if (matchingCity) {
                 if(email){
                     window.location.href = `./searchpage?email=${encodeURIComponent(email)}&city=${encodeURIComponent(matchingCity.city)}`;

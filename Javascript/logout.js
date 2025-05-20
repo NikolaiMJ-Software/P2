@@ -9,6 +9,7 @@ async function check_login(){
             document.getElementById('login').style.display = 'none';
             document.getElementById('signup').style.display = 'none';
             document.getElementById('logout').style.display = 'inline-block';
+            //if use is a shop owner, show the shop owner button
             if(data.shop_id){
                 const dashboard = document.getElementById('shop');
                 dashboard.style.display = 'inline-block';
@@ -18,6 +19,7 @@ async function check_login(){
                 });
             }
             console.log(data.admin_user)
+            //if use is an admin, show the admin button
             if(data.admin_user){
                 const admin = document.getElementById("admin");
                 admin.style.display = 'inline-block';
