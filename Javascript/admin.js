@@ -25,24 +25,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         shopSearch.innerHTML = ``
         shopSearch.appendChild(createSearch())
 
-        //Add shop creation to page
-        /*let createShop = document.createElement('button')
-        createShop.onclick = () => {window.location.href=`./new_store`}
-        createShop.textContent = "Create a new shop";
-        createShop.style = "margin-left: 10px"
-        shopSearch.appendChild(createShop);*/
-
         //load shop data
         shopTable()
     }
 
-    //crash button
-    document.getElementById("crash-button").onclick = () =>{
-        if(confirm("Vil du gerne crashe serveren?")){
-            if(confirm("Er du helt sikker på du vil crashe serveren?")){
+    //close button
+    document.getElementById("stop-button").onclick = () =>{
+        if(confirm("Vil du gerne stoppe serveren?")){
+            if(confirm("Er du helt sikker på du vil stoppe serveren?")){
                 if(confirm("Er du 100% sikker?")){
-                    alert("Server will crash in 10 seconds")
-                    setTimeout(crashServer, 12000) //crash server in 12 seconds
+                    alert("Server will close in 10 seconds")
+                    setTimeout(stopServer, 12000) //stop server in 12 seconds
                     countdown(10); //start countdown for 10 seconds
                 }
             }
@@ -50,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 })
 
+//Create a countdown for an amount of seconds (used for stop button)
 function countdown(seconds){
     let x = setInterval(() => {
         document.getElementById("timer").textContent = seconds;
@@ -61,9 +55,10 @@ function countdown(seconds){
     }, 1000);
 }
 
-async function crashServer(){
-    alert("Server will now crash")
-    await fetch("./crash_server")     
+//Stop the server
+async function stopServer(){
+    alert("Server will now stop")
+    await fetch("./stop_server")     
 }
 
 //Function to create the search bar and functionality
