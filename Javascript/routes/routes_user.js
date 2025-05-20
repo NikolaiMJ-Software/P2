@@ -46,7 +46,7 @@ router.post('/generate_key', async (req, res) => {
     if(banned && banned.banned) {
         return res.json({ success: "Bruger er bannet fra Click&hent" })
     }
-    //create random key, and sent mail and key to auth email maker function
+    //create random key, and run authentication_email_maker function with key and email
     const key = parseInt(Math.floor(Math.random() * 900000) + 100000)
     let success = await authentication_email_maker(email, key);
     return res.json({ success: success });
@@ -54,7 +54,7 @@ router.post('/generate_key', async (req, res) => {
 
 router.post('/authenticate_email', async (req, res) => {
     let { email, key, cart, name, password, shop_id } = req.body;
-    //Check if key and email fits database entry
+    //Check if key and email fits database entry with authenticate_email_checker function
     let authenticated = await authenticate_email_checker(email, key);
     if(authenticated !== true){
         return res.json({ success: authenticated });
@@ -96,7 +96,6 @@ async function authentication_email_maker(email, key){
 
 //Checks whether a authentication database entry exists
 async function authenticate_email_checker(email, key){
-    //checks if inserted email and key fits the values in authentication tabled, if yes delete email, else sent fail message
     const row = await db_get(`SELECT * FROM authentication WHERE authentication.email = ? AND authentication.key = ?;`, [email, key]);
     if(row){
         //Deletes the entry to clear up the database if entry was correct

@@ -94,6 +94,7 @@ function createSearch(){
     return searchField;
 }
 
+//Hides the tables
 function hidePages() {
     const managementArea = document.getElementById("management-area")
     let temp = managementArea.firstElementChild
@@ -326,7 +327,7 @@ document.getElementById("ban-button").addEventListener("click", () => {
         return;
     }
 
-    // Example: Send ban request to server (you need backend handling for this)
+    // Send ban request to server (you need backend handling for this)
     fetch(`./ban-user`, {
         method: 'POST',
         headers: {
