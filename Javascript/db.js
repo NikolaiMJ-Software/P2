@@ -2,7 +2,7 @@ import sqlite3 from 'sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// 👇 Convert import.meta.url to __filename and __dirname equivalents
+// Convert import.meta.url to __filename and __dirname equivalents
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -152,14 +152,14 @@ db.serialize(() => {
         if (err) console.error('Error inserting data:', err.message);
         else console.log('Cities with image paths inserted.');
     });
-
+/*
     db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude, revenue) VALUES
         ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'mormorogmorfar123456789@gmail.com', 57.048939, 9.921764, 150000),
         ('jerrys vare', '1', 'Images/Aalborg/jerrys vare/logo.png', 'mormorogmorfar123456789@gmail.com', 57.070059, 9.946330, 10)`, (err) => {
             if (err) console.error('Error inserting data:', err.message);
             else console.log('Shop inserted.');
     });
-
+*/
     db.run(`INSERT INTO private (name, API_key) VALUES
         ('Google maps', 'AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ')`, (err) => {
             if (err) console.error('Error inserting data:', err.message);
@@ -167,13 +167,11 @@ db.serialize(() => {
     });
 
     db.run(`INSERT INTO users (email, name, password, shop_id, admin_user) VALUES
-        ('sspg.dk@gmail.com', 'Sebastian', '123', 2, 0),
-        ('mormorogmorfar123456789@gmail.com', 'ikke mormor & morfar', '123', 1, 0),
         ('admin', 'admin', 'admin', NULL, 1)`, (err) => {
-            if (err) console.error('Error inserting data:', err.message);
-            else console.log('Users inserted.');
+        if (err) console.error('Error inserting data:', err.message);
+        else console.log('Users inserted.');
     });
-
+/*
     db.run(`INSERT INTO products (city_id, shop_id, product_name, stock, bought, price, description, img1_path, img2_path, img3_path, img4_path, specifications, discount, parent_id) 
         VALUES
         (1, 1, 'den grimme maskine (hvid)', 10, 0, 55, 'Den er grim', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128322083.png', 'Images/Aalborg/Måneby/Sage_Joracle_Jet_espressomaskine/dv_web_D18000128321829.png',
@@ -220,7 +218,7 @@ db.serialize(() => {
             }
         }
     );
-
+*/
     db.run(`CREATE INDEX idx_shops_city ON shops(city_id);`);
     db.run(`CREATE INDEX idx_products_shop ON products(shop_id);`);
 });

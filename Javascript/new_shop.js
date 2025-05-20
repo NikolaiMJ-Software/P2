@@ -53,13 +53,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             body: form_data,
         });
         
-            if (update_res.ok) {
-                alert("Butikken er blevet tilføjet.");
-                history.back();
-            } else {
-                const error_text = await update_res.text();
-                error_message.textContent = error_text;
-            }
+        if (update_res.ok) {
+            alert("Butikken er blevet tilføjet.");
+            history.back();
+        } else {
+            const error_text = await update_res.text();
+            error_message.textContent = error_text;
+        }
     });
 });
 
