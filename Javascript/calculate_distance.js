@@ -240,7 +240,7 @@ export function getWatchPositionPromise() {
 }
 
 
-// Clac coordinates changes in meters
+// Calc coordinates changes in meters
 export function haversineDistanceM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
     function toRad(degree) {
         return degree * Math.PI / 180;

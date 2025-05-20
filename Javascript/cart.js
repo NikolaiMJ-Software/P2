@@ -216,7 +216,7 @@ function adjust_table(action, product_id) {
     fill_table();
 }
 
-//Button function that adds a product to your cart on click (used in product_page.html)
+//Button function that adds a product to user's cart on click (used in product_page.html)
 const button = document.getElementById("cart_button");
 if(button != null) {
     button.addEventListener("click", async () => {
