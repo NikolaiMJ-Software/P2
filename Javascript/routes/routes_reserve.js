@@ -103,7 +103,7 @@ export async function reserve_wares(cart_items, user_email) {
             const product_ids = Object.keys(count);
             for (let j = 0; j < product_ids.length; j++) {
                 const product_id = product_ids[j];
-                const product = await db_get("SELECT products.product_name, products.price, products.discount FROM products WHERE products.id = ?",[product_id]);
+                const product = await db_get("SELECT product_name, price, discount FROM products WHERE id = ?",[product_id]);
                 const amount = count[product_id];
                 totalOrder[i].product.push(product.product_name);
                 totalOrder[i].amount.push(amount);
