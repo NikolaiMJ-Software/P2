@@ -25,6 +25,7 @@ const db = new sqlite3.Database(db_path, (err) => {
 //Reciever function that checks if an email has an account connected to it
 router.post('/email_status', (req, res) => {
     const { email } = req.body;
+    //select all from the users table based on email, and see if user exists or not
     db.get(`SELECT * FROM users WHERE email = ?`, [email], (err, user) => {
         if (err) {
             console.error('Login error:', err);
@@ -41,10 +42,12 @@ router.post('/email_status', (req, res) => {
 //Reciever functions to authenticate emails
 router.post('/generate_key', async (req, res) => {
     let { email } = req.body;
+    //check if user is banned, if so end function
     const banned = await db_get(`SELECT banned FROM users WHERE email = ?;`, [email]);
     if(banned && banned.banned) {
         return res.json({ success: "Bruger er bannet fra Click&hent" })
     }
+    //create random key, and sent mail and key to auth email maker function
     const key = parseInt(Math.floor(Math.random() * 900000) + 100000)
     let success = await authentication_email_maker(email, key);
     return res.json({ success: success });
@@ -71,6 +74,7 @@ router.post('/authenticate_email', async (req, res) => {
 async function authentication_email_maker(email, key){
     try {
         const date = new Date();
+        //check if new email exists in the auth table, if not insert it
         const row = await db_get(`SELECT * FROM authentication WHERE authentication.email = ?;`, [email]);
         if (!row) {
             db.run(`INSERT INTO authentication (email, key, time_stamp) VALUES (?, ?, ?)`, [email, key, date.getTime()]);
@@ -92,6 +96,7 @@ async function authentication_email_maker(email, key){
 
 //Checks whether a authentication database entry exists
 async function authenticate_email_checker(email, key){
+    //checks if inserted email and key fits the values in authentication tabled, if yes delete email, else sent fail message
     const row = await db_get(`SELECT * FROM authentication WHERE authentication.email = ? AND authentication.key = ?;`, [email, key]);
     if(row){
         db.run(`DELETE FROM authentication WHERE email = ?;`, [email]);
