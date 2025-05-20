@@ -2,7 +2,6 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 import path from 'path';
 import multer from 'multer';
-import fs from 'fs';
 import fse from 'fs-extra';
 import { send_mail, reserve_wares, db_get } from './routes_reserve.js';
 
@@ -52,6 +51,7 @@ router.post('/generate_key', async (req, res) => {
     let success = await authentication_email_maker(email, key);
     return res.json({ success: success });
 });
+
 router.post('/authenticate_email', async (req, res) => {
     let { email, key, cart, name, password, shop_id } = req.body;
     //Check if key and email fits database entry with authenticate_email_checker function
