@@ -1,7 +1,7 @@
 //The purpose of this script is to handle sending reservation emails via the SendGrid API
 //This script mostly interacts with the client-side cart.js script
 
-//Importing API's and using their definitions
+//Importing libraries
 import express from 'express';
 import sqlite3 from 'sqlite3';
 import sgmail from '@sendgrid/mail';
@@ -53,14 +53,14 @@ export function db_get(query, params) {
     });
 }
 
-// Prevent abuse or infinite loop calls on reservation email
+//Limits emails an IP can send per hour to prevent flooding
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 5, // max 5 requests per computer
   message: { error: "For mange anmodninger, prøv igen senere" }
 });
 
-//Reciever function for sending reservation emails for an entire cart (receives signal from cart.js)
+//Reciever function for sending reservation emails (receives signal from cart.js)
 router.post('/reserve_wares', limiter, async (req, res) => {
     let { cart } = req.body;
     let cart_items = Object.values(cart);
@@ -74,31 +74,32 @@ router.post('/reserve_wares', limiter, async (req, res) => {
     return res.json({ success: result })
 });
 
+//Function to reserve wares and send receipts to buyer and seller
 export async function reserve_wares(cart_items, user_email) {
-    //Gathers and converts data to be useful
-    let named_cart = [];
+
+    //Initiates overaching variable for the carts total product data
     let totalOrder = [];
 
     try {
-        //Creates a new cart array, where names are shown instead of id's
         for(let i = 0; i < cart_items.length; i++) {
+
+            //creates a new array for storing product data from 1 store, a string for the shop email, and structure for totalOrder
             const products = [];
             let shop_text = `\n`;
-            named_cart[i] = [];
             totalOrder[i] = {
                 product: [],
                 amount: [],
                 price: []
             }
 
-            // Count the amount of products
+            //Count the amount of products
             const count = {};
             for (let j = 0; j < cart_items[i].length; j++) {
                 const product_id = cart_items[i][j];
                 count[product_id] = (count[product_id] || 0) + 1;
             }
 
-            // Add relevant product information to totalOrder
+            //Add relevant product information to totalOrder
             const product_ids = Object.keys(count);
             for (let j = 0; j < product_ids.length; j++) {
                 const product_id = product_ids[j];
@@ -108,10 +109,10 @@ export async function reserve_wares(cart_items, user_email) {
                 totalOrder[i].amount.push(amount);
                 totalOrder[i].price.push(product.price - product.discount);
 
-                // Order text to shops
+                //Order text to shops
                 shop_text += `${product.product_name} x ${amount}, á ${product.price - product.discount}kr. pr. stk.\n`;
                 
-                // Insert the values in products
+                //Insert the values in products
                 products.push({
                     product_id,
                     amount,
@@ -119,17 +120,17 @@ export async function reserve_wares(cart_items, user_email) {
                 });
             }
             
-            // Define the shop_id based on cart
+            //Define the shop_id based on cart
             const shopObj = await db_get("SELECT shop_id FROM products WHERE id = ?", [cart_items[i][0]]);
             const shop_id = shopObj.shop_id;
             
-            // Random generatet code, and products as a string
+            //Random generatet code, and products as a string
             const code = crypto.randomUUID();
             const codeString = JSON.stringify(code);
             const orderProducts = JSON.stringify(products);
             const baseUrl = "https://cs-25-sw-2-06.p2datsw.cs.aau.dk/node0";
 
-            // Store orders
+            //Store orders
             const response = await fetch(`${baseUrl}/mail_order`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -141,7 +142,7 @@ export async function reserve_wares(cart_items, user_email) {
                 })
             });
 
-            // Insert the new id and code in the link, what would be send
+            //Insert the new id and code in the link, that will be sent to the store
             const orderResponse = await response.json();
             const url = `${baseUrl}/confirm?id=${orderResponse.id}&code=${code}`;
 
@@ -158,9 +159,7 @@ export async function reserve_wares(cart_items, user_email) {
                         ${shop_text.split('\n').filter(l => l.trim() !== '').map(l => `<li>${l}</li>`).join('')}
                     </ul>
                     <p>
-                        <a href="${url}" style="color: #0066cc; text-decoration: underline;">
-                            Klik her for at bekræfte kundens afhentning
-                        </a>
+                        <a href="${url}" style="color: #0066cc; text-decoration: underline;">Klik her for at bekræfte kundens afhentning</a>
                     </p>
                 </body>
                 </html>`,

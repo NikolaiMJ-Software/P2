@@ -102,7 +102,8 @@ export async function sortStandart(products){
     // Merge the two sorted arraies
     const sortedProducts = [
         ...topProducts, 
-        ...sortedProductsByShop.filter(product => !topProducts.includes(product))];
+        ...sortedProductsByShop.filter(product => !topProducts.includes(product))
+    ];
     
     return sortedProducts;
 }

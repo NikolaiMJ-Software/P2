@@ -70,7 +70,7 @@ router.post('/authenticate_email', async (req, res) => {
     return res.json({ success: reserved });
 });
 
-//Makes an entry in the database for authentication if none exists, and sends corrosponding email
+//Function that makes an entry in the database for authentication if none exists, and sends corrosponding email
 async function authentication_email_maker(email, key){
     try {
         const date = new Date();
@@ -99,6 +99,7 @@ async function authenticate_email_checker(email, key){
     //checks if inserted email and key fits the values in authentication tabled, if yes delete email, else sent fail message
     const row = await db_get(`SELECT * FROM authentication WHERE authentication.email = ? AND authentication.key = ?;`, [email, key]);
     if(row){
+        //Deletes the entry to clear up the database if entry was correct
         db.run(`DELETE FROM authentication WHERE email = ?;`, [email]);
         return true;
     }

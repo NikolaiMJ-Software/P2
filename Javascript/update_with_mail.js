@@ -30,6 +30,7 @@ async function changesInUsers(shop_id, code){
             continue;
         }
 
+        // Update user profile code to 0, and a shop_id
         const respons = await fetch(`./update_userStores`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -41,6 +42,7 @@ async function changesInUsers(shop_id, code){
             })
         });
 
+        // Notify the shop owner if is has been completet
         if(respons.ok){
             const h1 = document.createElement("h1");
             h1.textContent = "Bruger er nu forbundet butikken, lukker automatisk (5 sek).";
@@ -56,6 +58,7 @@ async function changesInUsers(shop_id, code){
         alert('Bruger har allerede skiftet butik.');
     }
 
+    // Close the window after 5 sec
     setTimeout(() => {
         window.close();
     }, 5000); // 5 sec
@@ -118,6 +121,7 @@ async function changesInProducts(id, code){
                 }
                 continue;
             }
+            // Notify the shop owner if it was the last product in stock
             if (diff === 0){
                 alert(`Det er den sidste af: ${product.product_name}, lager skal fyldes op.`);
             }
@@ -180,6 +184,7 @@ async function changesInProducts(id, code){
     h1.textContent = "Det er blevent rigisteret, lukker automatisk (5 sek)";
     document.getElementById("message").appendChild(h1);
 
+    // Close the window after 5 sec
     setTimeout(() => {
         window.close();
     }, 5000); // 5 sec
