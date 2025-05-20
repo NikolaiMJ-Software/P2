@@ -94,6 +94,7 @@ function createSearch(){
     return searchField;
 }
 
+//Hides the tables
 function hidePages() {
     const managementArea = document.getElementById("management-area")
     let temp = managementArea.firstElementChild
