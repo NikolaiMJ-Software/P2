@@ -356,7 +356,7 @@ app.get('/orders', (req, res) => {
     });
 });
 
-//Clears authentication data older than 5 minutes every minute
+//Clears authentication data for accounts older than 5 minutes every minute
 function fn60sec() {
     const now = new Date().getTime()
     db.run(`DELETE FROM authentication WHERE time_stamp < ?`, [now - 300 * 1000]);

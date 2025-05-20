@@ -48,13 +48,13 @@ export function remove_from_cart(product_id) {
     }
 }
 
-//Updates cart button number that showcases amount of wares in cart
+//Updates cart button number that showcases amount of wares in the current cart
 export function update_cart_button() {
     let length = getCookie("products").split(",").length;
     if(length === 1 && getCookie("products").split(",")[0] === "") {
         length = 0;
     }
-    console.log("length: " + length);
+    console.log("Cart size: " + length);
     document.getElementById("cart_top_button").textContent = "Din kurv (" + length + ")"
 }
 
@@ -96,14 +96,18 @@ function fill_table() {
 
         //Increases quantity value instead of adding new row if product already has a row
         if(product === past_product) {
+
+            //Changes quantity value
             let amount = parseInt(document.getElementById(product).textContent);
             amount++;
             document.getElementById(product).textContent = amount;
 
+            //Changes price for the row
             let product_price = parseInt(document.getElementById(product + "price").textContent);
             product_price += products[product-1].price - products[product-1].discount;
             document.getElementById(product + "price").textContent = product_price;
             
+            //Changes total price
             total_cost += products[product-1].price - products[product-1].discount;
             document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
         } else {
@@ -212,7 +216,7 @@ function adjust_table(action, product_id) {
     fill_table();
 }
 
-//Button that adds a product to your cart on click (used in product_page.html)
+//Button function that adds a product to your cart on click (used in product_page.html)
 const button = document.getElementById("cart_button");
 if(button != null) {
     button.addEventListener("click", async () => {
@@ -225,7 +229,6 @@ if(button != null) {
         //Checks cart if the added products + products in cart exceed store stock, if not, add to cart
         let cart = getCookie("products").split(",").map(Number);
         let currently_in_cart = cart.filter(val => val === product_id).length;
-
         if (products[product_id-1].stock === 0){
             alert("Varen er ikke på lager");
         }else if(currently_in_cart + amount <= products[product_id-1].stock && products[product_id-1].stock > 0) {
@@ -251,7 +254,7 @@ if(button_reserve != null) {
             alert("Kurven er tom!");
             return;
         }
-        let sorted_cart = {};
+        let sorted_cart = [];
         for (let i = 0; i < cart.length; i++) {
             let product_id = cart[i];
             let shop_id = products[product_id-1].shop_id;
@@ -303,7 +306,7 @@ if(button_reserve != null) {
                 let input = document.querySelector("#authentication_box input");
                 let key = input.value;
 
-                //Asks for the key sent over email before and verifies with server
+                //Send the key and email to verify with routes_reserve server-side
                 const response_1 = await fetch('./authenticate_email', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -376,7 +379,7 @@ if(button_reserve != null) {
         products = await response.json();
     }
 
-    //If on cart.html, add event listener for ready state if not loaded, otherwise just start up
+    //If on cart.html, add event listener for ready state if not loaded to fill product table, otherwise just fill product table now
     if(document.getElementById("cart") != null) {
         if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", start_up);
