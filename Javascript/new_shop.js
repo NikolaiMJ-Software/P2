@@ -2,12 +2,14 @@ const city_select = document.getElementById('city');
 const form = document.getElementById('signup-form');
 const error_message = document.getElementById('error-message');
 
+//on page load, load following functions
 document.addEventListener('DOMContentLoaded', async () => {
     try{
+        //fetching all cities
         const res = await fetch('./get_cities');
         const cities = await res.json();
     
-    
+        //foreach city create a city option in dropdown menu
         cities.forEach(city => {
             const option = document.createElement('option');
             option.value = city.id;
@@ -17,15 +19,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error('Error fetching cities:', error);
     }
-
+    //on submit, submit everything in form
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        //define lat, long and email
         const lat = form.latitude.value;
         const long = form.longitude.value;
         const email = form.email.value;
 
 
+        //if lat and long is missing, sent error
         if (!lat || !long) {
             error_message.textContent = "Vælg en adresse fra listen for at få koordinater.";
             return;
@@ -40,8 +44,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
         
+        //create variable for all form data
         const form_data = new FormData(form);
 
+        //sent data to backend
         const update_res = await fetch("./new_shop",{
             method: "POST",
             body: form_data,
@@ -57,15 +63,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+//create 3 global variables
 let autocomplete;
 let map;
 let marker;
-
+//function to auto update map on load
 export function initAutocomplete() {
+    //define address as input
     const input = document.getElementById("address");
     autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.setFields(["geometry", "formatted_address"]);
 
+    //check if user can find google maps data
     autocomplete.addListener("place_changed", () => {
         const place = autocomplete.getPlace();
 
@@ -74,6 +83,7 @@ export function initAutocomplete() {
             return;
         }
 
+        //define lat and lng as geometric location points
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
 
@@ -86,12 +96,13 @@ export function initAutocomplete() {
         marker.setVisible(true);
     });
 
-    // Init map
+    // sets map standard to the center of denmark
     map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: 56.2639, lng: 9.5018 }, // Denmark center
         zoom: 6,
     });
 
+    //make marker on map
     marker = new google.maps.Marker({
         map: map,
         visible: false,
