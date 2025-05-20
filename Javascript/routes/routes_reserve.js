@@ -53,7 +53,7 @@ export function db_get(query, params) {
     });
 }
 
-//Limits emails an IP can send per hour to prevent flooding
+//Limits emails a computer can send per hour to prevent flooding
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 5, // max 5 requests per computer
@@ -92,7 +92,7 @@ export async function reserve_wares(cart_items, user_email) {
                 price: []
             }
 
-            //Count the amount of products
+            //Count the amount of products of each type
             const count = {};
             for (let j = 0; j < cart_items[i].length; j++) {
                 const product_id = cart_items[i][j];
