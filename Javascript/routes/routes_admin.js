@@ -1,9 +1,7 @@
 import express from 'express';
 import sqlite3 from 'sqlite3';
 import path from 'path';
-import multer from 'multer';
 import fs from 'fs';
-import fse from 'fs-extra';
 
 //Makes files work together
 const router = express.Router();
@@ -19,6 +17,7 @@ const db = new sqlite3.Database(db_path, (err) => {
 });
 
 router.get('/admin', (req, res) => {
+    //Only allow access to page if the user is an admin user
     if(!req.user || !req.user.admin_user){
         return res.status(403).json({ error: "Ikke logget ind som admin" });
     }
@@ -26,6 +25,7 @@ router.get('/admin', (req, res) => {
 })
 
 router.get('/get_users', (req, res) => {
+    //Get information about users that isn't their password. Skip admins
     db.all(`SELECT id, email, name, shop_id, code FROM users WHERE admin_user != 1 ORDER BY id ASC`, (err, rows) => {
         if(err){
             res.status(500).json({ error: err.message });
@@ -36,16 +36,18 @@ router.get('/get_users', (req, res) => {
 })
 
 router.post('/delete_user', (req, res) => {
-    if(!req.user || !req.user.admin_user){
+    if(!req.user || !req.user.admin_user){ //Admin check
         return res.status(403).json({ error: "Ikke logget ind som admin" });
     }
+
     const {id} = req.body
     if (!id){
         return res.status(500).send("Databasefejl");
-    } else if (id == 3) {
+    } else if (id == 3) { //Admin id - shouldn't be deleted
         return res.status(403).send("Nej.");
     }
 
+    //Delete user with the given id from users table
     db.run(`DELETE FROM users WHERE id = ?`, [id], (err) =>{
         if (err){
             return res.status(500).send("Databasefejl");
@@ -55,9 +57,11 @@ router.post('/delete_user', (req, res) => {
 })
 
 router.post('/delete_shop', (req, res) =>{
-    if(!req.user || !req.user.admin_user){
+    if(!req.user || !req.user.admin_user){ //Admin check
         return res.status(403).json({ error: "Ikke logget ind som admin" });
     }
+
+    //Get shop id, id of the city it's in, and the name of the shop
     const {id, cityid, name} = req.body
     if (!id){
         return res.status(500).send("Databasefejl");
@@ -68,13 +72,14 @@ router.post('/delete_shop', (req, res) =>{
         if (err || !city){
             return res.status(500).send("Databasefejl");
         }
-        //delete from database
+
+        //delete shop from shops database
         db.run(`DELETE FROM shops WHERE id = ?`, [id], (err) =>{
             if (err){
                 return res.status(500).send("Databasefejl");
             }
                
-            //delete shop folders'
+            //delete shop folders
             const folder_path = path.join(process.cwd(), '.', 'Images', city.city, name);
             fs.rm(folder_path, { recursive: true, force: true }, (err) => {
                 if (err){
@@ -90,13 +95,17 @@ router.post('/delete_shop', (req, res) =>{
 })
 
 router.post('/edit_email', (req, res) => {
-    if(!req.user || !req.user.admin_user){
+    if(!req.user || !req.user.admin_user){ //Admin check
         return res.status(403).json({ error: "Ikke logget ind som admin" });
     }
+
+    //Get id for shop that needs new email, and new email
     const {id, email} = req.body
     if (!id || !email){
         return res.status(500).send("Databasefejl");
     }
+
+    //Update the shop with the new email
     db.run(`UPDATE shops SET email = ? WHERE id = ?`, [email, id], (err) =>{
         if (err){
             return res.status(500).send("Databasefejl");
@@ -109,7 +118,7 @@ router.post(`/update_userStores`, (req, res) => {
     if (req.body.bypassAdmin) {
         req.user = { admin_user: true };
     }
-    if(!req.user || !req.user.admin_user){
+    if(!req.user || !req.user.admin_user){ //Admin check
         return res.status(403).json({ error: "Ikke logget ind som admin" });
     }
     const {userId, shopId, code} = req.body;
@@ -117,6 +126,7 @@ router.post(`/update_userStores`, (req, res) => {
         return res.status(500).send("Databasefejl");
     }
 
+    //If shop chosen for user was no shop, make their shop_id null
     if (shopId == "null") {
         db.run(`UPDATE users SET shop_id = null WHERE id = ?`, [userId], (err) =>{
             if (err){
@@ -133,6 +143,7 @@ router.post(`/update_userStores`, (req, res) => {
             res.send("Shop opdateret")
         })
     } else {
+        //Update user with the chosen shop id
         db.run(`UPDATE users SET shop_id = ? WHERE id = ?`, [shopId, userId], (err) =>{
             if (err){
                 return res.status(500).send("Databasefejl");
@@ -142,16 +153,17 @@ router.post(`/update_userStores`, (req, res) => {
     }
 })
 
-router.get(`/crash_server`, (req, res) =>{
-    if(!req.user || !req.user.admin_user){
+//Close the server in case any errors happen
+router.get(`/stop_server`, (req, res) =>{
+    if(!req.user || !req.user.admin_user){ //Admin check
         return res.status(403).json({ error: "Ikke logget ind som admin" });
     }
     console.log("Server is closing now")
-    process.exit();
+    process.exit(); //Stops the server
 })
 
 router.post(`/ban-user`, (req, res) => {
-    if(!req.user || !req.user.admin_user){
+    if(!req.user || !req.user.admin_user){ //Admin check
         return res.status(403).json({ error: "Ikke logget ind som admin" });
     }
     const { email } = req.body;

@@ -11,7 +11,7 @@ const db_path = path.join(process.cwd(), 'databases', 'click_and_collect.db');
 // Makes a new database with data from the current database (which can be interacted with)
 const db = new sqlite3.Database(db_path, (err) => {
     if (err) return console.error('Mail_update DB error:', err.message);
-    console.log('Connected to SQLite database (Mail_update router).');
+    console.log('Connected to SQLite database (mail_update router).');
     db.run("PRAGMA foreign_keys = ON;");
 });
 
