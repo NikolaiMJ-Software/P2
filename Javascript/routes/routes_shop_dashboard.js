@@ -318,77 +318,77 @@ router.post("/update_product", upload.fields([
         const image_paths = {};
 
 
-//Save old image paths before renaming folder
-const old_image_paths = {};
-for (let i = 1; i <= 5; i++) {
-    old_image_paths[`img${i}_path`] = product[`img${i}_path`];
-}
+        //Save old image paths before renaming folder
+        const old_image_paths = {};
+        for (let i = 1; i <= 5; i++) {
+            old_image_paths[`img${i}_path`] = product[`img${i}_path`];
+        }
 
-//Delete old images
-for (let i = 1; i <= 5; i++) {
-    //define each new image if there is a new image
-    const image = `update-img${i}`;
-    //if there is a new image, and we have requested files do the following:
-    if (req.files && req.files[image]) {
-        // define the old image path, and if it isnt null do the following:
-        const old_img_path = old_image_paths[`img${i}_path`];
-        if (old_img_path) {
-            //define the full old image path images/[city]/[shop]/[product]/[image]
-            const full_old_path = path.join(process.cwd(), '.', old_img_path);
-            //if it exist, delete image
-            if (fs.existsSync(full_old_path)) {
-                fs.unlinkSync(full_old_path);
-            } else {
-                console.warn("Old image not found (pre-rename):", full_old_path);
+        //Delete old images
+        for (let i = 1; i <= 5; i++) {
+            //define each new image if there is a new image
+            const image = `update-img${i}`;
+            //if there is a new image, and we have requested files do the following:
+            if (req.files && req.files[image]) {
+                // define the old image path, and if it isnt null do the following:
+                const old_img_path = old_image_paths[`img${i}_path`];
+                if (old_img_path) {
+                    //define the full old image path images/[city]/[shop]/[product]/[image]
+                    const full_old_path = path.join(process.cwd(), '.', old_img_path);
+                    //if it exist, delete image
+                    if (fs.existsSync(full_old_path)) {
+                        fs.unlinkSync(full_old_path);
+                    } else {
+                        console.warn("Old image not found (pre-rename):", full_old_path);
+                    }
+                }
             }
         }
-    }
-}
 
-// Rename folder if product name has changed
-if (product.product_name !== name) {
-    //define old folder path
-    const old_folder = path.join(process.cwd(), '.', "Images", city_name, shop_name, product.product_name);
-    //define new folder path
-    const new_folder = path.join(process.cwd(), '.', "Images", city_name, shop_name, name);
-    //if old folder exist, rename old folder to new folder
-    if (fs.existsSync(old_folder)) {
-        fs.renameSync(old_folder, new_folder);
-    }
-}
-
-// Move new uploaded images into final destination and update image paths
-for (let i = 1; i <= 5; i++) {
-    //define new image
-    const image = `update-img${i}`;
-    //if image and files from 1-5 exist do the following:
-    if (req.files && req.files[image]) {
-        const file = req.files[image][0];
-        const filename = file.originalname;
-        const image_dir = path.join(process.cwd(), '.', "Images", city_name, shop_name, name);
-
-        // Ensure the renamed directory exists
-        fs.mkdirSync(image_dir, { recursive: true });
-
-        const target_path = path.join(image_dir, filename);
-
-        if (fs.existsSync(file.path)) {
-            fs.renameSync(file.path, target_path);
-        } else {
-            console.warn("Temp file missing:", file.path);
+        // Rename folder if product name has changed
+        if (product.product_name !== name) {
+            //define old folder path
+            const old_folder = path.join(process.cwd(), '.', "Images", city_name, shop_name, product.product_name);
+            //define new folder path
+            const new_folder = path.join(process.cwd(), '.', "Images", city_name, shop_name, name);
+            //if old folder exist, rename old folder to new folder
+            if (fs.existsSync(old_folder)) {
+                fs.renameSync(old_folder, new_folder);
+            }
         }
 
-        // Save new image path for DB update
-        image_paths[`img${i}_path`] = `./Images/${city_name}/${shop_name}/${name}/${filename}`;
-    } else {
-        // If image wasn't updated but folder was renamed, keep updated path
-        const old_img_path = old_image_paths[`img${i}_path`];
-        if (old_img_path && product.product_name !== name) {
-            const filename = path.basename(old_img_path);
-            image_paths[`img${i}_path`] = `./Images/${city_name}/${shop_name}/${name}/${filename}`;
+        // Move new uploaded images into final destination and update image paths
+        for (let i = 1; i <= 5; i++) {
+            //define new image
+            const image = `update-img${i}`;
+            //if image and files from 1-5 exist do the following:
+            if (req.files && req.files[image]) {
+                const file = req.files[image][0];
+                const filename = file.originalname;
+                const image_dir = path.join(process.cwd(), '.', "Images", city_name, shop_name, name);
+
+                // Ensure the renamed directory exists
+                fs.mkdirSync(image_dir, { recursive: true });
+
+                const target_path = path.join(image_dir, filename);
+
+                if (fs.existsSync(file.path)) {
+                    fs.renameSync(file.path, target_path);
+                } else {
+                    console.warn("Temp file missing:", file.path);
+                }
+
+                // Save new image path for DB update
+                image_paths[`img${i}_path`] = `./Images/${city_name}/${shop_name}/${name}/${filename}`;
+            } else {
+                // If image wasn't updated but folder was renamed, keep updated path
+                const old_img_path = old_image_paths[`img${i}_path`];
+                if (old_img_path && product.product_name !== name) {
+                    const filename = path.basename(old_img_path);
+                    image_paths[`img${i}_path`] = `./Images/${city_name}/${shop_name}/${name}/${filename}`;
+                }
+            }
         }
-    }
-}
 
         //make list for inputs in the DB
         const fields = [
@@ -398,24 +398,24 @@ for (let i = 1; i <= 5; i++) {
             `discount = ?`,
             `description = ?`,
             `specifications = ?`
-          ];
+        ];
 
-          //make list of values to be inserted in the DB
-          const values = [name, stock, price, discount, description, specifications];
+        //make list of values to be inserted in the DB
+        const values = [name, stock, price, discount, description, specifications];
 
-          //for each image path, add it to inputs in fields and values
-          for (const [image, value] of Object.entries(image_paths)) {
-            fields.push(`${image} = ?`);
-            values.push(value);
-          }
+        //for each image path, add it to inputs in fields and values
+        for (const [image, value] of Object.entries(image_paths)) {
+        fields.push(`${image} = ?`);
+        values.push(value);
+        }
 
-          //push id and shop id to values
-          values.push(id, shop_id);
+        //push id and shop id to values
+        values.push(id, shop_id);
 
 
-          //define the sqlite using the fields variable
-            const sql = `
-            UPDATE products SET ${fields.join(", ")} WHERE id = ? AND shop_id = ?`;
+        //define the sqlite using the fields variable
+        const sql = `
+        UPDATE products SET ${fields.join(", ")} WHERE id = ? AND shop_id = ?`;
 
         //insert everything into the DB using the sql variable and the values variable
         db.run(sql, values, function (err) {
@@ -426,10 +426,10 @@ for (let i = 1; i <= 5; i++) {
     
             res.send("Produkt opdateret.");
           });
-        } catch (err) {
-          console.error("Server error:", err);
-          res.status(500).send("Intern serverfejl.");
-        }
+    } catch (err) {
+        console.error("Server error:", err);
+        res.status(500).send("Intern serverfejl.");
+    }
 
 
 });
