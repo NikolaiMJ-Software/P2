@@ -40,6 +40,7 @@ router.post('/delete_user', (req, res) => {
         return res.status(403).json({ error: "Ikke logget ind som admin" });
     }
 
+    //Get user id from body
     const {id} = req.body
     if (!id){
         return res.status(500).send("Databasefejl");
@@ -114,6 +115,7 @@ router.post('/edit_email', (req, res) => {
     })
 })
 
+//Update a users shop_id
 router.post(`/update_userStores`, (req, res) => {
     if (req.body.bypassAdmin) {
         req.user = { admin_user: true };
