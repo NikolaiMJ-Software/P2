@@ -326,7 +326,7 @@ document.getElementById("ban-button").addEventListener("click", () => {
         return;
     }
 
-    // Example: Send ban request to server (you need backend handling for this)
+    // Send ban request to server (you need backend handling for this)
     fetch(`./ban-user`, {
         method: 'POST',
         headers: {
