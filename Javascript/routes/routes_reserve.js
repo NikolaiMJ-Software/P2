@@ -92,7 +92,7 @@ export async function reserve_wares(cart_items, user_email) {
                 price: []
             }
 
-            //Count the amount of products
+            //Count the amount of products of each type
             const count = {};
             for (let j = 0; j < cart_items[i].length; j++) {
                 const product_id = cart_items[i][j];
