@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log("Product ID:", product_id);
   console.log("Shop ID:", shop_id);
 
+  //define HTML elements
   const commentList = document.getElementById('comments-list');
   const submitBtn = document.getElementById('submit-rating');
   const commentInput = document.getElementById('user-comment');
@@ -57,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeBtn = document.getElementById('close-rating-modal');
   const avgStars = document.getElementById('average-rating-display');
 
+  //userinfo
   let userName = null;
   let userEmail = null;
   let isLoggedIn = false;
@@ -72,11 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
   avgStars?.addEventListener('click', () => {
     modal.style.display = 'flex';
   
+  // display alert in the case of user not being logged in.
     if (!isLoggedIn) {
       alert("Du er ikke logget ind. Du kan stadig læse kommentarer, men ikke skrive nogen.");
       return;
     }
-  
+  //if the user has commented, allow for updates.
     if (hasCommented) {
       if (confirm("Du har allerede skrevet en kommentar til dette produkt. Vil du opdatere den?")) {
         // Pre-fill comment box and stars
@@ -132,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const bottomList = document.getElementById('comments-list-bottom');
         if (bottomList) bottomList.replaceChildren();
 
+
         comments.forEach(c => {
           const li = document.createElement('li');
           li.style.marginBottom = '12px'; // spacing
@@ -140,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const name = document.createElement('strong');
           name.textContent = c.name;
 
+          //star calculation
           const starsSpan = document.createElement('span');
           starsSpan.className = 'comment-stars';
           let starsHTML = '';
@@ -153,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
           nameAndStars.appendChild(name);
           nameAndStars.appendChild(starsSpan);
 
+          //handeling comments
           const commentText = document.createElement('div');
           commentText.textContent = c.comment;
 
@@ -164,6 +170,8 @@ document.addEventListener('DOMContentLoaded', () => {
           li.appendChild(time);
 
           commentList.appendChild(li);
+
+          //add to bottom list
           if (bottomList) bottomList.appendChild(li.cloneNode(true));
         });
 
@@ -195,12 +203,14 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    //the contents of a comment
     const payload = {
       name,
       comment,
       rating: selectedRating
     };
 
+    //add the payload to either a product or shop by given id
     if (product_id) {
       payload.product_id = product_id;
     } else if (shop_id) {
@@ -227,6 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 
+  //handle login
   fetch('./user_logged_in')
     .then(res => res.json())
     .then(data => {
@@ -245,22 +256,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // Get all stars inside the rating "box"
   const stars = document.querySelectorAll('#star-rating .star');
 
-  // Loop through and apply events
+// Add interactive behavior to each star
   stars.forEach(star => {
     const value = parseInt(star.dataset.value);
 
+      // When mouse hovers over a star, highlight all stars up to that one
     star.addEventListener('mouseover', () => {
       stars.forEach(s => {
         s.classList.toggle('hovered', parseInt(s.dataset.value) <= value);
       });
     });
 
+    // When mouse leaves the star, remove all hover highlights
     star.addEventListener('mouseout', () => {
       stars.forEach(s => s.classList.remove('hovered'));
     });
 
+    // When a star is clicked, set the selected rating
     star.addEventListener('click', () => {
-      selectedRating = value;
+      selectedRating = value;  // Save the rating for submission  
       stars.forEach(s => {
         s.classList.toggle('selected', parseInt(s.dataset.value) <= value);
       });
