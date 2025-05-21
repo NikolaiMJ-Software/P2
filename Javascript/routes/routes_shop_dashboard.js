@@ -158,7 +158,7 @@ router.post("/add_product", upload.fields(
     //make sure nummerical values stays nummerical values
     const parsed_price = parseFloat(price);
     const parsed_stock = parseInt(stock, 10);
-    const parsed_discount = parseFloat(discount);
+    const parsed_discount = parseFloat(discount) || 0;
     
     if (isNaN(parsed_price) || parsed_price < 0) {
         return res.status(400).send("Pris skal være et gyldigt tal ≥ 0.");
@@ -265,7 +265,7 @@ router.post("/update_product", upload.fields([
     //make sure nummerical values stays nummerical values
     const parsed_price = parseFloat(price);
     const parsed_stock = parseInt(stock, 10);
-    const parsed_discount = parseFloat(discount);
+    const parsed_discount = parseFloat(discount) || 0;
     
     if (isNaN(parsed_price) || parsed_price < 0) {
         return res.status(400).send("Pris skal være et gyldigt tal ≥ 0.");
