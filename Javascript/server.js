@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //remove acces for, database
 app.use('/databases', (req, res)=>{
-    res.statusMessage(403).send('Get Good Bozo');
+    res.status(403).send('Get Good Bozo');
 });
 
 //feature which allows there to be saved a local login

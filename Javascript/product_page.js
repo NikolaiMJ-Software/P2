@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateLastVisit();
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
-    const currentCity = urlParams.get('city'); 
 
     if (!productId) {
         // No product ID provided
@@ -57,7 +56,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Set the product details into the page
         updateElement('product_name', product_name);
-        /*updateElement('shop_id', shop_id);*/
         updateElement('stock', stock === 0 ? "Ikke på lager" : `${stock} på lager`);
         //update price with the discount if applicaple
         let finalPrice = price;

@@ -1,5 +1,6 @@
 # P2
 P2 - "Click og Hent" webpage
+link to project on a server: https://cs-25-sw-2-06.p2datsw.cs.aau.dk/node0/
 
 The project is made in VS code, remember to download
 Install: VS code
