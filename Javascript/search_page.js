@@ -140,7 +140,7 @@ async function updateImage(products) {
 
         // Get the chosen product
         let advertChosen = orderedProducts[advertProduct-1];
-        console.log(advertChosen.product_name);
+        console.log(advertChosen);
 
         // create classes so it can be modified in css and add elements
         const advertButton = document.createElement('button');
