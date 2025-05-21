@@ -104,11 +104,11 @@ function fill_table() {
 
             //Changes price for the row
             let product_price = parseInt(document.getElementById(product + "price").textContent);
-            product_price += products[product-1].price - products[product-1].discount;
+            product_price += products[product].price - products[product].discount;
             document.getElementById(product + "price").textContent = product_price;
             
             //Changes total price
-            total_cost += products[product-1].price - products[product-1].discount;
+            total_cost += products[product].price - products[product].discount;
             document.getElementById("total_cost").textContent = "Endelig pris: " + total_cost + " kr.";
         } else {
 
@@ -119,13 +119,13 @@ function fill_table() {
             let image_element = document.createElement("td");
             let image = document.createElement("img");
             image.setAttribute("id", "pictures");
-            image.src = products[product-1].img1_path;
+            image.src = products[product].img1_path;
             image_element.appendChild(image);
             row.appendChild(image_element);
 
             //Creates and fills second column in the row (name of product)
             let name_element = document.createElement("td");
-            name_element.textContent = products[product-1].product_name;
+            name_element.textContent = products[product].product_name;
             row.appendChild(name_element);
 
             //Creates and fills third column in the row (button to show & change quantity)
@@ -153,7 +153,7 @@ function fill_table() {
                 if (clickX < buttonWidth / 3) {
                     adjust_table("-", product);
                 } else if (clickX > 2/3 * buttonWidth) {
-                    if(parseInt(quantity.textContent) < products[product-1].stock) {
+                    if(parseInt(quantity.textContent) < products[product].stock) {
                         adjust_table("+", product);
                     } else {
                         alert("Du kan ikke tilføje flerer varer til din kurv end butikken har på lager");
@@ -168,8 +168,8 @@ function fill_table() {
             //Creates and fills the fourth column in the row (price of product)
             let price_element = document.createElement("td");
             price_element.setAttribute("id", product + "price");
-            price_element.textContent = products[product-1].price - products[product-1].discount;
-            total_cost += products[product-1].price - products[product-1].discount;
+            price_element.textContent = products[product].price - products[product].discount;
+            total_cost += products[product].price - products[product].discount;
             row.appendChild(price_element);
 
             //Creates and fills the fifth column in the row (button to remove all instances of product from cart)
@@ -229,9 +229,9 @@ if(button != null) {
         //Checks cart if the added products + products in cart exceed store stock, if not, add to cart
         let cart = getCookie("products").split(",").map(Number);
         let currently_in_cart = cart.filter(val => val === product_id).length;
-        if (products[product_id-1].stock === 0){
+        if (products[product_id].stock === 0){
             alert("Varen er ikke på lager");
-        }else if(currently_in_cart + amount <= products[product_id-1].stock && products[product_id-1].stock > 0) {
+        }else if(currently_in_cart + amount <= products[product_id].stock && products[product_id].stock > 0) {
             for(let i = 0; i < amount; i++) {
                 add_to_cart(product_id);
             }
@@ -257,7 +257,7 @@ if(button_reserve != null) {
         let sorted_cart = [];
         for (let i = 0; i < cart.length; i++) {
             let product_id = cart[i];
-            let shop_id = products[product_id-1].shop_id;
+            let shop_id = products[product_id].shop_id;
             if (!sorted_cart[shop_id]) {
                 sorted_cart[shop_id] = [];
             }
