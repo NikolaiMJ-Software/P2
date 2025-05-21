@@ -137,11 +137,10 @@ async function updateImage(products) {
 
         // Pick a random product (this puts advertProduct as the products ID)
         let advertProduct = productList[Math.floor(Math.random() * productList.length)];
-        console.log(productList)
 
         // Get the chosen product
         let advertChosen = orderedProducts[advertProduct];
-        console.log(advertChosen);
+        console.log(advertChosen.product_name);
 
         // create classes so it can be modified in css and add elements
         const advertButton = document.createElement('button');
