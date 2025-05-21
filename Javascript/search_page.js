@@ -19,7 +19,7 @@ async function updateImage(products) {
     for (const product of products) {
         console.log(product.product_name + " " + product.price);
         if(product.discount > 0){
-            productList += product.id;
+            productList.push(product.id);
         }
 
         //initialize all products.
