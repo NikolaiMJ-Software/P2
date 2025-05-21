@@ -1,4 +1,4 @@
-//funktionalitet der venter på at submit knappen er trykket på, og poster email og password i headeren der bliver sendt videre
+//functionality that waits for the submit button to be pressed and posts the email and password in the header that is forwarded
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('login-form');
     const errorMessage = document.getElementById('error-message');
