@@ -55,7 +55,7 @@ export function db_get(query, params) {
 
 //Limits emails a computer can send per hour to prevent flooding
 const limiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
+  windowMs: 1000, //  (60 * 60 *) 1 hour
   max: 5, // max 5 requests per computer
   message: { error: "For mange anmodninger, prøv igen senere" }
 });
