@@ -152,8 +152,10 @@ document.addEventListener("DOMContentLoaded", async () =>{
     const shop_info = await shop_name_res.json();
     
     // setup shop name and logo:
-    // Set shop name
-    shop_name.textContent = shop_info.shop_name;
+    // Set shop name with the first letter always being uppercase.
+    const rawName = shop_info.shop_name;
+    shop_name.textContent = rawName.charAt(0).toUpperCase() + rawName.slice(1); 
+    
     // Set logo
     const logo = document.getElementById("logo");
     logo.src = shop_info.img_path;

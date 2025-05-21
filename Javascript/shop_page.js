@@ -14,10 +14,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             const shopData = await shopResponse.json();
             
             if (shopData.shop_name) {
-                document.getElementById("h1store_page").textContent = shopData.shop_name;
+                //Capitalize first letter only
+                const rawName = shopData.shop_name;
+                const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+
+                document.getElementById("h1store_page").textContent = formattedName;
             } else {
                 document.getElementById("h1store_page").textContent = "Ukendt butik";
-            }
+            }   
         } else {
             document.getElementById("h1store_page").textContent = currentCity;
         }
