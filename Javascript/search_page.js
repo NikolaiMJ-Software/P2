@@ -129,7 +129,11 @@ async function updateImage(products) {
         
         // Fetch products from the server
         const response = await fetch('./products'); 
-        let orderedProducts = await response.json();
+        const responseJson = await response.json();
+        orderedProducts = {};
+        responseJson.forEach(p => {
+            orderedProducts[p.id] = p;
+        });
 
         // Pick a random product (this puts advertProduct as the products ID)
         let advertProduct = productList[Math.floor(Math.random() * productList.length)];
