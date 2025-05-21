@@ -292,7 +292,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log(shop_id);
             if (shopData.shop_name) {
                 const shopBtn = document.getElementById('shop_name_button');
-                shopBtn.textContent = shopData.shop_name;
+                //Capitalize first letter only
+                const name = shopData.shop_name;
+                const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+                shopBtn.textContent = formattedName;
 
                 shopBtn.addEventListener('click', () => {
                     const cityMatch = cities.find(city => Number(city.id) === Number(city_id));
