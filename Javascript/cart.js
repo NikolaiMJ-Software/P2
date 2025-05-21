@@ -377,7 +377,11 @@ if(button_reserve != null) {
     if(document.getElementById("shop_name_button") != null || document.getElementById("cart") != null) {
         console.log("Henter produkt data...");
         const response = await fetch('./products');
-        products = await response.json();
+        const productList = await response.json();
+        products = {};
+        productList.forEach(p => {
+            products[p.id] = p;
+        });
     }
 
     //If on cart.html, add event listener for ready state if not loaded to fill product table, otherwise just fill product table now
