@@ -137,6 +137,7 @@ async function updateImage(products) {
 
         // Pick a random product (this puts advertProduct as the products ID)
         let advertProduct = productList[Math.floor(Math.random() * productList.length)];
+        console.log(productList)
 
         // Get the chosen product
         let advertChosen = orderedProducts[advertProduct];
