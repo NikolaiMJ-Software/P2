@@ -254,7 +254,7 @@ if(button_reserve != null) {
             alert("Kurven er tom!");
             return;
         }
-        let sorted_cart = [];
+        /*let sorted_cart = [];
         for (let i = 0; i < cart.length; i++) {
             let product_id = cart[i];
             let shop_id = products[product_id].shop_id;
@@ -262,8 +262,27 @@ if(button_reserve != null) {
                 sorted_cart[shop_id] = [];
             }
             sorted_cart[shop_id].push(product_id);
+        }*/
+        let sorted_cart = {};
+        for (let i = 0; i < cart.length; i++) {
+            const product_id = cart[i];
+            const product = products[product_id];
+            // Skip if the product doesn't exist
+            if (!product) {
+                console.warn("Ignorerer ugyldigt produkt-ID:", product_id);
+                continue;
+            }
+            const shop_id = product.shop_id;
+            // Skip if the shop_id is invalid (null, undefined, or falsey)
+            if (!shop_id) {
+                console.warn("Produkt", product_id, "har ingen gyldig butik.");
+                continue;
+            }
+            if (!sorted_cart[shop_id]) {
+                sorted_cart[shop_id] = [];
+            }
+            sorted_cart[shop_id].push(product_id);
         }
-
         //Asks user for a reservation email if user is not logged in
         let user_email = null;
         //constant that makes sure an email contains @ aswell as .(something)
