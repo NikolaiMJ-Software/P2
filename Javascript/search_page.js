@@ -130,7 +130,7 @@ async function updateImage(products) {
         // Fetch products from the server
         const response = await fetch('./products'); 
         const responseJson = await response.json();
-        orderedProducts = {};
+        let orderedProducts = {};
         responseJson.forEach(p => {
             orderedProducts[p.id] = p;
         });
