@@ -139,7 +139,7 @@ async function updateImage(products) {
         let advertProduct = productList[Math.floor(Math.random() * productList.length)];
 
         // Get the chosen product
-        let advertChosen = orderedProducts[advertProduct-1];
+        let advertChosen = orderedProducts[advertProduct];
         console.log(advertChosen);
 
         // create classes so it can be modified in css and add elements
