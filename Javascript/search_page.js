@@ -90,9 +90,15 @@ async function updateImage(products) {
             if (ratings.length > 0) {
                 const total = ratings.reduce((sum, r) => sum + r.rating, 0);
                 const average = total / ratings.length;
-
+                
                 // Display star icons based on average
-                const stars = '★'.repeat(Math.round(average)) + '☆'.repeat(5 - Math.round(average));
+                const fullStars = Math.floor(average);
+                const hasHalfStar = average % 1 >= 0.5;
+
+                let stars = '★'.repeat(fullStars);
+                if (hasHalfStar) stars += '⯪';
+                stars += '☆'.repeat(5 - fullStars - (hasHalfStar ? 1 : 0));
+
                 productRating.textContent = stars;
             } else {
                 productRating.textContent = '☆'.repeat(5);
@@ -194,7 +200,13 @@ async function updateImage(products) {
                 const average = total / ratings.length;
 
                 // Display star icons based on average
-                const stars = '★'.repeat(Math.round(average)) + '☆'.repeat(5 - Math.round(average));
+                const fullStars = Math.floor(average);
+                const hasHalfStar = average % 1 >= 0.5;
+
+                let stars = '★'.repeat(fullStars);
+                if (hasHalfStar) stars += '⯪';
+                stars += '☆'.repeat(5 - fullStars - (hasHalfStar ? 1 : 0));
+
                 productRating.textContent = stars;
             } else {
                 productRating.textContent = '☆'.repeat(5);
