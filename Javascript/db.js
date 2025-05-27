@@ -21,15 +21,15 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 
 db.serialize(() => {
-    db.run(`DROP TABLE IF EXISTS comments`);
-    db.run(`DROP TABLE IF EXISTS orders`);
-    db.run(`DROP TABLE IF EXISTS users`);
-    db.run(`DROP TABLE IF EXISTS products`);
-    db.run(`DROP TABLE IF EXISTS shops`);
-    db.run(`DROP TABLE IF EXISTS cities`);
+    //db.run(`DROP TABLE IF EXISTS comments`);
+    //db.run(`DROP TABLE IF EXISTS orders`);
+    //db.run(`DROP TABLE IF EXISTS users`);
+    //db.run(`DROP TABLE IF EXISTS products`);
+    //db.run(`DROP TABLE IF EXISTS shops`);
+    //db.run(`DROP TABLE IF EXISTS cities`);
     db.run(`DROP TABLE IF EXISTS private`);
 
-    db.run(`CREATE TABLE cities (
+    /*db.run(`CREATE TABLE cities (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         city TEXT UNIQUE,
         image_path TEXT,
@@ -85,7 +85,7 @@ db.serialize(() => {
     FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE,
     FOREIGN KEY(city_id) REFERENCES cities(id) ON DELETE CASCADE,
     FOREIGN KEY(parent_id) REFERENCES products(id) ON DELETE CASCADE
-    )`);
+    )`);*/
         
     db.run(`CREATE TABLE private (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -95,7 +95,7 @@ db.serialize(() => {
         if (err) console.error("Error creating table:", err.message);
         else console.log("Table 'private' created with UNIQUE constraint.");
     });
-
+/*
     db.run(`CREATE TABLE users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT UNIQUE NOT NULL,
@@ -151,7 +151,7 @@ db.serialize(() => {
     ('København', 'Images/København/Lille_havfrue.jpg', 55.67594, 12.56553)`, (err) => {
         if (err) console.error('Error inserting data:', err.message);
         else console.log('Cities with image paths inserted.');
-    });
+    });*/
 /*
     db.run(`INSERT INTO shops (shop_name, city_id, img_path, email, latitude, longitude, revenue) VALUES
         ('Måneby', '1', 'Images/Aalborg/Måneby/månebylogo.jpg', 'mormorogmorfar123456789@gmail.com', 57.048939, 9.921764, 150000),
@@ -161,11 +161,11 @@ db.serialize(() => {
     });
 */
     db.run(`INSERT INTO private (name, API_key) VALUES
-        ('Google maps', 'AIzaSyDdPn6PpVzepa89hD6F8xt0Po1TnAt_9SQ')`, (err) => {
+        ('Google maps', 'AIzaSyBCr_r1KJmJH4mbhMv8fC9ngjquNHhsUto')`, (err) => {
             if (err) console.error('Error inserting data:', err.message);
             else console.log('private inserted.');
     });
-
+/*
     db.run(`INSERT INTO users (email, name, password, shop_id, admin_user) VALUES
         ('admin', 'admin', 'admin', NULL, 1)`, (err) => {
         if (err) console.error('Error inserting data:', err.message);
@@ -218,9 +218,9 @@ db.serialize(() => {
             }
         }
     );
-*/
+*//*
     db.run(`CREATE INDEX idx_shops_city ON shops(city_id);`);
-    db.run(`CREATE INDEX idx_products_shop ON products(shop_id);`);
+    db.run(`CREATE INDEX idx_products_shop ON products(shop_id);`);*/
 });
 
 db.close();
