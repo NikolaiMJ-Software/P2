@@ -1,6 +1,4 @@
 const url = "https://routes.googleapis.com/directions/v2:computeRoutes"; // The URL for using the API
-import dotenv from 'dotenv';
-dotenv.config();
 let travelTimesCities = [];
 let travelTimesShops = [];
 
@@ -80,7 +78,9 @@ export async function calcTravelTimes(position, destination){
         const userLon = position.coords.longitude;
 
         // Get API key from server
-        const API_KEY = process.env.google_routes_API;
+        const rawAPI = await fetch('./api_key');
+        const API = await rawAPI.json();
+        const API_KEY = API[0].API_key;
 
         // Prepare and send requests for multiple destination simultaneously
         const travelTimePromises = destination.map((place) => {
