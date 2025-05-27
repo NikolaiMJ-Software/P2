@@ -90,9 +90,15 @@ async function updateImage(products) {
             if (ratings.length > 0) {
                 const total = ratings.reduce((sum, r) => sum + r.rating, 0);
                 const average = total / ratings.length;
-
+                
                 // Display star icons based on average
-                const stars = '★'.repeat(Math.round(average)) + '☆'.repeat(5 - Math.round(average));
+                const fullStars = Math.floor(average);
+                const hasHalfStar = average % 1 >= 0.5;
+
+                let stars = '★'.repeat(fullStars);
+                if (hasHalfStar) stars += '⯪';
+                stars += '☆'.repeat(5 - fullStars - (hasHalfStar ? 1 : 0));
+
                 productRating.textContent = stars;
             } else {
                 productRating.textContent = '☆'.repeat(5);
@@ -137,11 +143,10 @@ async function updateImage(products) {
 
         // Pick a random product (this puts advertProduct as the products ID)
         let advertProduct = productList[Math.floor(Math.random() * productList.length)];
-        console.log(productList)
 
         // Get the chosen product
         let advertChosen = orderedProducts[advertProduct];
-        console.log(advertChosen);
+        console.log(advertChosen.product_name);
 
         // create classes so it can be modified in css and add elements
         const advertButton = document.createElement('button');
@@ -195,7 +200,13 @@ async function updateImage(products) {
                 const average = total / ratings.length;
 
                 // Display star icons based on average
-                const stars = '★'.repeat(Math.round(average)) + '☆'.repeat(5 - Math.round(average));
+                const fullStars = Math.floor(average);
+                const hasHalfStar = average % 1 >= 0.5;
+
+                let stars = '★'.repeat(fullStars);
+                if (hasHalfStar) stars += '⯪';
+                stars += '☆'.repeat(5 - fullStars - (hasHalfStar ? 1 : 0));
+
                 productRating.textContent = stars;
             } else {
                 productRating.textContent = '☆'.repeat(5);
