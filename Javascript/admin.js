@@ -351,4 +351,5 @@ document.getElementById("ban-button").addEventListener("click", () => {
     });
 });
 
+//Loads tab previously in, unless first time on admin page this session, then loads user table
 document.getElementById(sessionStorage.adminTab ? sessionStorage.adminTab : "user-button").onclick();
