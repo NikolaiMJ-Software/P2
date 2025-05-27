@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let userSearch = document.getElementById("userSearch");
         userSearch.innerHTML = ``
         userSearch.appendChild (createSearch())
+        sessionStorage.adminTab = "user-button"
         
         //load user data
         userTable()
@@ -24,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let shopSearch = document.getElementById("shopSearch");
         shopSearch.innerHTML = ``
         shopSearch.appendChild(createSearch())
+        sessionStorage.adminTab = "shop-button"
 
         //load shop data
         shopTable()
@@ -348,3 +350,5 @@ document.getElementById("ban-button").addEventListener("click", () => {
         alert("An error occurred while banning the user.");
     });
 });
+
+document.getElementById(sessionStorage.adminTab ? sessionStorage.adminTab : "user-button").onclick();
